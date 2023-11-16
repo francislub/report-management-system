@@ -4,6 +4,8 @@ from tkinter import ttk
 import tkinter as tk
 import mysql.connector
 import random
+from tkcalendar import DateEntry
+from datetime import datetime
 import tkinter.messagebox
 from tkinter import messagebox
 class Teacher_win:
@@ -93,15 +95,17 @@ class Teacher_win:
         classL=Label(labelframeleft,text="Class",font=("times new roman",12,"bold"),padx=2,pady=6)
         classL.grid(row=4,column=0,sticky=W)
         
-        lblAge=Label(labelframeleft,text="Age",font=("times new roman",12,"bold"),padx=2,pady=6)
-        lblAge.grid(row=5,column=0,sticky=W)
-        txtAge=ttk.Entry(labelframeleft,textvariable=self.var_age,width=29,font=("times new roman",13,"bold"))
-        txtAge.grid(row=5,column=1)
-        
         lblDOB=Label(labelframeleft,text="Date Of Birth",font=("times new roman",12,"bold"),padx=2,pady=6)
-        lblDOB.grid(row=6,column=0,sticky=W)
-        txtDOB=ttk.Entry(labelframeleft,textvariable=self.var_dob,width=29,font=("times new roman",13,"bold"))
-        txtDOB.grid(row=6,column=1)
+        lblDOB.grid(row=5,column=0,sticky=W)
+        # Use DateEntry widget instead of ttk.Entry
+        txtDOB = DateEntry(labelframeleft, width=27, font=("times new roman", 13, "bold"))
+        txtDOB.grid(row=5, column=1)
+        txtDOB.bind("<<DateEntrySelected>>", self.update_age)
+        
+        lblAge=Label(labelframeleft,text="Age",font=("times new roman",12,"bold"),padx=2,pady=6)
+        lblAge.grid(row=6,column=0,sticky=W)
+        txtAge=ttk.Entry(labelframeleft,textvariable=self.var_age,width=29,font=("times new roman",13,"bold"))
+        txtAge.grid(row=6,column=1)
         
         lblNationality=Label(labelframeleft,text="Nationality",font=("times new roman",12,"bold"),padx=2,pady=6)
         lblNationality.grid(row=7,column=0,sticky=W)

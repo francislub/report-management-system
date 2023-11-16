@@ -94,8 +94,8 @@ class IMS:
         # Create a Menu for Settings dropdown
         self.termYear = Menu(root, tearoff=0)
         self.termYear.configure(font=("times new roman", 16, "bold"))  # Apply the same font as the Settings button
-        self.termYear.add_command(label="Year",command=self.year_details, font=("times new roman", 16, "bold"))  # Apply font to dropdown items
-        self.termYear.add_command(label="Term",command=self.term_details, font=("times new roman", 16, "bold"))  # Apply font to dropdown items
+        self.termYear.add_command(label="Year",command=self.show_loading_year, font=("times new roman", 16, "bold"))  # Apply font to dropdown items
+        self.termYear.add_command(label="Term",command=self.show_loading_term, font=("times new roman", 16, "bold"))  # Apply font to dropdown items
         
         # Function to display the Settings dropdown
         def show_TermYear():
@@ -110,8 +110,8 @@ class IMS:
         # Create a Menu for Settings dropdown
         self.classSubject = Menu(root, tearoff=0)
         self.classSubject.configure(font=("times new roman", 16, "bold"))  # Apply the same font as the Settings button
-        self.classSubject.add_command(label="Classes",command=self.class_details, font=("times new roman", 16, "bold"))  # Apply font to dropdown items
-        self.classSubject.add_command(label="Subjects",command=self.subject_details, font=("times new roman", 16, "bold"))  # Apply font to dropdown items
+        self.classSubject.add_command(label="Classes",command=self.show_loading_class, font=("times new roman", 16, "bold"))  # Apply font to dropdown items
+        self.classSubject.add_command(label="Subjects",command=self.show_loading_subject, font=("times new roman", 16, "bold"))  # Apply font to dropdown items
         
         # Function to display the Settings dropdown
         def show_classSubject():
@@ -123,7 +123,7 @@ class IMS:
         btn_classSubject.pack(side=TOP, fill=X)
         
         btn_teachers = Button(LeftMenu,text="Teachers",command=self.show_loading_message,image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",16,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
-        btn_grading = Button(LeftMenu,text="Grading",command=self.grade_details,image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",16,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
+        btn_grading = Button(LeftMenu,text="Grading",command=self.show_loading_grade,image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",16,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
         btn_reportTermination = Button(LeftMenu,text="Report Termination",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",13,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
         btn_reportGeneration = Button(LeftMenu,text="Report Generation",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",14,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
         
@@ -215,7 +215,7 @@ class IMS:
        
         #========footer================
         lbl_footer = Label(self.root,text="Report Management System | Developed by LarksTeckHub \nFor any Technical Issue Contact: 0741789121",font=("times new roman",12),bg="#4d636d",fg="white").pack(side=BOTTOM, fill=X)
-        
+    #########################################  
     def show_loading_message(self):
         self.loading_label = Label(self.root, text="Loading...", font=("times new roman", 20, "bold"))
         self.loading_label.pack()
@@ -223,26 +223,56 @@ class IMS:
         
     def cust_details(self):
         self.loading_label.destroy()
-
-        # Create a new window for customer details
-        #self.new_window = Toplevel(self.root)
-        #self.app = Teacher_win(self.new_window)
         self.new_window=Toplevel(self.root)
         self.app=Teacher_win(self.new_window)
+    #########################################  
+    def show_loading_term(self):
+        self.loading_label = Label(self.root, text="Loading...", font=("times new roman", 20, "bold"))
+        self.loading_label.pack()
+        self.root.after(1000, self.term_details)  # After 30 seconds, show another window
         
     def term_details(self):
+        self.loading_label.destroy()
         self.new_window=Toplevel(self.root)
         self.app=termYear(self.new_window)
+    #########################################  
+    def show_loading_year(self):
+        self.loading_label = Label(self.root, text="Loading...", font=("times new roman", 20, "bold"))
+        self.loading_label.pack()
+        self.root.after(1000, self.year_details)  # After 30 seconds, show another window
     def year_details(self):
+        self.loading_label.destroy()
         self.new_window=Toplevel(self.root)
         self.app=Year(self.new_window)
+    
+    #########################################  
+    def show_loading_class(self):
+        self.loading_label = Label(self.root, text="Loading...", font=("times new roman", 20, "bold"))
+        self.loading_label.pack()
+        self.root.after(1000, self.class_details)  # After 30 seconds, show another window
+        
     def class_details(self):
+        self.loading_label.destroy()
         self.new_window=Toplevel(self.root)
         self.app=cL(self.new_window)
+        
+    #########################################  
+    def show_loading_subject(self):
+        self.loading_label = Label(self.root, text="Loading...", font=("times new roman", 20, "bold"))
+        self.loading_label.pack()
+        self.root.after(1000, self.subject_details)  # After 30 seconds, show another window
     def subject_details(self):
+        self.loading_label.destroy()
         self.new_window=Toplevel(self.root)
         self.app=Subject(self.new_window)
+        
+    #########################################  
+    def show_loading_grade(self):
+        self.loading_label = Label(self.root, text="Loading...", font=("times new roman", 20, "bold"))
+        self.loading_label.pack()
+        self.root.after(1000, self.grade_details)  # After 30 seconds, show another window
     def grade_details(self):
+        self.loading_label.destroy()
         self.new_window=Toplevel(self.root)
         self.app=Grade(self.new_window)
     def logout(self):
