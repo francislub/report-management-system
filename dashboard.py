@@ -83,6 +83,7 @@ class IMS:
         label_user_role = Label(LeftMenu, text=f"Role: {user_role}",bg="#4d636d", padx=5,font=("times new roman",16,"bold"))
         label_user_role.pack(side="top", fill="x")
         
+        
         ########################Buttons#############################################
         self.icon_side = PhotoImage(file="images/side.png")
         new_width, new_height = 25, 25  # Set the new dimensions
@@ -216,11 +217,16 @@ class IMS:
         lbl_footer = Label(self.root,text="Report Management System | Developed by LarksTeckHub \nFor any Technical Issue Contact: 0741789121",font=("times new roman",12),bg="#4d636d",fg="white").pack(side=BOTTOM, fill=X)
         
     def show_loading_message(self):
-        loading_label = Label(self.root, text="Loading...", font=("times new roman", 20, "bold"))
-        loading_label.pack()
+        self.loading_label = Label(self.root, text="Loading...", font=("times new roman", 20, "bold"))
+        self.loading_label.pack()
         self.root.after(1000, self.cust_details)  # After 30 seconds, show another window
         
     def cust_details(self):
+        self.loading_label.destroy()
+
+        # Create a new window for customer details
+        #self.new_window = Toplevel(self.root)
+        #self.app = Teacher_win(self.new_window)
         self.new_window=Toplevel(self.root)
         self.app=Teacher_win(self.new_window)
         

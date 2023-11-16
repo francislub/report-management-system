@@ -22,6 +22,7 @@ class Teacher_win:
         self.var_status=StringVar()
         self.var_class=StringVar()
         self.var_age=StringVar()
+        self.var_dob=StringVar()
         self.var_nationality=StringVar()
         self.var_address=StringVar()
         
@@ -97,17 +98,22 @@ class Teacher_win:
         txtAge=ttk.Entry(labelframeleft,textvariable=self.var_age,width=29,font=("times new roman",13,"bold"))
         txtAge.grid(row=5,column=1)
         
+        lblDOB=Label(labelframeleft,text="Date Of Birth",font=("times new roman",12,"bold"),padx=2,pady=6)
+        lblDOB.grid(row=6,column=0,sticky=W)
+        txtDOB=ttk.Entry(labelframeleft,textvariable=self.var_dob,width=29,font=("times new roman",13,"bold"))
+        txtDOB.grid(row=6,column=1)
+        
         lblNationality=Label(labelframeleft,text="Nationality",font=("times new roman",12,"bold"),padx=2,pady=6)
-        lblNationality.grid(row=6,column=0,sticky=W)
+        lblNationality.grid(row=7,column=0,sticky=W)
         combo_Nationality=ttk.Combobox(labelframeleft,textvariable=self.var_nationality,width=27,font=("times new roman",13,"bold"))
         combo_Nationality["value"]=("Select","Ugandan","Kenyan","Tanzania","Others")
         combo_Nationality.current(0)
-        combo_Nationality.grid(row=6,column=1)
+        combo_Nationality.grid(row=7,column=1)
         
         lblAddress=Label(labelframeleft,text="Address",font=("times new roman",12,"bold"),padx=2,pady=6)
-        lblAddress.grid(row=7,column=0,sticky=W)
+        lblAddress.grid(row=8,column=0,sticky=W)
         txtAddress=ttk.Entry(labelframeleft,textvariable=self.var_address,width=29,font=("times new roman",13,"bold"))
-        txtAddress.grid(row=7,column=1)
+        txtAddress.grid(row=8,column=1)
         #================btn===========================================
         btn_frame=Frame(labelframeleft,bd=2,relief=RIDGE)
         btn_frame.place(x=0,y=420,width=760,height=550)
