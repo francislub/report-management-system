@@ -175,9 +175,13 @@ class Teacher_win:
             try:
                 conn = mysql.connector.connect(host="localhost", user="root", password="francis121", database="report")
                 my_cursor = conn.cursor()
-                
-                if self.var_ref is not None:
+                # Check if subjectID  already exists
+                my_cursor.execute("SELECT * FROM teacher WHERE ref = %s", (self.var_ref.get(),))
+                existing_record = my_cursor.fetchone()
+
+                if existing_record:
                     messagebox.showerror("Error", "Teacher reference already exists. Please enter a different reference.", parent=self.root)
+                
                 else:
                     my_cursor.execute("insert into teacher values(%s, %s, %s, %s, %s, %s, %s)", (
                         self.var_ref.get(),
@@ -227,7 +231,7 @@ class Teacher_win:
        else:
            conn=mysql.connector.connect(host="localhost",username="root",password="francis121",database="report")
            my_cursor=conn.cursor()
-           my_cursor.execute("update  teacher set Name=%s,Gender=%s,Mobile=%s,Email=%s,Nationality=%s,Address=%s where Ref=%s",(
+           my_cursor.execute("update  teacher set Name=%s,Gender=%s,Mobile=%s,Email=%s,Nationality=%s,Address=%s where Reff=%s",(
                    self.var_teacher_name.get(),
                    self.var_gender.get(),
                    self.var_mobile.get(),
@@ -256,16 +260,7 @@ class Teacher_win:
        self.fetch_data()
        conn.close()
        self.reset()
-    #def reset(self):
-       #self.var_ref.set(""),
-       #self.var_teacher_name.set(""),
-       #self.var_gender.set(""),
-       #self.var_mobile.set(""),
-       #self.var_email.set(""),
-       #self.var_nationality.set(""),
-       #self.var_address.set("")
-       #x=random.randint(1000,9999)
-       #self.var_ref.set(str(x))
+
     def reset(self):
         try:
             # Fetch the last reference from the database

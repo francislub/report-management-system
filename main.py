@@ -103,15 +103,16 @@ def userLogin():
 
 
 app = ctk.CTk()
-app.geometry("1400x900")
+#app.geometry("1400x900")
+app.geometry("1450x730+0+0")
 app.title("STUDENT REPORT GENERATING SYSTEM")
 
 ctk.set_default_color_theme("green")  # Themes: "blue" (standard), "green", "dark-blue"
 ctk.set_appearance_mode("dark")
 
-logo = PhotoImage(file="logo.png")
-logo_label = ctk.CTkLabel(app, image=logo)
-logo_label.place(x=500, y=0)
+#logo = PhotoImage(file="images/logo.png")
+#logo_label = ctk.CTkLabel(app, image=logo)
+#logo_label.place(x=500, y=0)
 
 title_label = ctk.CTkLabel(
     app,
@@ -120,10 +121,10 @@ title_label = ctk.CTkLabel(
         size=40,
         weight="bold",
         family="Microsoft YaHei UI Light"))
-title_label.place(x=280, y=300)
+title_label.place(x=280, y=150)
 
 mainFrame = ctk.CTkFrame(master=app, width=500, height=200)
-mainFrame.place(x=430, y=400)
+mainFrame.place(x=400, y=300)
 
 select_label = ctk.CTkLabel(mainFrame,
                         text="Select Role",
@@ -135,7 +136,7 @@ select_label.grid(row=0, column=2, pady=20)
 
 roles_list = ["Director Of Studies (DOS)", "Secretary/Teacher", "Admin"]
 
-role_menu = ctk.CTkComboBox(mainFrame, values=roles_list, width=300)
+role_menu = ctk.CTkComboBox(mainFrame, values=roles_list, width=400)
 role_menu.grab_current()
 role_menu.grid(row=1, column=2, padx=100, pady=10)
 

@@ -5,6 +5,8 @@ import mysql.connector
 import random
 from time import strftime
 from teacher import Teacher_win
+#from teacherDash import Teacher
+import colorsys
 from term import termYear
 from year import Year
 from classL import cL
@@ -16,8 +18,8 @@ class IMS:
         self.root.geometry("1450x730+0+0")
         self.root.overrideredirect(True)
         self.root.title('Color Changer')
-        # List of colors
-        colors = ["#ff5733", "#33ff57", "#3357ff", "#ff33a6", "#a633ff"]
+        #List of colors
+        colors = ["#010c48","#ff5733", "#33ff57", "#3357ff", "#ff33a6", "#a633ff"]
 
         # Function to change the background color
         def change_color():
@@ -27,7 +29,6 @@ class IMS:
 
         # Call the change_color function to start changing the color
         change_color()
-        #self.root.configure(bg="black")
         self.root .title("Report Management System | Developed by LarksTeckHub")
         
         
@@ -126,6 +127,7 @@ class IMS:
         btn_grading = Button(LeftMenu,text="Grading",command=self.show_loading_grade,image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",16,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
         btn_reportTermination = Button(LeftMenu,text="Report Termination",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",13,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
         btn_reportGeneration = Button(LeftMenu,text="Report Generation",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",14,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
+        btn_teachDash = Button(LeftMenu,text="Teacher's Dash",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",16,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
         
         ################## SETTINGS####################################################
         # Create a Menu for Settings dropdown
@@ -147,12 +149,66 @@ class IMS:
         #btn_settings['menu'] = self.settings_menu 
          
         btn_logout = Button(LeftMenu,text="Logout",command=self.logout,image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",16,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
+        #========footer================
         
+        lbl_footer = Label(self.root,text="Report Management System | Developed by LarksTeckHub \nFor any Technical Issue Contact: 0741789121",font=("times new roman",12),bg="#4d636d",fg="white").pack(side=BOTTOM, fill=X)
+   
         #===============content==================
-        self.lbl_student=Label(self.root,text="Total Students\n[0]",bd=5,relief=RIDGE,bg="#33bbf9",fg="white",font=("goudy old style",20,"bold"))
-        self.lbl_student.place(x=250,y=120,height=100,width=200)
-        #####################################################
+        ###############################################################
+        # Display total students
+        self.lbl_student = Label(self.root, text="", bd=5, relief=RIDGE, bg="#33bbf9", fg="white", font=("goudy old style", 20, "bold"))
+        self.lbl_student.place(x=250, y=120, height=100, width=200)
+        
         # Connect to the MySQL database
+        self.mydb = mysql.connector.connect(host="localhost", user="root", password="francis121", database="report")
+
+        # Create a cursor object to execute SQL queries
+        self.mycursor = self.mydb.cursor()
+
+        # Initialize the slide index
+        self.slide_index = 0
+
+        # Schedule the slide show
+        self.update_slideshowStudent()
+
+    def update_slideshowStudent(self):
+        # Execute queries to get relevant information
+        queries = [
+            "SELECT COUNT(*) FROM student",
+            "SELECT COUNT(*) FROM student WHERE gender = 'Female'",
+            "SELECT COUNT(*) FROM student WHERE gender = 'Male'",
+            "SELECT class, COUNT(*) FROM student GROUP BY class"
+        ]
+
+        self.mycursor.execute(queries[self.slide_index])
+
+        if self.slide_index == 0:
+            result = self.mycursor.fetchone()
+            total_students = result[0]
+            self.lbl_student.config(text=f"Total Students\n{total_students}")
+
+        elif self.slide_index == 1:
+            result = self.mycursor.fetchone()
+            total_girls = result[0]
+            self.lbl_student.config(text=f"Total Girls\n{total_girls}")
+
+        elif self.slide_index == 2:
+            result = self.mycursor.fetchone()
+            total_boys = result[0]
+            self.lbl_student.config(text=f"Total Boys\n{total_boys}")
+
+        elif self.slide_index == 3:
+            results = self.mycursor.fetchall()
+            class_info = "\n".join([f"{row[0]}: {row[1]}" for row in results])
+            self.lbl_student.config(text=f"Total Students in Each Class\n{class_info}")
+
+        # Increment the slide index
+        self.slide_index = (self.slide_index + 1) % 4
+
+        # Schedule the next update after 3000 milliseconds (3 seconds)
+        self.root.after(3000, self.update_slideshowStudent)
+        #####################################################
+               # Connect to the MySQL database
         mydb = mysql.connector.connect(host="localhost",user="root",password="francis121",database="report")
 
         # Create a cursor object to execute SQL queries
@@ -209,13 +265,26 @@ class IMS:
         self.lbl_term = Label(self.root, text=f"Total Term\n{total_term}", bd=5, relief=RIDGE, bg="#607d8b", fg="white", font=("goudy old style", 20, "bold"))
         self.lbl_term.place(x=850, y=120, height=100, width=200)
        #########################################################
-        self.lbl_user=Label(self.root,text="Total Users\n[0]",bd=5,relief=RIDGE,bg="#ffc107",fg="white",font=("goudy old style",20,"bold"))
-        self.lbl_user.place(x=1050,y=120,height=100,width=200)
+       # Connect to the MySQL database
+        mydb = mysql.connector.connect(host="localhost",user="root",password="francis121",database="report")
+
+        # Create a cursor object to execute SQL queries
+        mycursor = mydb.cursor()
+
+        # Execute an SQL query to get the total number of user
+        mycursor.execute("SELECT COUNT(*) FROM user")
+
+        # Fetch the result of the query
+        result = mycursor.fetchone()
+
+        # Get the total number of user from the result
+        total_term = result[0]
+
+        # Display the total number of user
+        self.lbl_sales = Label(self.root, text=f"Total Users\n{total_term}", bd=5, relief=RIDGE, bg="#ffc107", fg="white", font=("goudy old style", 20, "bold"))
+        self.lbl_sales.place(x=1050, y=120, height=100, width=200)
        
-       
-        #========footer================
-        lbl_footer = Label(self.root,text="Report Management System | Developed by LarksTeckHub \nFor any Technical Issue Contact: 0741789121",font=("times new roman",12),bg="#4d636d",fg="white").pack(side=BOTTOM, fill=X)
-    #########################################  
+        #########################################  
     def show_loading_message(self):
         self.loading_label = Label(self.root, text="Loading...", font=("times new roman", 20, "bold"))
         self.loading_label.pack()
@@ -275,6 +344,18 @@ class IMS:
         self.loading_label.destroy()
         self.new_window=Toplevel(self.root)
         self.app=Grade(self.new_window)
+
+        
+    #########################################  
+    #def show_loading_dash(self):
+    #    self.loading_label = Label(self.root, text="Loading...", font=("times new roman", 20, "bold"))
+    #    self.loading_label.pack()
+    #    self.root.after(1000, self.teacherDash_details)  # After 30 seconds, show another window
+    #def teacherDash_details(self):
+    #    self.loading_label.destroy()
+    #    self.new_window=Toplevel(self.root)
+    #    self.app=Teacher(self.teacherDash_details)
+        
     def logout(self):
         logout = tkinter.messagebox.askyesno("Report Management System", "Confirm if you want to log out", parent=self.root)
         if logout:

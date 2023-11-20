@@ -8,7 +8,7 @@ from tkcalendar import DateEntry
 from datetime import datetime
 import tkinter.messagebox
 from tkinter import messagebox
-class Teacher_win:
+class Student:
     def __init__(self,root):
         self.root=root
         self.root.title("Report Management System")
@@ -41,9 +41,25 @@ class Teacher_win:
         
         lblimg=Label(self.root,image=self.photoImage2,bd=0,relief=RIDGE)
         lblimg.place(x=5,y=2,width=100,height=40)
+        
+        #===========Left Menu==============
+        LeftMenu = Frame(self.root,bd=2,relief=RIDGE, bg="white")
+        LeftMenu.place(x=5,y=50,width=420,height=170)
+        
+        # Placeholder for user's photo (Assumed as a box)
+        user_photo_placeholder = Label(LeftMenu, text="User Photo", bg="lightgray", height=10)
+        user_photo_placeholder.pack(side="top", fill="x")
+        #===================1st Image=====================================================
+        Img=Image.open(r"C:\Users\USER\Desktop\summer\PYTHON PROJECTS TKINTER\report-management-system\images/s4.jpg")
+        Img=Img.resize((500,170),Image.LANCZOS)
+        self.photoImg=ImageTk.PhotoImage(Img)
+        
+        lblimg=Label(LeftMenu,image=self.photoImg,bd=4,relief=RIDGE)
+        lblimg.place(x=0,y=0,width=420,height=170)
+        
         #===================labelframe====================================================
         labelframeleft=LabelFrame(self.root,bd=2,relief=RIDGE,text="Student Details",font=("times new roman",18,"bold"),padx=2)
-        labelframeleft.place(x=5,y=50,width=425,height=500)
+        labelframeleft.place(x=5,y=210,width=425,height=500)
         #====================labels and entrys=========================================
         lbl_student_ref = Label(labelframeleft, text="Student Ref", font=("times new roman", 12, "bold"), padx=2, pady=6)
         lbl_student_ref.grid(row=0, column=0, sticky=W)
@@ -98,15 +114,15 @@ class Teacher_win:
         lblDOB=Label(labelframeleft,text="Date Of Birth",font=("times new roman",12,"bold"),padx=2,pady=6)
         lblDOB.grid(row=5,column=0,sticky=W)
         # Use DateEntry widget instead of ttk.Entry
-        txtDOB = DateEntry(labelframeleft, width=27, font=("times new roman", 13, "bold"))
-        txtDOB.grid(row=5, column=1)
-        txtDOB.bind("<<DateEntrySelected>>", self.update_age)
+        self.txtDOB = DateEntry(labelframeleft,textvariable=self.var_dob, width=27, font=("times new roman", 13, "bold"))
+        self.txtDOB.grid(row=5, column=1)
+        self.txtDOB.bind("<<DateEntrySelected>>", self.update_age)
         
         lblAge=Label(labelframeleft,text="Age",font=("times new roman",12,"bold"),padx=2,pady=6)
         lblAge.grid(row=6,column=0,sticky=W)
         txtAge=ttk.Entry(labelframeleft,textvariable=self.var_age,width=29,font=("times new roman",13,"bold"))
         txtAge.grid(row=6,column=1)
-        
+            
         lblNationality=Label(labelframeleft,text="Nationality",font=("times new roman",12,"bold"),padx=2,pady=6)
         lblNationality.grid(row=7,column=0,sticky=W)
         combo_Nationality=ttk.Combobox(labelframeleft,textvariable=self.var_nationality,width=27,font=("times new roman",13,"bold"))
@@ -120,18 +136,18 @@ class Teacher_win:
         txtAddress.grid(row=8,column=1)
         #================btn===========================================
         btn_frame=Frame(labelframeleft,bd=2,relief=RIDGE)
-        btn_frame.place(x=0,y=420,width=760,height=550)
+        btn_frame.place(x=0,y=400,width=760,height=50)
         
-        btnAdd=Button(btn_frame,text="Add",font=("arial",11,"bold"),bg="black",fg="gold",width=8)
+        btnAdd=Button(btn_frame,text="Add",command=self.add_data,font=("arial",11,"bold"),bg="black",fg="gold",width=8)
         btnAdd.grid(row=0,column=0,padx=1)
         
-        btnUpdate=Button(btn_frame,text="Update",font=("arial",11,"bold"),bg="black",fg="gold",width=8)
+        btnUpdate=Button(btn_frame,text="Update",command=self.update,font=("arial",11,"bold"),bg="black",fg="gold",width=8)
         btnUpdate.grid(row=0,column=1,padx=1)
         
-        btnDelete=Button(btn_frame,text="Delete",font=("arial",11,"bold"),bg="black",fg="gold",width=8)
+        btnDelete=Button(btn_frame,text="Delete",command=self.Delete,font=("arial",11,"bold"),bg="black",fg="gold",width=8)
         btnDelete.grid(row=0,column=2,padx=1)
         
-        btnReset=Button(btn_frame,text="Reset",font=("arial",11,"bold"),bg="black",fg="gold",width=8)
+        btnReset=Button(btn_frame,text="Reset",command=self.reset,font=("arial",11,"bold"),bg="black",fg="gold",width=8)
         btnReset.grid(row=0,column=3,padx=1)
         
         btnExit=Button(btn_frame,text="Exit",font=("arial",11,"bold"),bg="black",fg="gold",width=8)
@@ -139,7 +155,7 @@ class Teacher_win:
         
         #===============table===============
         Table_Frame=LabelFrame(self.root,bd=2,relief=RIDGE,text="View Details and Search System",font=("arial",12,"bold"))
-        Table_Frame.place(x=435,y=50,width=915,height=490)
+        Table_Frame.place(x=435,y=50,width=915,height=530)
         
         lblSearchBy=Label(Table_Frame,text="Search By:",font=("times new roman",12,"bold"),bg="red",fg="white")
         lblSearchBy.grid(row=0,column=0,sticky=W,padx=2)
@@ -162,12 +178,12 @@ class Teacher_win:
         
         #================Show data table===========================================
         details_table=Frame(Table_Frame,bd=2,relief=RIDGE)
-        details_table.place(x=0,y=50,width=890,height=400)
+        details_table.place(x=0,y=80,width=890,height=400)
         
         Scrollbar_x=ttk.Scrollbar(details_table,orient=HORIZONTAL)
         Scrollbar_y=ttk.Scrollbar(details_table,orient=VERTICAL)
         
-        self.Cust_Details_Table=ttk.Treeview(details_table,columns=("ref","name","gender","status","class","nationality","address"),xscrollcommand=Scrollbar_x.set,yscrollcommand=Scrollbar_y.set)
+        self.Cust_Details_Table=ttk.Treeview(details_table,columns=("ref","name","gender","status","class","dob","age","nationality","address"),xscrollcommand=Scrollbar_x.set,yscrollcommand=Scrollbar_y.set)
         Scrollbar_x.pack(side=BOTTOM,fill=X)
         Scrollbar_y.pack(side=RIGHT,fill=Y)
         
@@ -180,15 +196,19 @@ class Teacher_win:
         self.Cust_Details_Table.heading("gender",text="Gender", anchor=tk.CENTER)
         self.Cust_Details_Table.heading("status",text="Status", anchor=tk.CENTER)
         self.Cust_Details_Table.heading("class",text="Class", anchor=tk.CENTER)
+        self.Cust_Details_Table.heading("dob",text="Date Of Birth", anchor=tk.CENTER)
+        self.Cust_Details_Table.heading("age",text="Age", anchor=tk.CENTER)
         self.Cust_Details_Table.heading("nationality",text="Nationality", anchor=tk.CENTER)
         self.Cust_Details_Table.heading("address",text="Address", anchor=tk.CENTER)
         
         self.Cust_Details_Table["show"]="headings"
         self.Cust_Details_Table.column("ref",width=100, anchor=tk.CENTER)
-        self.Cust_Details_Table.column("name",width=400, anchor=tk.CENTER)
+        self.Cust_Details_Table.column("name",width=300)
         self.Cust_Details_Table.column("gender",width=100, anchor=tk.CENTER)
         self.Cust_Details_Table.column("status",width=200, anchor=tk.CENTER)
         self.Cust_Details_Table.column("class",width=250, anchor=tk.CENTER)
+        self.Cust_Details_Table.column("dob",width=250, anchor=tk.CENTER)
+        self.Cust_Details_Table.column("age",width=100, anchor=tk.CENTER)
         self.Cust_Details_Table.column("nationality",width=100, anchor=tk.CENTER)
         self.Cust_Details_Table.column("address",width=150,anchor=tk.CENTER)
         
@@ -196,23 +216,89 @@ class Teacher_win:
         self.Cust_Details_Table.bind("<ButtonRelease-1>",self.get_cusrsor)
         self.fetch_data()
         
+        # Add buttons for navigation
+        self.prev_button = Button(Table_Frame, text="Previous", command=self.show_previous_table)
+        self.prev_button.place(x=2, y=45)
+
+        self.next_button = Button(Table_Frame, text="Next", command=self.show_next_table)
+        self.next_button.place(x=850, y=45)
+        
+        # Create the label widget
+        self.class_label = Label(Table_Frame, text="", font=("times new roman", 20, "bold"), fg="green")
+        self.class_label.place(x=200, y=40)
+
+        #####################################
+        self.current_class_index = 0
+
+        # Fetch all distinct classes from the database
+        self.class_list = self.get_distinct_classes()
+
+        # Show the first class table
+        self.show_class_table()
+
+    def get_distinct_classes(self):
+        conn = mysql.connector.connect(host="localhost", username="root", password="francis121", database="report")
+        my_cursor = conn.cursor()
+        my_cursor.execute("SELECT DISTINCT class FROM student")
+        classes = my_cursor.fetchall()
+        conn.close()
+        return classes
+
+    def show_class_table(self):
+        if self.class_list:
+            current_class = self.class_list[self.current_class_index][0]
+
+            conn = mysql.connector.connect(host="localhost", username="root", password="francis121", database="report")
+            my_cursor = conn.cursor()
+            my_cursor.execute("SELECT * FROM student WHERE class = %s", (current_class,))
+            rows = my_cursor.fetchall()
+
+            if len(rows) != 0:
+                self.Cust_Details_Table.delete(*self.Cust_Details_Table.get_children())
+                for i in rows:
+                    self.Cust_Details_Table.insert("", END, values=i)
+                conn.close()
+
+        # Create the label widget
+        #self.class_label = Label(Table_Frame, text="", font=("times new roman", 20, "bold"), fg="green")
+        #self.class_label.place(x=750, y=110)
+
+        # Update the label to show the current class
+        self.class_label.config(text=f"These are students from: {current_class}")
+
+
+    def show_next_table(self):
+        if self.current_class_index < len(self.class_list) - 1:
+            self.current_class_index += 1
+            self.show_class_table()
+
+    def show_previous_table(self):
+        if self.current_class_index > 0:
+            self.current_class_index -= 1
+            self.show_class_table()
+        
     def add_data(self):
-        if self.var_mobile.get() == "" or self.var_teacher_name.get() == "":
+        if self.var_ref.get() == "" or self.var_student_name.get() == "":
             messagebox.showerror("Error", "All fields are required", parent=self.root)
         else:
             try:
                 conn = mysql.connector.connect(host="localhost", user="root", password="francis121", database="report")
                 my_cursor = conn.cursor()
-                
-                if self.var_ref is not None:
-                    messagebox.showerror("Error", "Teacher reference already exists. Please enter a different reference.", parent=self.root)
+                # Check if subjectID  already exists
+                my_cursor.execute("SELECT * FROM student WHERE ref = %s", (self.var_ref.get(),))
+                existing_record = my_cursor.fetchone()
+
+                if existing_record:
+                    messagebox.showerror("Error", "Student reference already exists. Please enter a different reference.", parent=self.root)
                 else:
-                    my_cursor.execute("insert into teacher values(%s, %s, %s, %s, %s, %s, %s)", (
+                    my_cursor.execute("insert into student values(%s, %s, %s, %s, %s, %s, %s,%s,%s)", (
                         self.var_ref.get(),
-                        self.var_teacher_name.get(),
+                        self.var_student_name.get(),
                         self.var_gender.get(),
-                        self.var_mobile.get(),
-                        self.var_email.get(),
+                        self.var_status.get(),
+                        self.var_class.get(),
+                        self.var_dob.get(),
+                        self.var_age.get(),
                         self.var_nationality.get(),
                         self.var_address.get()
                     ))
@@ -220,14 +306,14 @@ class Teacher_win:
                     self.fetch_data()
                     self.reset()
                     conn.close()
-                    messagebox.showinfo("Success", "Teacher has been added successfully", parent=self.root)
+                    messagebox.showinfo("Success", "Student has been added successfully", parent=self.root)
             except Exception as es:
                 messagebox.showwarning("Warning", f"Something went wrong: {str(es)}", parent=self.root)
 
     def fetch_data(self):
        conn=mysql.connector.connect(host="localhost",username="root",password="francis121",database="report")
        my_cursor=conn.cursor()
-       my_cursor.execute("select *from teacher")
+       my_cursor.execute("select *from student")
        rows=my_cursor.fetchall()
        if len(rows)!=0:
            self.Cust_Details_Table.delete(*self.Cust_Details_Table.get_children())
@@ -242,24 +328,28 @@ class Teacher_win:
        row=content["values"]
         
        self.var_ref.set(row[0]),
-       self.var_teacher_name.set(row[1]),
+       self.var_student_name.set(row[1]),
        self.var_gender.set(row[2]),
-       self.var_mobile.set(row[3]),
-       self.var_email.set(row[4]),
-       self.var_nationality.set(row[5]),
-       self.var_address.set(row[6])
+       self.var_status.set(row[3]),
+       self.var_class.set(row[4]),
+       self.var_dob.set(row[5]),
+       self.var_age.set(row[6]),
+       self.var_nationality.set(row[7]),
+       self.var_address.set(row[8])
         
     def update(self):
-       if self.var_mobile.get()=="":
-           messagebox.showerror("Error","Please enter mobile number",parent=self.root)
+       if self.var_student_name.get()=="":
+           messagebox.showerror("Error","Please enter the student details to be deleted",parent=self.root)
        else:
            conn=mysql.connector.connect(host="localhost",username="root",password="francis121",database="report")
            my_cursor=conn.cursor()
-           my_cursor.execute("update  teacher set Name=%s,Gender=%s,Mobile=%s,Email=%s,Nationality=%s,Address=%s where Ref=%s",(
-                   self.var_teacher_name.get(),
+           my_cursor.execute("update  student set Name=%s,Gender=%s,Status=%s,Class=%s,DOB=%s,Age=%s,Nationality=%s,Address=%s where Ref=%s",(
+                   self.var_student_name.get(),
                    self.var_gender.get(),
-                   self.var_mobile.get(),
-                   self.var_email.get(),
+                   self.var_status.get(),
+                   self.var_class.get(),
+                   self.var_dob.get(),
+                   self.var_age.get(),
                    self.var_nationality.get(),
                    self.var_address.get(),
                    self.var_ref.get()
@@ -268,13 +358,13 @@ class Teacher_win:
            self.fetch_data()
            conn.close()
            self.reset()
-           messagebox.showinfo("Update","Teacher details has been updated sucessfully",parent=self.root)
+           messagebox.showinfo("Update","Student details has been updated sucessfully",parent=self.root)
     def Delete(self):
-       Delete=messagebox.askyesno("Report Management System","Do you want to delete this Teacher",parent=self.root)
+       Delete=messagebox.askyesno("Report Management System","Do you want to delete this Student",parent=self.root)
        if Delete>0:
            conn=mysql.connector.connect(host="localhost",username="root",password="francis121",database="report")
            my_cursor=conn.cursor()
-           query="delete from teacher where Ref=%s"
+           query="delete from student where Ref=%s"
            value=(self.var_ref.get(),)
            my_cursor.execute(query,value)
        else:
@@ -284,16 +374,7 @@ class Teacher_win:
        self.fetch_data()
        conn.close()
        self.reset()
-    #def reset(self):
-       #self.var_ref.set(""),
-       #self.var_teacher_name.set(""),
-       #self.var_gender.set(""),
-       #self.var_mobile.set(""),
-       #self.var_email.set(""),
-       #self.var_nationality.set(""),
-       #self.var_address.set("")
-       #x=random.randint(1000,9999)
-       #self.var_ref.set(str(x))
+
     def reset(self):
         try:
             # Fetch the last reference from the database
@@ -313,16 +394,20 @@ class Teacher_win:
             print(f"Error fetching or incrementing reference: {e}")
 
         # Reset other variables
-        self.var_teacher_name.set("")
-        self.var_mobile.set("")
-        self.var_email.set("")
+        self.var_student_name.set("")
+        self.var_gender.set("Select")
+        self.var_status.set("Select")
+        self.var_class.set("Select")
+        self.var_dob.set("")
+        self.var_age.set("")
+        self.var_nationality.set("Select")
         self.var_address.set("")
         
     def search(self):
        conn=mysql.connector.connect(host="localhost",user="root",password="francis121",database="report")
        my_cursor=conn.cursor()
         
-       my_cursor.execute("SELECT * FROM teacher WHERE " + str(self.serch_var.get()) + " LIKE %s", ('%' + str(self.txt_search.get()) + '%',))
+       my_cursor.execute("SELECT * FROM student WHERE " + str(self.serch_var.get()) + " LIKE %s", ('%' + str(self.txt_search.get()) + '%',))
 
        rows=my_cursor.fetchall()
        if len(rows)!=0:
@@ -336,7 +421,7 @@ class Teacher_win:
         conn = mysql.connector.connect(host="localhost", user="root", password="francis121", database="report")
         my_cursor = conn.cursor()
 
-        my_cursor.execute("SELECT * FROM teacher")
+        my_cursor.execute("SELECT * FROM student")
         rows = my_cursor.fetchall()
 
         if len(rows) != 0:
@@ -355,7 +440,7 @@ class Teacher_win:
                 cursor = conn.cursor()
 
                 # Execute a query to get the maximum reference value from the database
-                cursor.execute("SELECT MAX(ref) FROM teacher")
+                cursor.execute("SELECT MAX(ref) FROM student")
 
                 # Fetch the result
                 result = cursor.fetchone()
@@ -372,6 +457,16 @@ class Teacher_win:
             except Exception as e:
                 print(f"Error: {e}")
                 return None
+    def update_age(self,event):
+        # Get the selected date of birth
+        dob = self.txtDOB.get_date()
+
+        # Calculate age based on the selected date of birth
+        today = datetime.now()
+        age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
+
+        # Update the age entry
+        self.var_age.set(age)
 
     
     #def Exit(self):
@@ -383,5 +478,5 @@ class Teacher_win:
                     
 if __name__=="__main__":
     root=Tk()
-    obj=Teacher_win(root)
+    obj=Student(root)
     root.mainloop()

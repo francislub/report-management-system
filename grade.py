@@ -19,38 +19,54 @@ class Grade:
         self.var_gradeID.set(str(x))
         
         self.var_class=StringVar()
-        self.var_subject1=StringVar()
-        self.var_teacher1=StringVar()
-        self.var_subject2=StringVar()
-        self.var_teacher2=StringVar()
-        self.var_subject3=StringVar()
-        self.var_teacher3=StringVar()
-        self.var_subject4=StringVar()
-        self.var_teacher4=StringVar()
-        self.var_subject5=StringVar()
-        self.var_teacher5=StringVar()
-        self.var_subject6=StringVar()
-        self.var_teacher6=StringVar()
-        self.var_subject7=StringVar()
-        self.var_teacher7=StringVar()
-        self.var_subject8=StringVar()
-        self.var_teacher8=StringVar()
-        self.var_subject9=StringVar()
-        self.var_teacher9=StringVar()
-        self.var_subject10=StringVar()
-        self.var_teacher10=StringVar()
-        self.var_subject11=StringVar()
-        self.var_teacher11=StringVar()
-        self.var_subject12=StringVar()
-        self.var_teacher12=StringVar()
-        self.var_subject13=StringVar()
-        self.var_teacher13=StringVar()
-        self.var_subject14=StringVar()
-        self.var_teacher14=StringVar()
-        self.var_subject15=StringVar()
-        self.var_teacher15=StringVar()
-        self.var_subject16=StringVar()
-        self.var_teacher16=StringVar()
+        self.var_mark1=StringVar()
+        self.var_mark2=StringVar()
+        self.var_grade1=StringVar()
+        self.var_comm1=StringVar()
+        self.var_mark1_1=StringVar()
+        self.var_mark2_1=StringVar()
+        self.var_grade1_1=StringVar()
+        self.var_comm1_1=StringVar()
+        self.var_mark1_2=StringVar()
+        self.var_mark2_2=StringVar()
+        self.var_grade1_2=StringVar()
+        self.var_comm1_2=StringVar()
+        self.var_mark1_3=StringVar()
+        self.var_mark2_3=StringVar()
+        self.var_grade1_3=StringVar()
+        self.var_comm1_3=StringVar()
+        self.var_mark1_4=StringVar()
+        self.var_mark2_4=StringVar()
+        self.var_grade1_4=StringVar()
+        self.var_comm1_4=StringVar()
+        self.var_mark1_5=StringVar()
+        self.var_mark2_5=StringVar()
+        self.var_grade1_5=StringVar()
+        self.var_comm1_5=StringVar()
+        self.var_mark1_6=StringVar()
+        self.var_mark2_6=StringVar()
+        self.var_grade1_6=StringVar()
+        self.var_comm1_6=StringVar()
+        self.var_mark1_7=StringVar()
+        self.var_mark2_7=StringVar()
+        self.var_grade1_7=StringVar()
+        self.var_comm1_7=StringVar()
+        self.var_mark1_8=StringVar()
+        self.var_mark2_8=StringVar()
+        self.var_grade1_8=StringVar()
+        self.var_comm1_8=StringVar()
+        self.var_mark1_9=StringVar()
+        self.var_mark2_9=StringVar()
+        self.var_grade1_9=StringVar()
+        self.var_comm1_9=StringVar()
+        self.var_mark1_10=StringVar()
+        self.var_mark2_10=StringVar()
+        self.var_grade1_10=StringVar()
+        self.var_comm1_10=StringVar()
+        self.var_mark1_11=StringVar()
+        self.var_mark2_11=StringVar()
+        self.var_grade1_11=StringVar()
+        self.var_comm1_11=StringVar()
         
         #=====================title=======================================================
         lbl_title=Label(self.root,text="GRADE SETTINGS",font=("times new roman",18,"bold"),bg="black",fg="gold",bd=4,relief=RIDGE)
@@ -64,7 +80,7 @@ class Grade:
         lblimg.place(x=5,y=2,width=100,height=40)
         #===================labelframe====================================================
         labelframeleft=LabelFrame(self.root,bd=2,relief=RIDGE,text="Select Class",font=("times new roman",18,"bold"),padx=2)
-        labelframeleft.place(x=400,y=50,width=755,height=120)
+        labelframeleft.place(x=400,y=50,width=755,height=200)
         #====================labels and entrys=========================================
         lbl_grade_ref=Label(labelframeleft,text="Grade ID",font=("times new roman",12,"bold"),padx=2,pady=6)
         lbl_grade_ref.grid(row=0,column=0,sticky=W)
@@ -96,6 +112,17 @@ class Grade:
         classL=Label(labelframeleft,text="Class",font=("times new roman",12,"bold"),padx=2,pady=6)
         classL.grid(row=1,column=0,sticky=W)
         
+        def get_selected_class():
+            # Replace this function with your code to fetch the user's name from the database
+            return "S.1"  
+        
+        # Retrieve user information from the database
+        selected_cl = get_selected_class()
+
+        # Label to display the user's name
+        label_selected_class = Label(labelframeleft, text=f"SET GRADING SYSTEM FOR {selected_cl}", padx=5,font=("times new roman",16,"bold"))
+        label_selected_class.place(x=0,y=100,width=600,height=20)
+        
         #================btn===========================================
         btn_frame=Frame(labelframeleft,bd=2,relief=RIDGE)
         btn_frame.place(x=400,y=10,width=250,height=80)
@@ -116,8 +143,8 @@ class Grade:
         btnExit.grid(row=1,column=1,padx=1)
         
         #===========================Right Frame ==================================
-        labelframeright=LabelFrame(self.root,bd=2,relief=RIDGE,text="Enter The Grading System For Each Class",font=("arial",12,"bold"))
-        labelframeright.place(x=200,y=200,width=1020,height=470)
+        labelframeright=LabelFrame(self.root,bd=2,relief=RIDGE,text="",font=("arial",12,"bold"))
+        labelframeright.place(x=200,y=250,width=1020,height=430)
         #==================================================================================
         #==========================Labels =======================================
         lbl_subject1_ref=Label(labelframeright,text="From",font=("times new roman",12,"bold"),padx=2,pady=6)
@@ -133,149 +160,149 @@ class Grade:
         teacher2.grid(row=0,column=7,sticky=W,padx=40)
         
         #=========================Entries=====================================
-        entry_subject1=ttk.Entry(labelframeright,textvariable=self.var_subject4,width=16,font=("times new roman",13,"bold"))
-        entry_subject1.grid(row=1,column=1,padx=40,pady=5)
+        entry_mark1=ttk.Entry(labelframeright,textvariable=self.var_mark1,width=16,font=("times new roman",13,"bold"))
+        entry_mark1.grid(row=1,column=1,padx=40,pady=5)
         
-        entry_subject2=ttk.Entry(labelframeright,textvariable=self.var_subject4,width=16,font=("times new roman",13,"bold"))
-        entry_subject2.grid(row=1,column=3,padx=40,pady=5)
+        entry_mark2=ttk.Entry(labelframeright,textvariable=self.var_mark2,width=16,font=("times new roman",13,"bold"))
+        entry_mark2.grid(row=1,column=3,padx=40,pady=5)
         
-        entry_subject3=ttk.Entry(labelframeright,textvariable=self.var_subject4,width=16,font=("times new roman",13,"bold"))
-        entry_subject3.grid(row=1,column=5,padx=40,pady=5)
+        entry_grade1=ttk.Entry(labelframeright,textvariable=self.var_grade1,width=16,font=("times new roman",13,"bold"))
+        entry_grade1.grid(row=1,column=5,padx=40,pady=5)
         
-        entry_subject4=ttk.Entry(labelframeright,textvariable=self.var_subject4,width=16,font=("times new roman",13,"bold"))
-        entry_subject4.grid(row=1,column=7,padx=40,pady=5)
+        entry_comm1=ttk.Entry(labelframeright,textvariable=self.var_comm1,width=16,font=("times new roman",13,"bold"))
+        entry_comm1.grid(row=1,column=7,padx=40,pady=5)
         
-        entry_subject5=ttk.Entry(labelframeright,textvariable=self.var_subject4,width=16,font=("times new roman",13,"bold"))
-        entry_subject5.grid(row=2,column=1,padx=40,pady=5)
+        entry_mark1_1=ttk.Entry(labelframeright,textvariable=self.var_mark1_1,width=16,font=("times new roman",13,"bold"))
+        entry_mark1_1.grid(row=2,column=1,padx=40,pady=5)
         
-        entry_subject6=ttk.Entry(labelframeright,textvariable=self.var_subject4,width=16,font=("times new roman",13,"bold"))
-        entry_subject6.grid(row=2,column=3,padx=40,pady=5)
+        entry_mark2_1=ttk.Entry(labelframeright,textvariable=self.var_mark2_1,width=16,font=("times new roman",13,"bold"))
+        entry_mark2_1.grid(row=2,column=3,padx=40,pady=5)
         
-        entry_subject7=ttk.Entry(labelframeright,textvariable=self.var_subject4,width=16,font=("times new roman",13,"bold"))
-        entry_subject7.grid(row=2,column=5,padx=40,pady=5)
+        entry_grade1_1=ttk.Entry(labelframeright,textvariable=self.var_grade1_1,width=16,font=("times new roman",13,"bold"))
+        entry_grade1_1.grid(row=2,column=5,padx=40,pady=5)
         
-        entry_subject8=ttk.Entry(labelframeright,textvariable=self.var_subject4,width=16,font=("times new roman",13,"bold"))
-        entry_subject8.grid(row=2,column=7,padx=40,pady=5)
+        entry_comm1_1=ttk.Entry(labelframeright,textvariable=self.var_comm1_1,width=16,font=("times new roman",13,"bold"))
+        entry_comm1_1.grid(row=2,column=7,padx=40,pady=5)
 
-        entry_subject9=ttk.Entry(labelframeright,textvariable=self.var_subject4,width=16,font=("times new roman",13,"bold"))
-        entry_subject9.grid(row=3,column=1,padx=40,pady=5)
+        entry_mark1_2=ttk.Entry(labelframeright,textvariable=self.var_mark1_2,width=16,font=("times new roman",13,"bold"))
+        entry_mark1_2.grid(row=3,column=1,padx=40,pady=5)
         
-        entry_subject10=ttk.Entry(labelframeright,textvariable=self.var_subject4,width=16,font=("times new roman",13,"bold"))
-        entry_subject10.grid(row=3,column=3,padx=40,pady=5)
+        entry_mark2_2=ttk.Entry(labelframeright,textvariable=self.var_mark2_2,width=16,font=("times new roman",13,"bold"))
+        entry_mark2_2.grid(row=3,column=3,padx=40,pady=5)
         
-        entry_subject11=ttk.Entry(labelframeright,textvariable=self.var_subject4,width=16,font=("times new roman",13,"bold"))
-        entry_subject11.grid(row=3,column=5,padx=40,pady=5)
+        entry_grade1_2=ttk.Entry(labelframeright,textvariable=self.var_grade1_2,width=16,font=("times new roman",13,"bold"))
+        entry_grade1_2.grid(row=3,column=5,padx=40,pady=5)
         
-        entry_subject12=ttk.Entry(labelframeright,textvariable=self.var_subject4,width=16,font=("times new roman",13,"bold"))
-        entry_subject12.grid(row=3,column=7,padx=40,pady=5)
+        entry_comm1_2=ttk.Entry(labelframeright,textvariable=self.var_comm1_2,width=16,font=("times new roman",13,"bold"))
+        entry_comm1_2.grid(row=3,column=7,padx=40,pady=5)
 
-        entry_subject13=ttk.Entry(labelframeright,textvariable=self.var_subject4,width=16,font=("times new roman",13,"bold"))
-        entry_subject13.grid(row=3,column=1,padx=40,pady=5)
+        entry_mark1_3=ttk.Entry(labelframeright,textvariable=self.var_mark1_3,width=16,font=("times new roman",13,"bold"))
+        entry_mark1_3.grid(row=3,column=1,padx=40,pady=5)
         
-        entry_subject14=ttk.Entry(labelframeright,textvariable=self.var_subject4,width=16,font=("times new roman",13,"bold"))
-        entry_subject14.grid(row=3,column=3,padx=40,pady=5)
+        entry_mark2_3=ttk.Entry(labelframeright,textvariable=self.var_mark2_3,width=16,font=("times new roman",13,"bold"))
+        entry_mark2_3.grid(row=3,column=3,padx=40,pady=5)
         
-        entry_subject15=ttk.Entry(labelframeright,textvariable=self.var_subject4,width=16,font=("times new roman",13,"bold"))
-        entry_subject15.grid(row=3,column=5,padx=40,pady=5)
+        entry_grade1_3=ttk.Entry(labelframeright,textvariable=self.var_grade1_3,width=16,font=("times new roman",13,"bold"))
+        entry_grade1_3.grid(row=3,column=5,padx=40,pady=5)
         
-        entry_subject16=ttk.Entry(labelframeright,textvariable=self.var_subject4,width=16,font=("times new roman",13,"bold"))
-        entry_subject16.grid(row=3,column=7,padx=40,pady=5)
+        entry_comm1_3=ttk.Entry(labelframeright,textvariable=self.var_comm1_3,width=16,font=("times new roman",13,"bold"))
+        entry_comm1_3.grid(row=3,column=7,padx=40,pady=5)
 
-        entry_subject17=ttk.Entry(labelframeright,textvariable=self.var_subject4,width=16,font=("times new roman",13,"bold"))
-        entry_subject17.grid(row=4,column=1,padx=40,pady=5)
+        entry_mark1_4=ttk.Entry(labelframeright,textvariable=self.var_mark1_4,width=16,font=("times new roman",13,"bold"))
+        entry_mark1_4.grid(row=4,column=1,padx=40,pady=5)
         
-        entry_subject18=ttk.Entry(labelframeright,textvariable=self.var_subject4,width=16,font=("times new roman",13,"bold"))
-        entry_subject18.grid(row=4,column=3,padx=40,pady=5)
+        entry_mark2_4=ttk.Entry(labelframeright,textvariable=self.var_mark2_4,width=16,font=("times new roman",13,"bold"))
+        entry_mark2_4.grid(row=4,column=3,padx=40,pady=5)
         
-        entry_subject19=ttk.Entry(labelframeright,textvariable=self.var_subject4,width=16,font=("times new roman",13,"bold"))
-        entry_subject19.grid(row=4,column=5,padx=40,pady=5)
+        entry_grade1_4=ttk.Entry(labelframeright,textvariable=self.var_grade1_4,width=16,font=("times new roman",13,"bold"))
+        entry_grade1_4.grid(row=4,column=5,padx=40,pady=5)
         
-        entry_subject20=ttk.Entry(labelframeright,textvariable=self.var_subject4,width=16,font=("times new roman",13,"bold"))
-        entry_subject20.grid(row=4,column=7,padx=40,pady=5)
+        entry_comm1_4=ttk.Entry(labelframeright,textvariable=self.var_comm1_4,width=16,font=("times new roman",13,"bold"))
+        entry_comm1_4.grid(row=4,column=7,padx=40,pady=5)
 
-        entry_subject21=ttk.Entry(labelframeright,textvariable=self.var_subject4,width=16,font=("times new roman",13,"bold"))
-        entry_subject21.grid(row=5,column=1,padx=40,pady=5)
+        entry_mark1_5=ttk.Entry(labelframeright,textvariable=self.var_mark1_5,width=16,font=("times new roman",13,"bold"))
+        entry_mark1_5.grid(row=5,column=1,padx=40,pady=5)
         
-        entry_subject22=ttk.Entry(labelframeright,textvariable=self.var_subject4,width=16,font=("times new roman",13,"bold"))
-        entry_subject22.grid(row=5,column=3,padx=40,pady=5)
+        entry_mark2_5=ttk.Entry(labelframeright,textvariable=self.var_mark2_5,width=16,font=("times new roman",13,"bold"))
+        entry_mark2_5.grid(row=5,column=3,padx=40,pady=5)
         
-        entry_subject23=ttk.Entry(labelframeright,textvariable=self.var_subject4,width=16,font=("times new roman",13,"bold"))
-        entry_subject23.grid(row=5,column=5,padx=40,pady=5)
+        entry_grade1_5=ttk.Entry(labelframeright,textvariable=self.var_grade1_5,width=16,font=("times new roman",13,"bold"))
+        entry_grade1_5.grid(row=5,column=5,padx=40,pady=5)
         
-        entry_subject24=ttk.Entry(labelframeright,textvariable=self.var_subject4,width=16,font=("times new roman",13,"bold"))
-        entry_subject24.grid(row=5,column=7,padx=40,pady=5)
+        entry_comm1_5=ttk.Entry(labelframeright,textvariable=self.var_comm1_5,width=16,font=("times new roman",13,"bold"))
+        entry_comm1_5.grid(row=5,column=7,padx=40,pady=5)
 
-        entry_subject25=ttk.Entry(labelframeright,textvariable=self.var_subject4,width=16,font=("times new roman",13,"bold"))
-        entry_subject25.grid(row=6,column=1,padx=40,pady=5)
+        entry_mark1_6=ttk.Entry(labelframeright,textvariable=self.var_mark1_6,width=16,font=("times new roman",13,"bold"))
+        entry_mark1_6.grid(row=6,column=1,padx=40,pady=5)
         
-        entry_subject26=ttk.Entry(labelframeright,textvariable=self.var_subject4,width=16,font=("times new roman",13,"bold"))
-        entry_subject26.grid(row=6,column=3,padx=40,pady=5)
+        entry_mark2_6=ttk.Entry(labelframeright,textvariable=self.var_mark2_6,width=16,font=("times new roman",13,"bold"))
+        entry_mark2_6.grid(row=6,column=3,padx=40,pady=5)
         
-        entry_subject27=ttk.Entry(labelframeright,textvariable=self.var_subject4,width=16,font=("times new roman",13,"bold"))
-        entry_subject27.grid(row=6,column=5,padx=40,pady=5)
+        entry_grade1_6=ttk.Entry(labelframeright,textvariable=self.var_grade1_6,width=16,font=("times new roman",13,"bold"))
+        entry_grade1_6.grid(row=6,column=5,padx=40,pady=5)
         
-        entry_subject28=ttk.Entry(labelframeright,textvariable=self.var_subject4,width=16,font=("times new roman",13,"bold"))
-        entry_subject28.grid(row=6,column=7,padx=40,pady=5)
+        entry_comm1_6=ttk.Entry(labelframeright,textvariable=self.var_comm1_6,width=16,font=("times new roman",13,"bold"))
+        entry_comm1_6.grid(row=6,column=7,padx=40,pady=5)
 
-        entry_subject29=ttk.Entry(labelframeright,textvariable=self.var_subject4,width=16,font=("times new roman",13,"bold"))
-        entry_subject29.grid(row=7,column=1,padx=40,pady=5)
+        entry_mark1_7=ttk.Entry(labelframeright,textvariable=self.var_mark1_7,width=16,font=("times new roman",13,"bold"))
+        entry_mark1_7.grid(row=7,column=1,padx=40,pady=5)
         
-        entry_subject30=ttk.Entry(labelframeright,textvariable=self.var_subject4,width=16,font=("times new roman",13,"bold"))
-        entry_subject30.grid(row=7,column=3,padx=40,pady=5)
+        entry_mark2_7=ttk.Entry(labelframeright,textvariable=self.var_mark2_7,width=16,font=("times new roman",13,"bold"))
+        entry_mark2_7.grid(row=7,column=3,padx=40,pady=5)
         
-        entry_subject31=ttk.Entry(labelframeright,textvariable=self.var_subject4,width=16,font=("times new roman",13,"bold"))
-        entry_subject31.grid(row=7,column=5,padx=40,pady=5)
+        entry_grade1_7=ttk.Entry(labelframeright,textvariable=self.var_grade1_7,width=16,font=("times new roman",13,"bold"))
+        entry_grade1_7.grid(row=7,column=5,padx=40,pady=5)
         
-        entry_subject32=ttk.Entry(labelframeright,textvariable=self.var_subject4,width=16,font=("times new roman",13,"bold"))
-        entry_subject32.grid(row=7,column=7,padx=40,pady=5)
+        entry_comm1_7=ttk.Entry(labelframeright,textvariable=self.var_comm1_7,width=16,font=("times new roman",13,"bold"))
+        entry_comm1_7.grid(row=7,column=7,padx=40,pady=5)
 
-        entry_subject33=ttk.Entry(labelframeright,textvariable=self.var_subject4,width=16,font=("times new roman",13,"bold"))
-        entry_subject33.grid(row=8,column=1,padx=40,pady=5)
+        entry_mark1_8=ttk.Entry(labelframeright,textvariable=self.var_mark1_8,width=16,font=("times new roman",13,"bold"))
+        entry_mark1_8.grid(row=8,column=1,padx=40,pady=5)
         
-        entry_subject34=ttk.Entry(labelframeright,textvariable=self.var_subject4,width=16,font=("times new roman",13,"bold"))
-        entry_subject34.grid(row=8,column=3,padx=40,pady=5)
+        entry_mark2_8=ttk.Entry(labelframeright,textvariable=self.var_mark2_8,width=16,font=("times new roman",13,"bold"))
+        entry_mark2_8.grid(row=8,column=3,padx=40,pady=5)
         
-        entry_subject35=ttk.Entry(labelframeright,textvariable=self.var_subject4,width=16,font=("times new roman",13,"bold"))
-        entry_subject35.grid(row=8,column=5,padx=40,pady=5)
+        entry_grade1_8=ttk.Entry(labelframeright,textvariable=self.var_grade1_8,width=16,font=("times new roman",13,"bold"))
+        entry_grade1_8.grid(row=8,column=5,padx=40,pady=5)
         
-        entry_subject36=ttk.Entry(labelframeright,textvariable=self.var_subject4,width=16,font=("times new roman",13,"bold"))
-        entry_subject36.grid(row=8,column=7,padx=40,pady=5)
+        entry_comm1_8=ttk.Entry(labelframeright,textvariable=self.var_comm1_8,width=16,font=("times new roman",13,"bold"))
+        entry_comm1_8.grid(row=8,column=7,padx=40,pady=5)
 
-        entry_subject37=ttk.Entry(labelframeright,textvariable=self.var_subject4,width=16,font=("times new roman",13,"bold"))
-        entry_subject37.grid(row=9,column=1,padx=40,pady=5)
+        entry_mark1_9=ttk.Entry(labelframeright,textvariable=self.var_mark1_9,width=16,font=("times new roman",13,"bold"))
+        entry_mark1_9.grid(row=9,column=1,padx=40,pady=5)
         
-        entry_subject38=ttk.Entry(labelframeright,textvariable=self.var_subject4,width=16,font=("times new roman",13,"bold"))
-        entry_subject38.grid(row=9,column=3,padx=40,pady=5)
+        entry_mark2_9=ttk.Entry(labelframeright,textvariable=self.var_mark2_9,width=16,font=("times new roman",13,"bold"))
+        entry_mark2_9.grid(row=9,column=3,padx=40,pady=5)
         
-        entry_subject39=ttk.Entry(labelframeright,textvariable=self.var_subject4,width=16,font=("times new roman",13,"bold"))
-        entry_subject39.grid(row=9,column=5,padx=40,pady=5)
+        entry_grade1_9=ttk.Entry(labelframeright,textvariable=self.var_grade1_9,width=16,font=("times new roman",13,"bold"))
+        entry_grade1_9.grid(row=9,column=5,padx=40,pady=5)
         
-        entry_subject40=ttk.Entry(labelframeright,textvariable=self.var_subject4,width=16,font=("times new roman",13,"bold"))
-        entry_subject40.grid(row=9,column=7,padx=40,pady=5)
+        entry_comm1_9=ttk.Entry(labelframeright,textvariable=self.var_comm1_9,width=16,font=("times new roman",13,"bold"))
+        entry_comm1_9.grid(row=9,column=7,padx=40,pady=5)
 
-        entry_subject41=ttk.Entry(labelframeright,textvariable=self.var_subject4,width=16,font=("times new roman",13,"bold"))
-        entry_subject41.grid(row=10,column=1,padx=40,pady=5)
+        entry_mark1_10=ttk.Entry(labelframeright,textvariable=self.var_mark1_10,width=16,font=("times new roman",13,"bold"))
+        entry_mark1_10.grid(row=10,column=1,padx=40,pady=5)
         
-        entry_subject42=ttk.Entry(labelframeright,textvariable=self.var_subject4,width=16,font=("times new roman",13,"bold"))
-        entry_subject42.grid(row=10,column=3,padx=40,pady=5)
+        entry_mark2_10=ttk.Entry(labelframeright,textvariable=self.var_mark2_10,width=16,font=("times new roman",13,"bold"))
+        entry_mark2_10.grid(row=10,column=3,padx=40,pady=5)
         
-        entry_subject43=ttk.Entry(labelframeright,textvariable=self.var_subject4,width=16,font=("times new roman",13,"bold"))
-        entry_subject43.grid(row=10,column=5,padx=40,pady=5)
+        entry_grade1_10=ttk.Entry(labelframeright,textvariable=self.var_grade1_10,width=16,font=("times new roman",13,"bold"))
+        entry_grade1_10.grid(row=10,column=5,padx=40,pady=5)
         
-        entry_subject44=ttk.Entry(labelframeright,textvariable=self.var_subject4,width=16,font=("times new roman",13,"bold"))
-        entry_subject44.grid(row=10,column=7,padx=40,pady=5)
+        entry_comm1_10=ttk.Entry(labelframeright,textvariable=self.var_comm1_10,width=16,font=("times new roman",13,"bold"))
+        entry_comm1_10.grid(row=10,column=7,padx=40,pady=5)
         
-        entry_subject45=ttk.Entry(labelframeright,textvariable=self.var_subject4,width=16,font=("times new roman",13,"bold"))
-        entry_subject45.grid(row=11,column=1,padx=40,pady=5)
+        entry_mark1_11=ttk.Entry(labelframeright,textvariable=self.var_mark1_11,width=16,font=("times new roman",13,"bold"))
+        entry_mark1_11.grid(row=11,column=1,padx=40,pady=5)
         
-        entry_subject46=ttk.Entry(labelframeright,textvariable=self.var_subject4,width=16,font=("times new roman",13,"bold"))
-        entry_subject46.grid(row=11,column=3,padx=40,pady=5)
+        entry_mark2_11=ttk.Entry(labelframeright,textvariable=self.var_mark1_11,width=16,font=("times new roman",13,"bold"))
+        entry_mark2_11.grid(row=11,column=3,padx=40,pady=5)
         
-        entry_subject47=ttk.Entry(labelframeright,textvariable=self.var_subject4,width=16,font=("times new roman",13,"bold"))
-        entry_subject47.grid(row=11,column=5,padx=40,pady=5)
+        entry_grade1_11=ttk.Entry(labelframeright,textvariable=self.var_grade1_11,width=16,font=("times new roman",13,"bold"))
+        entry_grade1_11.grid(row=11,column=5,padx=40,pady=5)
         
-        entry_subject48=ttk.Entry(labelframeright,textvariable=self.var_subject4,width=16,font=("times new roman",13,"bold"))
-        entry_subject48.grid(row=11,column=7,padx=40,pady=5)
+        entry_comm1_11=ttk.Entry(labelframeright,textvariable=self.var_comm1_11,width=16,font=("times new roman",13,"bold"))
+        entry_comm1_11.grid(row=11,column=7,padx=40,pady=5)
         
         #========================================================================================
         

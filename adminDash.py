@@ -4,13 +4,26 @@ import mysql.connector
 import random
 from time import strftime
 from PIL import Image,ImageTk
+from user import User
 
 class Admin:
     def __init__(self,root):
         self.root = root
         self.root.geometry("1450x730+0+0")
         self.root.overrideredirect(True)
-        self.root.configure(bg="black")
+        self.root.title('Color Changer')
+        # List of colors
+        colors = ["#ff5733", "#33ff57", "#3357ff", "#ff33a6", "#a633ff"]
+
+        # Function to change the background color
+        def change_color():
+            color = random.choice(colors)  # Select a random color from the list
+            self.root.configure(bg=color)  # Change the background color of the window
+            self.root.after(10000, change_color)  # Call the change_color function after 300000ms (5 minutes)
+
+        # Call the change_color function to start changing the color
+        change_color()
+        #self.root.configure(bg="black")
         self.root .title("Report Management System | Developed by LarksTeckHub")
         
         
@@ -72,12 +85,14 @@ class Admin:
         self.icon_side = self.icon_side.subsample(self.icon_side.width()// new_width, self.icon_side.height() // new_height)
         
         #=========================BUTTONS===============================================
-        btn_user = Button(LeftMenu,text="Users",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",16,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
+        btn_user = Button(LeftMenu,text="Users",command=self.show_loading_user,image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",16,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
         btn_marks = Button(LeftMenu,text="",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",16,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
         btn_viewStud = Button(LeftMenu,text="",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",13,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
         btn_reportGeneration = Button(LeftMenu,text="",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",14,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
         btn_reportGenerat = Button(LeftMenu,text="",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",14,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
         btn_reportGene = Button(LeftMenu,text="",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",14,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
+        btn_DOSDash = Button(LeftMenu,text="DOS's Dash",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",16,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
+        btn_teachDash = Button(LeftMenu,text="Teacher's Dash",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",16,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
         
         ################## SETTINGS####################################################
         # Create a Menu for Settings dropdown
@@ -101,8 +116,25 @@ class Admin:
         btn_logout = Button(LeftMenu,text="Logout",command=self.logout,image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",16,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
         
         #===============content==================
-        self.lbl_student=Label(self.root,text="Total Students\n[0]",bd=5,relief=RIDGE,bg="#33bbf9",fg="white",font=("goudy old style",20,"bold"))
-        self.lbl_student.place(x=250,y=120,height=100,width=200)
+        #################################################################
+       # Connect to the MySQL database
+        mydb = mysql.connector.connect(host="localhost",user="root",password="francis121",database="report")
+
+        # Create a cursor object to execute SQL queries
+        mycursor = mydb.cursor()
+
+        # Execute an SQL query to get the total number of student
+        mycursor.execute("SELECT COUNT(*) FROM student")
+
+        # Fetch the result of the query
+        result = mycursor.fetchone()
+
+        # Get the total number of student from the result
+        total_student = result[0]
+
+        # Display the total number of steudent
+        self.lbl_student = Label(self.root, text=f"Total Students\n{total_student}", bd=5, relief=RIDGE, bg="#33bbf9", fg="white", font=("goudy old style", 20, "bold"))
+        self.lbl_student.place(x=250, y=120, height=100, width=200)
         
         #####################################################
         # Connect to the MySQL database
@@ -162,14 +194,38 @@ class Admin:
         self.lbl_term = Label(self.root, text=f"Total Term\n{total_term}", bd=5, relief=RIDGE, bg="#607d8b", fg="white", font=("goudy old style", 20, "bold"))
         self.lbl_term.place(x=850, y=120, height=100, width=200)
        #########################################################
-       
-        self.lbl_sales=Label(self.root,text="Total Users\n[0]",bd=5,relief=RIDGE,bg="#ffc107",fg="white",font=("goudy old style",20,"bold"))
-        self.lbl_sales.place(x=1050,y=120,height=100,width=200)
-       
+       # Connect to the MySQL database
+        mydb = mysql.connector.connect(host="localhost",user="root",password="francis121",database="report")
+
+        # Create a cursor object to execute SQL queries
+        mycursor = mydb.cursor()
+
+        # Execute an SQL query to get the total number of user
+        mycursor.execute("SELECT COUNT(*) FROM user")
+
+        # Fetch the result of the query
+        result = mycursor.fetchone()
+
+        # Get the total number of user from the result
+        total_term = result[0]
+
+        # Display the total number of user
+        self.lbl_sales = Label(self.root, text=f"Total Users\n{total_term}", bd=5, relief=RIDGE, bg="#ffc107", fg="white", font=("goudy old style", 20, "bold"))
+        self.lbl_sales.place(x=1050, y=120, height=100, width=200)
        
         #========footer================
         lbl_footer = Label(self.root,text="Report Management System | Developed by LarksTeckHub \nFor any Technical Issue Contact: 0741789121",font=("times new roman",12),bg="#4d636d",fg="white").pack(side=BOTTOM, fill=X)
    
+    #########################################  
+    def show_loading_user(self):
+        self.loading_label = Label(self.root, text="Loading...", font=("times new roman", 20, "bold"))
+        self.loading_label.pack()
+        self.root.after(1000, self.user_details)  # After 30 seconds, show another window
+    def user_details(self):
+        self.loading_label.destroy()
+        self.new_window=Toplevel(self.root)
+        self.app=User(self.new_window)
+        
     def logout(self):
         logout = tkinter.messagebox.askyesno("Report Management System", "Confirm if you want to log out", parent=self.root)
         if logout:

@@ -6,15 +6,16 @@ def adminLoggedIn():
     pass
 
 app = ctk.CTk()
-app.geometry("1400x900")
+#app.geometry("1400x900")
+app.geometry("1450x730+0+0")
 app.title("LARKS TECH HUB ADMIN PANEL")
 
 ctk.set_default_color_theme("green")  # Themes: "blue" (standard), "green", "dark-blue"
 ctk.set_appearance_mode("dark")
 
-logo = PhotoImage(file="logo.png")
-logo_label = ctk.CTkLabel(app, image=logo)
-logo_label.place(x=500, y=0)
+#logo = PhotoImage(file="logo.png")
+#logo_label = ctk.CTkLabel(app, image=logo)
+#logo_label.place(x=500, y=0)
 
 title_label = ctk.CTkLabel(
     app,
