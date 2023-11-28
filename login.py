@@ -29,6 +29,12 @@ entry_password = ctk.CTkEntry(master=app, width=200, show="*")
 entry_password.place(relx=0.5, rely=0.6, anchor=tk.CENTER)
 
 btnLogin = ctk.CTkButton(master=app, text="Login", command=Login)
-btnLogin.place(relx=0.5, rely=0.9, anchor=tk.CENTER)
+btnLogin.place(relx=0.5, rely=0.7, anchor=tk.CENTER)
+
+lblWelcome = ctk.CTkLabel(master=app, text="Forgot your password?", font=('Helvetica', 17, 'bold'))
+lblWelcome.place(relx=0.4, rely=0.8, anchor=tk.CENTER)
+
+lblWelcome = ctk.CTkLabel(master=app, text="Click here to recover it", font=('Helvetica', 15, 'italic'))
+lblWelcome.place(relx=0.4, rely=0.85, anchor=tk.CENTER)
 
 app.mainloop()
