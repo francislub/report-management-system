@@ -6,9 +6,9 @@ from PIL import Image,ImageTk
 import mysql.connector
 import random
 from time import strftime
-import openpyxl
-import os
-class Marks:
+from sheet import MarkEntry
+
+class Markss:
     def __init__(self,root,selected_class="Select Class"):
         self.root = root
         self.root.geometry("1450x730+0+0")
@@ -91,20 +91,24 @@ class Marks:
         self.label_class = Label(self.root, text=f"Class: {selected_class}", bg="black", fg="white", anchor="w",
                                  padx=5, font=("times new roman", 20, "bold"))
         self.label_class.place(x=270, y=160)
+        # Function to update the label when the combobox selection changes
+        #def update_selected_class_label(self, event):
+        #    selected_class = self.combo_class.get()
+        #    self.label_class.config(text=f"Class: {selected_class}")
         
         #===========Left Menu==============
         LeftMenu = Frame(self.root,bd=2,relief=RIDGE, bg="white")
-        LeftMenu.place(x=0,y=160,width=200,height=520)
+        LeftMenu.place(x=0,y=160,width=200,height=530)
         
         ################## Buttons####################################################
         #self.subject_buttons = []  # List to store subject buttons
-        btn_subject = Button(LeftMenu,text="Subject\nEntry",command=self.show_subject1,image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",17,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
+        btn_subject = Button(LeftMenu,text="Subject\nEntry",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",17,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
         btn_terminalRe = Button(LeftMenu,text="Terminal\nReports",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",17,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
-        btn_classList = Button(LeftMenu,text="Class List",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",18,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
-        btn_reportGeneration = Button(LeftMenu,text="",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",18,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
-        btn_teachDash = Button(LeftMenu,text="",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",18,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
-        btn_teachDash = Button(LeftMenu,text="",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",18,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
-        btn_teachDash = Button(LeftMenu,text="",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",18,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
+        btn_classList = Button(LeftMenu,text="Class\nList",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",18,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
+        btn_broadSheet = Button(LeftMenu,text="Broad\nSheet",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",18,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
+        btn_teachDash = Button(LeftMenu,text="MOCK",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",18,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
+        btn_teachDash = Button(LeftMenu,text="Attendance",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",18,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
+        btn_teachDash = Button(LeftMenu,text="Remarks",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",18,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
         btn_settings = Button(LeftMenu,text="Settings",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",19,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
         btn_exit = Button(LeftMenu,text="Exit",command=self.logout,image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",18,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
         
@@ -117,332 +121,95 @@ class Marks:
         labelframeleft.place(x=200,y=200,width=1160,height=485)
         
         #================btn===========================================
-        self.btn_subject1 = Button(labelframeleft, text="", font=("times new roman", 15, "bold"), cursor="hand2", command=self.show_subject1)
+        self.btn_subject1 = Button(labelframeleft, text="", font=("times new roman", 15, "bold"), cursor="hand2", command=self.show_subject)
         self.btn_subject1.place(x=20, y=10, height=40, width=200)
         
-        self.btn_subject2 = Button(labelframeleft,text="",font=("times new roman",15,"bold"),cursor="hand2",command=self.show_subject2)
+        self.btn_subject2 = Button(labelframeleft,text="",font=("times new roman",15,"bold"),cursor="hand2")
         self.btn_subject2.place(x=250,y=10,height=40,width=200)
         
-        self.btn_subject3 = Button(labelframeleft,text="",font=("times new roman",15,"bold"),cursor="hand2",command=self.show_subject3)
+        self.btn_subject3 = Button(labelframeleft,text="",font=("times new roman",15,"bold"),cursor="hand2")
         self.btn_subject3.place(x=20,y=60,height=40,width=200)
         
-        self.btn_subject4 = Button(labelframeleft,text="",font=("times new roman",15,"bold"),cursor="hand2",command=self.show_subject4)
+        self.btn_subject4 = Button(labelframeleft,text="",font=("times new roman",15,"bold"),cursor="hand2")
         self.btn_subject4.place(x=250,y=60,height=40,width=200)
         
-        self.btn_subject5 = Button(labelframeleft,text="",font=("times new roman",15,"bold"),cursor="hand2",command=self.show_subject5)
+        self.btn_subject5 = Button(labelframeleft,text="",font=("times new roman",15,"bold"),cursor="hand2")
         self.btn_subject5.place(x=20,y=110,height=40,width=200)
         
-        self.btn_subject6 = Button(labelframeleft,text="",font=("times new roman",15,"bold"),cursor="hand2",command=self.show_subject6)
+        self.btn_subject6 = Button(labelframeleft,text="",font=("times new roman",15,"bold"),cursor="hand2")
         self.btn_subject6.place(x=250,y=110,height=40,width=200)
         
-        self.btn_subject7 = Button(labelframeleft,text="",font=("times new roman",15,"bold"),cursor="hand2",command=self.show_subject7)
+        self.btn_subject7 = Button(labelframeleft,text="",font=("times new roman",15,"bold"),cursor="hand2")
         self.btn_subject7.place(x=20,y=160,height=40,width=200)
         
-        self.btn_subject8 = Button(labelframeleft,text="",font=("times new roman",15,"bold"),cursor="hand2",command=self.show_subject8)
+        self.btn_subject8 = Button(labelframeleft,text="",font=("times new roman",15,"bold"),cursor="hand2")
         self.btn_subject8.place(x=250,y=160,height=40,width=200)
         
-        self.btn_subject9 = Button(labelframeleft,text="",font=("times new roman",15,"bold"),cursor="hand2",command=self.show_subject9)
+        self.btn_subject9 = Button(labelframeleft,text="",font=("times new roman",15,"bold"),cursor="hand2")
         self.btn_subject9.place(x=20,y=210,height=40,width=200)
         
-        self.btn_subject10 = Button(labelframeleft,text="",font=("times new roman",15,"bold"),cursor="hand2",command=self.show_subject10)
+        self.btn_subject10 = Button(labelframeleft,text="",font=("times new roman",15,"bold"),cursor="hand2")
         self.btn_subject10.place(x=250,y=210,height=40,width=200)
         
-        self.btn_subject11 = Button(labelframeleft,text="",font=("times new roman",15,"bold"),cursor="hand2",command=self.show_subject11)
+        self.btn_subject11 = Button(labelframeleft,text="",font=("times new roman",15,"bold"),cursor="hand2")
         self.btn_subject11.place(x=20,y=260,height=40,width=200)
         
-        self.btn_subject12 = Button(labelframeleft,text="",font=("times new roman",15,"bold"),cursor="hand2",command=self.show_subject12)
+        self.btn_subject12 = Button(labelframeleft,text="",font=("times new roman",15,"bold"),cursor="hand2")
         self.btn_subject12.place(x=250,y=260,height=40,width=200)
         
-        self.btn_subject13 = Button(labelframeleft,text="",font=("times new roman",15,"bold"),cursor="hand2",command=self.show_subject13)
+        self.btn_subject13 = Button(labelframeleft,text="",font=("times new roman",15,"bold"),cursor="hand2")
         self.btn_subject13.place(x=20,y=310,height=40,width=200)
         
-        self.btn_subject14 = Button(labelframeleft,text="",font=("times new roman",15,"bold"),cursor="hand2",command=self.show_subject14)
+        self.btn_subject14 = Button(labelframeleft,text="",font=("times new roman",15,"bold"),cursor="hand2")
         self.btn_subject14.place(x=250,y=310,height=40,width=200)
         
-        self.btn_subject15 = Button(labelframeleft,text="",font=("times new roman",15,"bold"),cursor="hand2",command=self.show_subject15)
+        self.btn_subject15 = Button(labelframeleft,text="",font=("times new roman",15,"bold"),cursor="hand2")
         self.btn_subject15.place(x=20,y=360,height=40,width=200)
         
-        self.btn_subject16 = Button(labelframeleft,text="",font=("times new roman",15,"bold"),cursor="hand2",command=self.show_subject16)
+        self.btn_subject16 = Button(labelframeleft,text="",font=("times new roman",15,"bold"),cursor="hand2")
         self.btn_subject16.place(x=250,y=360,height=40,width=200)
         #########################################
-             
+            
+        self.subject_buttons = []
+
+        for i in range(1, 17):
+            btn_subject = Button(labelframeleft, text="", font=("times new roman", 15, "bold"), cursor="hand2", command=lambda i=i: self.show_subject(i))
+            row = (i - 1) // 2
+            col = (i - 1) % 2
+            btn_subject.place(x=20 + col * 230, y=10 + row * 50, height=40, width=200)
+            self.subject_buttons.append(btn_subject)
+            
     def update_selected_class_label(self, event):
         selected_class = self.combo_class.get()
-        if selected_class != "Select Class":
-            self.label_class.config(text=f"Class: {selected_class}")
+        self.label_class.config(text=f"Class: {selected_class}")
+        # Fetch subjects for the selected class from the database
+        cursor = self.conn.cursor()
+        cursor.execute("SELECT subject1, subject2, subject3, subject4, subject5, subject6, subject7, subject8, subject9, subject10, subject11, subject12, subject13, subject14, subject15, subject16 FROM subject WHERE class = %s", (selected_class,))
+        subjects = cursor.fetchone()
 
-    def show_subject1(self):
-        selected_class = self.combo_class.get()
-        if selected_class != "Select Class":
-            # Fetch subjects related to the selected class from the database
-            conn = mysql.connector.connect(host="localhost", user="root", password="francis121", database="report")
-            my_cursor = conn.cursor()
-            my_cursor.execute("SELECT subject1 FROM subject WHERE class = %s", (selected_class,))
-            subjects = [subject[0] for subject in my_cursor.fetchall()]
-
-            if subjects:
-                subject_text = "\n".join(subjects)
-                self.btn_subject1.config(text=subject_text)
+        for i, subject in enumerate(subjects):
+            # If subject is not empty, update button text
+            if subject:
+                self.subject_buttons[i]["text"] = subject
             else:
-                messagebox.showinfo("No Subjects", "No subjects available for the selected class.", parent=self.root)
-        else:
-            messagebox.showwarning("Warning", "Please select a class.")
-            
-    def show_subject2(self):
+                # If subject is empty, display "Empty" on the button
+                self.subject_buttons[i]["text"] = "Empty"
+    
+    def show_subject(self, subject_number):
+        # Check if a class is selected
         selected_class = self.combo_class.get()
-        if selected_class != "Select Class":
-            # Fetch subjects related to the selected class from the database
-            conn = mysql.connector.connect(host="localhost", user="root", password="francis121", database="report")
-            my_cursor = conn.cursor()
-            my_cursor.execute("SELECT subject2 FROM subject WHERE class = %s", (selected_class,))
-            subjects = [subject[0] for subject in my_cursor.fetchall()]
+        if selected_class == "Select Class":
+            messagebox.showinfo("Error", "Please select a class first.")
+            return
 
-            if subjects:
-                subject_text = "\n".join(subjects)
-                self.btn_subject2.config(text=subject_text)
-            else:
-                messagebox.showinfo("No Subjects", "No subjects available for the selected class.", parent=self.root)
-        else:
-            messagebox.showwarning("Warning", "Please select a class.")
-            
-    def show_subject3(self):
-        selected_class = self.combo_class.get()
-        if selected_class != "Select Class":
-            # Fetch subjects related to the selected class from the database
-            conn = mysql.connector.connect(host="localhost", user="root", password="francis121", database="report")
-            my_cursor = conn.cursor()
-            my_cursor.execute("SELECT subject3 FROM subject WHERE class = %s", (selected_class,))
-            subjects = [subject[0] for subject in my_cursor.fetchall()]
+        # Fetch students for the selected class from the database
+        cursor = self.conn.cursor()
+        cursor.execute("SELECT name FROM student WHERE class = %s", (selected_class,))
+        students = [student[0] for student in cursor.fetchall()]
 
-            if subjects:
-                subject_text = "\n".join(subjects)
-                self.btn_subject3.config(text=subject_text)
-            else:
-                messagebox.showinfo("No Subjects", "No subjects available for the selected class.", parent=self.root)
-        else:
-            messagebox.showwarning("Warning", "Please select a class.")
-            
-    def show_subject4(self):
-        selected_class = self.combo_class.get()
-        if selected_class != "Select Class":
-            # Fetch subjects related to the selected class from the database
-            conn = mysql.connector.connect(host="localhost", user="root", password="francis121", database="report")
-            my_cursor = conn.cursor()
-            my_cursor.execute("SELECT subject4 FROM subject WHERE class = %s", (selected_class,))
-            subjects = [subject[0] for subject in my_cursor.fetchall()]
-
-            if subjects:
-                subject_text = "\n".join(subjects)
-                self.btn_subject4.config(text=subject_text)
-            else:
-                messagebox.showinfo("No Subjects", "No subjects available for the selected class.", parent=self.root)
-        else:
-            messagebox.showwarning("Warning", "Please select a class.")
-        
-    def show_subject5(self):
-        selected_class = self.combo_class.get()
-        if selected_class != "Select Class":
-            # Fetch subjects related to the selected class from the database
-            conn = mysql.connector.connect(host="localhost", user="root", password="francis121", database="report")
-            my_cursor = conn.cursor()
-            my_cursor.execute("SELECT subject5 FROM subject WHERE class = %s", (selected_class,))
-            subjects = [subject[0] for subject in my_cursor.fetchall()]
-
-            if subjects:
-                subject_text = "\n".join(subjects)
-                self.btn_subject5.config(text=subject_text)
-            else:
-                messagebox.showinfo("No Subjects", "No subjects available for the selected class.", parent=self.root)
-        else:
-            messagebox.showwarning("Warning", "Please select a class.")
-            
-    def show_subject6(self):
-        selected_class = self.combo_class.get()
-        if selected_class != "Select Class":
-            # Fetch subjects related to the selected class from the database
-            conn = mysql.connector.connect(host="localhost", user="root", password="francis121", database="report")
-            my_cursor = conn.cursor()
-            my_cursor.execute("SELECT subject6 FROM subject WHERE class = %s", (selected_class,))
-            subjects = [subject[0] for subject in my_cursor.fetchall()]
-
-            if subjects:
-                subject_text = "\n".join(subjects)
-                self.btn_subject6.config(text=subject_text)
-            else:
-                messagebox.showinfo("No Subjects", "No subjects available for the selected class.", parent=self.root)
-        else:
-            messagebox.showwarning("Warning", "Please select a class.")
-    def show_subject7(self):
-        selected_class = self.combo_class.get()
-        if selected_class != "Select Class":
-            # Fetch subjects related to the selected class from the database
-            conn = mysql.connector.connect(host="localhost", user="root", password="francis121", database="report")
-            my_cursor = conn.cursor()
-            my_cursor.execute("SELECT subject7 FROM subject WHERE class = %s", (selected_class,))
-            subjects = [subject[0] for subject in my_cursor.fetchall()]
-
-            if subjects:
-                subject_text = "\n".join(subjects)
-                self.btn_subject7.config(text=subject_text)
-            else:
-                messagebox.showinfo("No Subjects", "No subjects available for the selected class.", parent=self.root)
-        else:
-            messagebox.showwarning("Warning", "Please select a class.")
-    def show_subject8(self):
-        selected_class = self.combo_class.get()
-        if selected_class != "Select Class":
-            # Fetch subjects related to the selected class from the database
-            conn = mysql.connector.connect(host="localhost", user="root", password="francis121", database="report")
-            my_cursor = conn.cursor()
-            my_cursor.execute("SELECT subject8 FROM subject WHERE class = %s", (selected_class,))
-            subjects = [subject[0] for subject in my_cursor.fetchall()]
-
-            if subjects:
-                subject_text = "\n".join(subjects)
-                self.btn_subject8.config(text=subject_text)
-            else:
-                messagebox.showinfo("No Subjects", "No subjects available for the selected class.", parent=self.root)
-        else:
-            messagebox.showwarning("Warning", "Please select a class.")
-    def show_subject9(self):
-        selected_class = self.combo_class.get()
-        if selected_class != "Select Class":
-            # Fetch subjects related to the selected class from the database
-            conn = mysql.connector.connect(host="localhost", user="root", password="francis121", database="report")
-            my_cursor = conn.cursor()
-            my_cursor.execute("SELECT subject9 FROM subject WHERE class = %s", (selected_class,))
-            subjects = [subject[0] for subject in my_cursor.fetchall()]
-
-            if subjects:
-                subject_text = "\n".join(subjects)
-                self.btn_subject9.config(text=subject_text)
-            else:
-                messagebox.showinfo("No Subjects", "No subjects available for the selected class.", parent=self.root)
-        else:
-            messagebox.showwarning("Warning", "Please select a class.")
-    def show_subject10(self):
-        selected_class = self.combo_class.get()
-        if selected_class != "Select Class":
-            # Fetch subjects related to the selected class from the database
-            conn = mysql.connector.connect(host="localhost", user="root", password="francis121", database="report")
-            my_cursor = conn.cursor()
-            my_cursor.execute("SELECT subject10 FROM subject WHERE class = %s", (selected_class,))
-            subjects = [subject[0] for subject in my_cursor.fetchall()]
-
-            if subjects:
-                subject_text = "\n".join(subjects)
-                self.btn_subject10.config(text=subject_text)
-            else:
-                messagebox.showinfo("No Subjects", "No subjects available for the selected class.", parent=self.root)
-        else:
-            messagebox.showwarning("Warning", "Please select a class.")
-    def show_subject11(self):
-        selected_class = self.combo_class.get()
-        if selected_class != "Select Class":
-            # Fetch subjects related to the selected class from the database
-            conn = mysql.connector.connect(host="localhost", user="root", password="francis121", database="report")
-            my_cursor = conn.cursor()
-            my_cursor.execute("SELECT subject11 FROM subject WHERE class = %s", (selected_class,))
-            subjects = [subject[0] for subject in my_cursor.fetchall()]
-
-            if subjects:
-                subject_text = "\n".join(subjects)
-                self.btn_subject11.config(text=subject_text)
-            else:
-                messagebox.showinfo("No Subjects", "No subjects available for the selected class.", parent=self.root)
-        else:
-            messagebox.showwarning("Warning", "Please select a class.")
-    def show_subject12(self):
-        selected_class = self.combo_class.get()
-        if selected_class != "Select Class":
-            # Fetch subjects related to the selected class from the database
-            conn = mysql.connector.connect(host="localhost", user="root", password="francis121", database="report")
-            my_cursor = conn.cursor()
-            my_cursor.execute("SELECT subject12 FROM subject WHERE class = %s", (selected_class,))
-            subjects = [subject[0] for subject in my_cursor.fetchall()]
-
-            if subjects:
-                subject_text = "\n".join(subjects)
-                self.btn_subject12.config(text=subject_text)
-            else:
-                messagebox.showinfo("No Subjects", "No subjects available for the selected class.", parent=self.root)
-        else:
-            messagebox.showwarning("Warning", "Please select a class.")
-    def show_subject13(self):
-        selected_class = self.combo_class.get()
-        if selected_class != "Select Class":
-            # Fetch subjects related to the selected class from the database
-            conn = mysql.connector.connect(host="localhost", user="root", password="francis121", database="report")
-            my_cursor = conn.cursor()
-            my_cursor.execute("SELECT subject13 FROM subject WHERE class = %s", (selected_class,))
-            subjects = [subject[0] for subject in my_cursor.fetchall()]
-
-            if subjects:
-                subject_text = "\n".join(subjects)
-                self.btn_subject13.config(text=subject_text)
-            else:
-                messagebox.showinfo("No Subjects", "No subjects available for the selected class.", parent=self.root)
-        else:
-            messagebox.showwarning("Warning", "Please select a class.")
-    def show_subject14(self):
-        selected_class = self.combo_class.get()
-        if selected_class != "Select Class":
-            # Fetch subjects related to the selected class from the database
-            conn = mysql.connector.connect(host="localhost", user="root", password="francis121", database="report")
-            my_cursor = conn.cursor()
-            my_cursor.execute("SELECT subject14 FROM subject WHERE class = %s", (selected_class,))
-            subjects = [subject[0] for subject in my_cursor.fetchall()]
-
-            if subjects:
-                subject_text = "\n".join(subjects)
-                self.btn_subject14.config(text=subject_text)
-            else:
-                messagebox.showinfo("No Subjects", "No subjects available for the selected class.", parent=self.root)
-        else:
-            messagebox.showwarning("Warning", "Please select a class.")
-    def show_subject15(self):
-        selected_class = self.combo_class.get()
-        if selected_class != "Select Class":
-            # Fetch subjects related to the selected class from the database
-            conn = mysql.connector.connect(host="localhost", user="root", password="francis121", database="report")
-            my_cursor = conn.cursor()
-            my_cursor.execute("SELECT subject15 FROM subject WHERE class = %s", (selected_class,))
-            subjects = [subject[0] for subject in my_cursor.fetchall()]
-
-            if subjects:
-                subject_text = "\n".join(subjects)
-                self.btn_subject15.config(text=subject_text)
-            else:
-                messagebox.showinfo("No Subjects", "No subjects available for the selected class.", parent=self.root)
-        else:
-            messagebox.showwarning("Warning", "Please select a class.")
-    def show_subject16(self):
-        selected_class = self.combo_class.get()
-        if selected_class != "Select Class":
-            # Fetch subjects related to the selected class from the database
-            conn = mysql.connector.connect(host="localhost", user="root", password="francis121", database="report")
-            my_cursor = conn.cursor()
-            my_cursor.execute("SELECT subject16 FROM subject WHERE class = %s", (selected_class,))
-            subjects = [subject[0] for subject in my_cursor.fetchall()]
-
-            if subjects:
-                subject_text = "\n".join(subjects)
-                self.btn_subject16.config(text=subject_text)
-            else:
-                messagebox.showinfo("No Subjects", "No subjects available for the selected class.", parent=self.root)
-        else:
-            messagebox.showwarning("Warning", "Please select a class.")
-                        
-    #def show_loading_subject(self):
-     #   self.loading_label = Label(self.root, text="Loading...", font=("times new roman", 20, "bold"))
-     #   self.loading_label.pack()
-     #   self.root.after(1000, self.subject_details)  # After 30 seconds, show another window
-        
-    #def subject_details(self):
-    #    self.loading_label.destroy()
-    #    self.new_window=Toplevel(self.root)
-    #    self.app=MarkButton(self.new_window)
-
+        # Continue with the intended behavior
+        self.new_window = Toplevel(self.root)
+        self.app = MarkEntry(self.new_window, rows=10, columns=5, students=students)
     #########################################  
     #def show_loading_term(self):
     #    self.loading_label = Label(self.root, text="Loading...", font=("times new roman", 20, "bold"))
@@ -482,5 +249,5 @@ class Marks:
             self.root.destroy()
     
 root=Tk()
-ob = Marks(root)
+ob = Markss(root)
 root.mainloop()

@@ -5,7 +5,8 @@ import random
 from time import strftime
 from PIL import Image,ImageTk
 from student import Student
-#from markDash import Marks
+from markDash import Markss
+#from sheet import MarkEntry
 
 class Teacher:
     def __init__(self,root):
@@ -87,11 +88,12 @@ class Teacher:
         
         #=========================BUTTONS===============================================
         btn_students = Button(LeftMenu,text="Students",command=self.show_loading_student,image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",16,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
-        btn_marks = Button(LeftMenu,text="Marks Entry",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",16,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
-        btn_viewStud = Button(LeftMenu,text="View Students",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",13,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
-        btn_reportGeneration = Button(LeftMenu,text="",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",14,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
-        btn_reportGenerat = Button(LeftMenu,text="",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",14,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
-        btn_reportGenerat = Button(LeftMenu,text="",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",14,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
+        btn_marks = Button(LeftMenu,text="Marks Entry",command=self.show_loading_marks,image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",16,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
+        btn_viewStud = Button(LeftMenu,text="View Students",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",16,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
+        btn_reportGeneration = Button(LeftMenu,text="",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",16,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
+        btn_reportGenerat = Button(LeftMenu,text="",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",16,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
+        btn_reportGenerat = Button(LeftMenu,text="",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",16,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
+        btn_reportGenerat = Button(LeftMenu,text="",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",16,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
         
         ################## SETTINGS####################################################
         # Create a Menu for Settings dropdown
@@ -226,16 +228,16 @@ class Teacher:
         self.loading_label.destroy()
         self.new_window=Toplevel(self.root)
         self.app=Student(self.new_window)
+
+    def show_loading_marks(self):
+        self.loading_label = Label(self.root, text="Loading...", font=("times new roman", 20, "bold"))
+        self.loading_label.pack()
+        self.root.after(1000, self.marks_details)  # After 30 seconds, show another window
         
-    #def show_loading_marks(self):
-    #    self.loading_label = Label(self.root, text="Loading...", font=("times new roman", 20, "bold"))
-    #    self.loading_label.pack()
-    #    self.root.after(1000, self.marks_details)  # After 30 seconds, show another window
-        
-    #def marks_details(self):
-    #    self.loading_label.destroy()
-    #    self.new_window=Toplevel(self.root)
-    #    self.app=Marks(self.new_window)
+    def marks_details(self):
+        self.loading_label.destroy()
+        self.new_window=Toplevel(self.root)
+        self.app=Markss(self.new_window)
     
     #########################################  
     #def show_loading_marksB(self):

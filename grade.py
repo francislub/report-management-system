@@ -114,8 +114,7 @@ class Grade:
         
         def get_selected_class():
             # Replace this function with your code to fetch the user's name from the database
-            return "S.1"  
-        
+            return
         # Retrieve user information from the database
         selected_cl = get_selected_class()
 
@@ -147,17 +146,17 @@ class Grade:
         labelframeright.place(x=200,y=250,width=1020,height=430)
         #==================================================================================
         #==========================Labels =======================================
-        lbl_subject1_ref=Label(labelframeright,text="From",font=("times new roman",12,"bold"),padx=2,pady=6)
-        lbl_subject1_ref.grid(row=0,column=1,sticky=W ,padx=40)
+        lbl_from=Label(labelframeright,text="From",font=("times new roman",12,"bold"),padx=2,pady=6)
+        lbl_from.grid(row=0,column=1,sticky=W ,padx=40)
         
-        teacher1=Label(labelframeright,text="To",font=("times new roman",12,"bold"),padx=2,pady=6)
-        teacher1.grid(row=0,column=3,sticky=W,padx=40)
+        lbl_to=Label(labelframeright,text="To",font=("times new roman",12,"bold"),padx=2,pady=6)
+        lbl_to.grid(row=0,column=3,sticky=W,padx=40)
         
-        lbl_subject2_ref=Label(labelframeright,text="Grade",font=("times new roman",12,"bold"),padx=2,pady=6)
-        lbl_subject2_ref.grid(row=0,column=5,sticky=W ,padx=40)
+        lbl_grade=Label(labelframeright,text="Grade",font=("times new roman",12,"bold"),padx=2,pady=6)
+        lbl_grade.grid(row=0,column=5,sticky=W ,padx=40)
         
-        teacher2=Label(labelframeright,text="Comment",font=("times new roman",12,"bold"),padx=2,pady=6)
-        teacher2.grid(row=0,column=7,sticky=W,padx=40)
+        lbl_comment=Label(labelframeright,text="Comment",font=("times new roman",12,"bold"),padx=2,pady=6)
+        lbl_comment.grid(row=0,column=7,sticky=W,padx=40)
         
         #=========================Entries=====================================
         entry_mark1=ttk.Entry(labelframeright,textvariable=self.var_mark1,width=16,font=("times new roman",13,"bold"))

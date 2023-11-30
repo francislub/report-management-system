@@ -6,7 +6,6 @@ import mysql.connector
 import random
 from tkcalendar import DateEntry
 from datetime import datetime
-import tkinter.messagebox
 from tkinter import messagebox
 class Student:
     def __init__(self,root):
@@ -176,6 +175,9 @@ class Student:
         btnShowAll=Button(Table_Frame,text="Show All",command=self.show_all_data,font=("arial",11,"bold"),bg="black",fg="gold",width=8)
         btnShowAll.grid(row=0,column=4,padx=1)
         
+        btnviewAll=Button(Table_Frame,text="View Each Class",command=self.show_class_dropdown,font=("arial",11,"bold"),bg="black",fg="gold",width=12)
+        btnviewAll.grid(row=0,column=5,padx=1)
+        
         #================Show data table===========================================
         details_table=Frame(Table_Frame,bd=2,relief=RIDGE)
         details_table.place(x=0,y=80,width=890,height=400)
@@ -202,6 +204,12 @@ class Student:
         self.Cust_Details_Table.heading("address",text="Address", anchor=tk.CENTER)
         
         self.Cust_Details_Table["show"]="headings"
+        s = ttk.Style(root)
+        s.theme_use("clam")
+        
+        s.configure(".", font=('Helvetice',11))
+        s.configure("Treeview.Heading",foreground='red',font=('Helvetica',11,"bold"))
+
         self.Cust_Details_Table.column("ref",width=100, anchor=tk.CENTER)
         self.Cust_Details_Table.column("name",width=300)
         self.Cust_Details_Table.column("gender",width=100, anchor=tk.CENTER)
@@ -215,6 +223,55 @@ class Student:
         self.Cust_Details_Table.pack(fill=BOTH,expand=1)
         self.Cust_Details_Table.bind("<ButtonRelease-1>",self.get_cusrsor)
         self.fetch_data()
+        # Define tag configuration for odd and even rows
+        self.Cust_Details_Table.tag_configure('oddrow', background='#E8E8E8')  # Light gray
+        self.Cust_Details_Table.tag_configure('evenrow', background='#FFFFFF')  # White
+
+        # Fetch and display data
+        self.fetch_data()
+
+        # Add these lines after the self.fetch_data() line
+
+        # Define tag configuration for odd and even rows
+        self.Cust_Details_Table.tag_configure('oddrow', background='#E8E8E8')  # Light gray
+        self.Cust_Details_Table.tag_configure('evenrow', background='#FFFFFF')  # White
+
+        # Fetch and display data
+        self.fetch_data()
+
+        # Add these lines after the self.fetch_data() line
+
+        # Apply the tags to alternate rows
+        for i in range(len(self.Cust_Details_Table.get_children())):
+            if i % 2 == 0:
+                self.Cust_Details_Table.item(self.Cust_Details_Table.get_children()[i], tags=('evenrow',))
+            else:
+                self.Cust_Details_Table.item(self.Cust_Details_Table.get_children()[i], tags=('oddrow',))
+        
+        #i = 0
+        #for row in conn:
+        #    if ro[0]%2==0:
+        #        tree.insert('',i,text="",values=(ro[0],ro[1],ro[2],ro[3],ro[4],ro[5],ro[6]),tags=("even",))
+        #    else:
+        #        tree.insert('',i,text="",values=(ro[0],ro[1],ro[2],ro[3],ro[4],ro[5],ro[6]),tags=("odd",))
+        #    i = i + 1
+        
+        
+        # Define tag configuration for odd and even rows
+        #tree.tag_configure('even',foreground="black", background='white')  # Light gray
+        #tree.tag_configure('odd',foreground="white", background='black')  # White
+
+        # Fetch and display data
+        #self.fetch_data()
+
+        # Add these lines after the self.fetch_data() line
+
+        # Apply the tags to alternate rows
+        #for i in range(len(self.Cust_Details_Table.get_children())):
+        #    if i % 2 == 0:
+        #        self.Cust_Details_Table.item(self.Cust_Details_Table.get_children()[i], tags=('evenrow',))
+        #    else:
+        #        self.Cust_Details_Table.item(self.Cust_Details_Table.get_children()[i], tags=('oddrow',))
         
         # Add buttons for navigation
         self.prev_button = Button(Table_Frame, text="Previous", command=self.show_previous_table)
@@ -235,6 +292,21 @@ class Student:
 
         # Show the first class table
         self.show_class_table()
+                
+    def show_class_dropdown(self):
+        conn = mysql.connector.connect(host="localhost", username="root", password="francis121", database="report")
+        my_cursor = conn.cursor()
+        my_cursor.execute("SELECT DISTINCT class FROM student")
+        classes = [class_info[0] for class_info in my_cursor.fetchall()]
+        conn.close()
+
+        menu = Menu(self.root, tearoff=0)
+        for class_name in self.class_list:
+            menu.add_command(label=class_name[0])
+
+        btnviewAll = self.root.nametowidget(self.root.winfo_children()[0])  # Assuming the button is the first child
+        menu.post(btnviewAll.winfo_rootx() + btnviewAll.winfo_width(), btnviewAll.winfo_rooty())
+
 
     def get_distinct_classes(self):
         conn = mysql.connector.connect(host="localhost", username="root", password="francis121", database="report")
@@ -252,16 +324,11 @@ class Student:
             my_cursor = conn.cursor()
             my_cursor.execute("SELECT * FROM student WHERE class = %s", (current_class,))
             rows = my_cursor.fetchall()
-
             if len(rows) != 0:
                 self.Cust_Details_Table.delete(*self.Cust_Details_Table.get_children())
                 for i in rows:
                     self.Cust_Details_Table.insert("", END, values=i)
                 conn.close()
-
-        # Create the label widget
-        #self.class_label = Label(Table_Frame, text="", font=("times new roman", 20, "bold"), fg="green")
-        #self.class_label.place(x=750, y=110)
 
         # Update the label to show the current class
         self.class_label.config(text=f"These are students from: {current_class}")
@@ -321,6 +388,7 @@ class Student:
                self.Cust_Details_Table.insert("",END,values=i)
                conn.commit()
            conn.close()
+        
             
     def get_cusrsor(self,event=""):
        cusrsor_row=self.Cust_Details_Table.focus()

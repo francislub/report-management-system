@@ -554,9 +554,19 @@ class Subject:
         self.Cust_Details_Table.heading("teacher16",text="Teacher16",anchor=tk.CENTER)
         
         self.Cust_Details_Table["show"]="headings"
+        s = ttk.Style(root)
+        s.theme_use("clam")
+        
+        s.configure(".", font=('Helvetice',11))
+        s.configure("Treeview.Heading",foreground='red',font=('Helvetica',11,"bold"))
+        
+        # Create a custom style for alternating row colors
+        s.configure("Custom.Treeview.Item", foreground='black', background='white')
+        s.map("Custom", background=[("active", "red")])
+        
         self.Cust_Details_Table.column("subjectID",width=100,anchor=tk.CENTER)
         self.Cust_Details_Table.column("class",width=100,anchor=tk.CENTER)
-        self.Cust_Details_Table.column("classteacher",width=100,anchor=tk.CENTER)
+        self.Cust_Details_Table.column("classteacher",width=200,anchor=tk.CENTER)
         self.Cust_Details_Table.column("subject1",width=100,anchor=tk.CENTER)
         self.Cust_Details_Table.column("teacher1",width=200,anchor=tk.CENTER)
         self.Cust_Details_Table.column("subject2",width=100,anchor=tk.CENTER)
@@ -592,6 +602,22 @@ class Subject:
         self.Cust_Details_Table.pack(fill=BOTH,expand=1)
         self.Cust_Details_Table.bind("<ButtonRelease-1>",self.get_cusrsor)
         self.fetch_data()
+        
+        # Define tag configuration for odd and even rows
+        self.Cust_Details_Table.tag_configure('oddrow', background='#E8E8E8')  # Light gray
+        self.Cust_Details_Table.tag_configure('evenrow', background='#FFFFFF')  # White
+
+        # Fetch and display data
+        self.fetch_data()
+
+        # Add these lines after the self.fetch_data() line
+
+        # Apply the tags to alternate rows
+        for i in range(len(self.Cust_Details_Table.get_children())):
+            if i % 2 == 0:
+                self.Cust_Details_Table.item(self.Cust_Details_Table.get_children()[i], tags=('evenrow',))
+            else:
+                self.Cust_Details_Table.item(self.Cust_Details_Table.get_children()[i], tags=('oddrow',))
         
     def add_data(self):
         if self.var_subjectID.get() == "" or self.var_class.get() == "":

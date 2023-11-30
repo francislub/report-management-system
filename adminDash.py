@@ -5,6 +5,7 @@ import random
 from time import strftime
 from PIL import Image,ImageTk
 from user import User
+#from teacherDash import Teacher
 
 class Admin:
     def __init__(self,root):
@@ -225,6 +226,15 @@ class Admin:
         self.loading_label.destroy()
         self.new_window=Toplevel(self.root)
         self.app=User(self.new_window)
+    
+    #def show_loading_teacher(self):
+    #    self.loading_label = Label(self.root, text="Loading...", font=("times new roman", 20, "bold"))
+    #    self.loading_label.pack()
+    #    self.root.after(1000, self.teacher_details)  # After 30 seconds, show another window
+    #def teacher_details(self):
+    #    self.loading_label.destroy()
+    #    self.new_window=Toplevel(self.root)
+    #    self.app=User(self.new_window)
         
     def logout(self):
         logout = tkinter.messagebox.askyesno("Report Management System", "Confirm if you want to log out", parent=self.root)
