@@ -1,6 +1,7 @@
 from tkinter import *
 import tkinter.messagebox
-import mysql.connector
+#import mysql.connector
+import pymysql
 import random
 from time import strftime
 from PIL import Image,ImageTk
@@ -119,7 +120,7 @@ class Admin:
         #===============content==================
         #################################################################
        # Connect to the MySQL database
-        mydb = mysql.connector.connect(host="localhost",user="root",password="francis121",database="report")
+        mydb = pymysql.connect(host="localhost",user="root",database="report")
 
         # Create a cursor object to execute SQL queries
         mycursor = mydb.cursor()
@@ -139,7 +140,7 @@ class Admin:
         
         #####################################################
         # Connect to the MySQL database
-        mydb = mysql.connector.connect(host="localhost",user="root",password="francis121",database="report")
+        mydb = pymysql.connect(host="localhost",user="root",database="report")
 
         # Create a cursor object to execute SQL queries
         mycursor = mydb.cursor()
@@ -158,7 +159,7 @@ class Admin:
         self.lbl_stuff.place(x=450, y=120, height=100, width=200)
         ##################################################################
         # Connect to the MySQL database
-        mydb = mysql.connector.connect(host="localhost",user="root",password="francis121",database="report")
+        mydb = pymysql.connect(host="localhost",user="root",database="report")
 
         # Create a cursor object to execute SQL queries
         mycursor = mydb.cursor()
@@ -177,7 +178,7 @@ class Admin:
         self.lbl_subject.place(x=650, y=120, height=100, width=200)
         #################################################################
        # Connect to the MySQL database
-        mydb = mysql.connector.connect(host="localhost",user="root",password="francis121",database="report")
+        mydb = pymysql.connect(host="localhost",user="root",database="report")
 
         # Create a cursor object to execute SQL queries
         mycursor = mydb.cursor()
@@ -196,7 +197,7 @@ class Admin:
         self.lbl_term.place(x=850, y=120, height=100, width=200)
        #########################################################
        # Connect to the MySQL database
-        mydb = mysql.connector.connect(host="localhost",user="root",password="francis121",database="report")
+        mydb = pymysql.connect(host="localhost",user="root",database="report")
 
         # Create a cursor object to execute SQL queries
         mycursor = mydb.cursor()

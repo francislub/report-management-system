@@ -1,7 +1,8 @@
 from tkinter import *
 import tkinter.messagebox
 from PIL import Image,ImageTk
-import mysql.connector
+#import mysql.connector
+import pymysql
 import random
 from time import strftime
 from teacher import Teacher_win
@@ -11,7 +12,7 @@ from term import termYear
 from year import Year
 from classL import cL
 from subject import Subject
-from grade import Grade
+from grade import Grade 
 class IMS:
     def __init__(self,root):
         self.root = root
@@ -19,7 +20,8 @@ class IMS:
         self.root.overrideredirect(True)
         self.root.title('Color Changer')
         #List of colors
-        colors = ["#010c48","#ff5733", "#33ff57", "#3357ff", "#ff33a6", "#a633ff"]
+        colors = ["#000000","#000426","#000848","#000C6A","#00108C","#0014AE","#0018D0"]
+        #colors = ["#010c48","#ff5733", "#33ff57", "#3357ff", "#ff33a6", "#a633ff"]
 
         # Function to change the background color
         def change_color():
@@ -160,7 +162,7 @@ class IMS:
         self.lbl_student.place(x=250, y=120, height=100, width=200)
         
         # Connect to the MySQL database
-        self.mydb = mysql.connector.connect(host="localhost", user="root", password="francis121", database="report")
+        self.mydb = pymysql.connect(host="localhost", user="root", database="report")
 
         # Create a cursor object to execute SQL queries
         self.mycursor = self.mydb.cursor()
@@ -207,9 +209,9 @@ class IMS:
 
         # Schedule the next update after 3000 milliseconds (3 seconds)
         self.root.after(3000, self.update_slideshowStudent)
-        #####################################################
+        ##################################################### START ######################
                # Connect to the MySQL database
-        mydb = mysql.connector.connect(host="localhost",user="root",password="francis121",database="report")
+        mydb = pymysql.connect(host="localhost",user="root",database="report")
 
         # Create a cursor object to execute SQL queries
         mycursor = mydb.cursor()
@@ -222,13 +224,57 @@ class IMS:
 
         # Get the total number of stuff from the result
         total_stuff = result[0]
-
+        ###################################################################===================
+    
         # Display the total number of stuff
         self.lbl_stuff = Label(self.root, text=f"Total Stuff\n{total_stuff}", bd=5, relief=RIDGE, bg="#ff5722", fg="white", font=("goudy old style", 20, "bold"))
         self.lbl_stuff.place(x=450, y=120, height=100, width=200)
-        ##################################################################
         # Connect to the MySQL database
-        mydb = mysql.connector.connect(host="localhost",user="root",password="francis121",database="report")
+        #self.mydb = mysql.connector.connect(host="localhost", user="root", password="francis121", database="report")
+
+        # Create a cursor object to execute SQL queries
+        #self.mycursor = self.mydb.cursor()
+
+        # Create labels to display total information
+        #self.labels = [
+        #    Label(self.root, bd=5, relief=RIDGE, bg="#ff5722", fg="white", font=("goudy old style", 20, "bold"))
+        #    for _ in range(3)
+        #]
+
+        # Display the labels
+        #for idx, label in enumerate(self.labels):
+        #    label.place(x=450, y=120, height=100, width=200)
+
+        # Create a slideshow iterator
+        #self.slide_show = cycle(self.update_labels)
+        #self.root.after(0, self.update_slideshow)
+
+    #def execute_query(self, query):
+    #    self.mycursor.execute(query)
+    #    result = self.mycursor.fetchone()
+    #    return result[0]
+
+    #def update_labels(self):
+        # Execute SQL queries to get total count for different categories
+    #    total_stuff = self.execute_query("SELECT COUNT(*) FROM teacher")
+    #    total_males = self.execute_query("SELECT COUNT(*) FROM teacher WHERE gender = 'Male'")
+    #    total_females = self.execute_query("SELECT COUNT(*) FROM teacher WHERE gender = 'Female'")
+
+        # Display the total information on labels
+    #    self.labels[0]['text'] = f"Total Stuff\n{total_stuff}"
+    #    self.labels[1]['text'] = f"Total Males\n{total_males}"
+    #    self.labels[2]['text'] = f"Total Females\n{total_females}"
+
+    #def update_slideshow(self):
+        # Update labels with the next set of information
+    #    next_slide = next(self.slide_show)
+    #    next_slide()
+
+        # Schedule the next update after 10 seconds
+    #    self.root.after(10000, self.update_slideshow)
+        ##################################################################===================================
+        # Connect to the MySQL database
+        mydb = pymysql.connect(host="localhost",user="root",database="report")
 
         # Create a cursor object to execute SQL queries
         mycursor = mydb.cursor()
@@ -247,7 +293,7 @@ class IMS:
         self.lbl_subject.place(x=650, y=120, height=100, width=200)
         #################################################################
        # Connect to the MySQL database
-        mydb = mysql.connector.connect(host="localhost",user="root",password="francis121",database="report")
+        mydb = pymysql.connect(host="localhost",user="root",database="report")
 
         # Create a cursor object to execute SQL queries
         mycursor = mydb.cursor()
@@ -266,7 +312,7 @@ class IMS:
         self.lbl_term.place(x=850, y=120, height=100, width=200)
        #########################################################
        # Connect to the MySQL database
-        mydb = mysql.connector.connect(host="localhost",user="root",password="francis121",database="report")
+        mydb = pymysql.connect(host="localhost",user="root",database="report")
 
         # Create a cursor object to execute SQL queries
         mycursor = mydb.cursor()
@@ -283,6 +329,11 @@ class IMS:
         # Display the total number of user
         self.lbl_sales = Label(self.root, text=f"Total Users\n{total_term}", bd=5, relief=RIDGE, bg="#ffc107", fg="white", font=("goudy old style", 20, "bold"))
         self.lbl_sales.place(x=1050, y=120, height=100, width=200)
+        
+        #===========Graph Menu==============
+        GraphMenu = Frame(self.root,bd=2,relief=RIDGE, bg="white")
+        GraphMenu.place(x=390,y=240,width=965,height=440)
+        
        
         #########################################  
     def show_loading_message(self):

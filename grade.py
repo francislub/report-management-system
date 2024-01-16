@@ -2,7 +2,8 @@ from tkinter import*
 from PIL import Image,ImageTk
 from tkinter import ttk
 import tkinter as tk
-import mysql.connector
+#import mysql.connector
+import pymysql
 import random
 import tkinter.messagebox
 from tkinter import messagebox
@@ -19,10 +20,6 @@ class Grade:
         self.var_gradeID.set(str(x))
         
         self.var_class=StringVar()
-        self.var_mark1=StringVar()
-        self.var_mark2=StringVar()
-        self.var_grade1=StringVar()
-        self.var_comm1=StringVar()
         self.var_mark1_1=StringVar()
         self.var_mark2_1=StringVar()
         self.var_grade1_1=StringVar()
@@ -81,7 +78,8 @@ class Grade:
         #===================labelframe====================================================
         labelframeleft=LabelFrame(self.root,bd=2,relief=RIDGE,text="Select Class",font=("times new roman",18,"bold"),padx=2)
         labelframeleft.place(x=400,y=50,width=755,height=200)
-        #====================labels and entrys=========================================
+        #====================labels and entrys==================================================================================
+        #===========================================================================================================================
         lbl_grade_ref=Label(labelframeleft,text="Grade ID",font=("times new roman",12,"bold"),padx=2,pady=6)
         lbl_grade_ref.grid(row=0,column=0,sticky=W)
         entry_gradeID=ttk.Entry(labelframeleft,textvariable=self.var_gradeID,width=22,font=("times new roman",13,"bold"),state="readonly")
@@ -94,10 +92,10 @@ class Grade:
             next_reference = "1001"  # Initial reference
         
         self.var_gradeID.set(next_reference)
-        
+        #===========================================================================================================================
         #==========================Select Class ========================================
         self.var_=StringVar()
-        self.conn = mysql.connector.connect(host="localhost",user="root",password="francis121",database="report")
+        self.conn = pymysql.connect(host="localhost",user="root",database="report")
 
         # Retrieve values from the database
         cursor = self.conn.cursor()
@@ -108,25 +106,36 @@ class Grade:
         combo_class["values"] = tuple(["Select"] + classs)
         combo_class.current(0)
         combo_class.grid(row=1, column=1)
+        combo_class.bind("<<ComboboxSelected>>", self.fetch_data)
         
         classL=Label(labelframeleft,text="Class",font=("times new roman",12,"bold"),padx=2,pady=6)
         classL.grid(row=1,column=0,sticky=W)
         
         def get_selected_class():
             # Replace this function with your code to fetch the user's name from the database
-            return
+            return self.var_class.get()
         # Retrieve user information from the database
         selected_cl = get_selected_class()
 
         # Label to display the user's name
         label_selected_class = Label(labelframeleft, text=f"SET GRADING SYSTEM FOR {selected_cl}", padx=5,font=("times new roman",16,"bold"))
         label_selected_class.place(x=0,y=100,width=600,height=20)
+
+        # Function to update the label when the class is selected
+        def update_selected_class_label():
+            selected_class = get_selected_class()
+            label_selected_class.config(text=f"SET GRADING SYSTEM FOR {selected_class}")
+
+        # Bind the function to the Combobox event
+        combo_class.bind("<<ComboboxSelected>>", lambda event: update_selected_class_label())
+        #========================================================================================================================
+        #========================================================================================================================
         
         #================btn===========================================
         btn_frame=Frame(labelframeleft,bd=2,relief=RIDGE)
         btn_frame.place(x=400,y=10,width=250,height=80)
         
-        btnAdd=Button(btn_frame,text="Add",font=("arial",11,"bold"),bg="black",fg="gold",width=8)
+        btnAdd=Button(btn_frame,text="Add", command=self.add_data,font=("arial",11,"bold"),bg="black",fg="gold",width=8)
         btnAdd.grid(row=0,column=0,padx=1)
         
         btnUpdate=Button(btn_frame,text="View",font=("arial",11,"bold"),bg="black",fg="gold",width=8)
@@ -159,41 +168,29 @@ class Grade:
         lbl_comment.grid(row=0,column=7,sticky=W,padx=40)
         
         #=========================Entries=====================================
-        entry_mark1=ttk.Entry(labelframeright,textvariable=self.var_mark1,width=16,font=("times new roman",13,"bold"))
-        entry_mark1.grid(row=1,column=1,padx=40,pady=5)
-        
-        entry_mark2=ttk.Entry(labelframeright,textvariable=self.var_mark2,width=16,font=("times new roman",13,"bold"))
-        entry_mark2.grid(row=1,column=3,padx=40,pady=5)
-        
-        entry_grade1=ttk.Entry(labelframeright,textvariable=self.var_grade1,width=16,font=("times new roman",13,"bold"))
-        entry_grade1.grid(row=1,column=5,padx=40,pady=5)
-        
-        entry_comm1=ttk.Entry(labelframeright,textvariable=self.var_comm1,width=16,font=("times new roman",13,"bold"))
-        entry_comm1.grid(row=1,column=7,padx=40,pady=5)
-        
         entry_mark1_1=ttk.Entry(labelframeright,textvariable=self.var_mark1_1,width=16,font=("times new roman",13,"bold"))
-        entry_mark1_1.grid(row=2,column=1,padx=40,pady=5)
+        entry_mark1_1.grid(row=1,column=1,padx=40,pady=5)
         
         entry_mark2_1=ttk.Entry(labelframeright,textvariable=self.var_mark2_1,width=16,font=("times new roman",13,"bold"))
-        entry_mark2_1.grid(row=2,column=3,padx=40,pady=5)
+        entry_mark2_1.grid(row=1,column=3,padx=40,pady=5)
         
         entry_grade1_1=ttk.Entry(labelframeright,textvariable=self.var_grade1_1,width=16,font=("times new roman",13,"bold"))
-        entry_grade1_1.grid(row=2,column=5,padx=40,pady=5)
+        entry_grade1_1.grid(row=1,column=5,padx=40,pady=5)
         
         entry_comm1_1=ttk.Entry(labelframeright,textvariable=self.var_comm1_1,width=16,font=("times new roman",13,"bold"))
-        entry_comm1_1.grid(row=2,column=7,padx=40,pady=5)
+        entry_comm1_1.grid(row=1,column=7,padx=40,pady=5)
 
         entry_mark1_2=ttk.Entry(labelframeright,textvariable=self.var_mark1_2,width=16,font=("times new roman",13,"bold"))
-        entry_mark1_2.grid(row=3,column=1,padx=40,pady=5)
+        entry_mark1_2.grid(row=2,column=1,padx=40,pady=5)
         
         entry_mark2_2=ttk.Entry(labelframeright,textvariable=self.var_mark2_2,width=16,font=("times new roman",13,"bold"))
-        entry_mark2_2.grid(row=3,column=3,padx=40,pady=5)
+        entry_mark2_2.grid(row=2,column=3,padx=40,pady=5)
         
         entry_grade1_2=ttk.Entry(labelframeright,textvariable=self.var_grade1_2,width=16,font=("times new roman",13,"bold"))
-        entry_grade1_2.grid(row=3,column=5,padx=40,pady=5)
+        entry_grade1_2.grid(row=2,column=5,padx=40,pady=5)
         
         entry_comm1_2=ttk.Entry(labelframeright,textvariable=self.var_comm1_2,width=16,font=("times new roman",13,"bold"))
-        entry_comm1_2.grid(row=3,column=7,padx=40,pady=5)
+        entry_comm1_2.grid(row=2,column=7,padx=40,pady=5)
 
         entry_mark1_3=ttk.Entry(labelframeright,textvariable=self.var_mark1_3,width=16,font=("times new roman",13,"bold"))
         entry_mark1_3.grid(row=3,column=1,padx=40,pady=5)
@@ -298,178 +295,191 @@ class Grade:
         entry_mark2_11.grid(row=11,column=3,padx=40,pady=5)
         
         entry_grade1_11=ttk.Entry(labelframeright,textvariable=self.var_grade1_11,width=16,font=("times new roman",13,"bold"))
-        entry_grade1_11.grid(row=11,column=5,padx=40,pady=5)
+        entry_grade1_11.grid(row=11, column=5, padx=40, pady=5)
         
         entry_comm1_11=ttk.Entry(labelframeright,textvariable=self.var_comm1_11,width=16,font=("times new roman",13,"bold"))
         entry_comm1_11.grid(row=11,column=7,padx=40,pady=5)
+
         
         #========================================================================================
-        
     def add_data(self):
-        if self.var_subjectID.get() == "" or self.var_class.get() == "":
+        if self.var_class.get() == "Select":
             messagebox.showerror("Error", "All fields are required", parent=self.root)
         else:
             try:
-                conn = mysql.connector.connect(host="localhost", user="root", password="francis121", database="report")
+                conn = pymysql.connect(host="localhost", user="root", database="report")
                 my_cursor = conn.cursor()
-                # Check if subjectID  already exists
-                my_cursor.execute("SELECT * FROM subject WHERE subjectID = %s", (self.var_subjectID.get(),))
+
+                # Use the last reference to generate the next gradeID
+                last_reference = self.get_last_reference()
+                next_reference = str(int(last_reference) + 1) if last_reference else "1001"
+                self.var_gradeID.set(next_reference)
+
+                # Check if gradeID already exists
+                my_cursor.execute("SELECT * FROM grade WHERE gradeID = %s", (self.var_gradeID.get(),))
                 existing_record = my_cursor.fetchone()
 
+                # Define the values for the query
+                values = (
+                    self.var_gradeID.get(),
+                    self.var_class.get(),
+                    self.var_mark1_1.get(), self.var_mark2_1.get(), self.var_grade1_1.get(), self.var_comm1_1.get(),
+                    self.var_mark1_2.get(), self.var_mark2_2.get(), self.var_grade1_2.get(), self.var_comm1_2.get(),
+                    self.var_mark1_3.get(), self.var_mark2_3.get(), self.var_grade1_3.get(), self.var_comm1_3.get(),
+                    self.var_mark1_4.get(), self.var_mark2_4.get(), self.var_grade1_4.get(), self.var_comm1_4.get(),
+                    self.var_mark1_5.get(), self.var_mark2_5.get(), self.var_grade1_5.get(), self.var_comm1_5.get(),
+                    self.var_mark1_6.get(), self.var_mark2_6.get(), self.var_grade1_6.get(), self.var_comm1_6.get(),
+                    self.var_mark1_7.get(), self.var_mark2_7.get(), self.var_grade1_7.get(), self.var_comm1_7.get(),
+                    self.var_mark1_8.get(), self.var_mark2_8.get(), self.var_grade1_8.get(), self.var_comm1_8.get(),
+                    self.var_mark1_9.get(), self.var_mark2_9.get(), self.var_grade1_9.get(), self.var_comm1_9.get(),
+                    self.var_mark1_10.get(), self.var_mark2_10.get(), self.var_grade1_10.get(), self.var_comm1_10.get(),
+                    self.var_mark1_11.get(), self.var_mark2_11.get(), self.var_grade1_11.get(), self.var_comm1_11.get()
+                )
+
                 if existing_record:
-                    messagebox.showerror("Error", "Subject ID already exists. Please enter a different ID.", parent=self.root)
+                    # Update the existing record
+                    my_cursor.execute("""
+                        UPDATE grade SET
+                        class = %s,
+                        mark1 = %s, mark1_1 = %s, grade1 = %s, comment1 = %s,
+                        mark2 = %s, mark2_2 = %s, grade2 = %s, comment2 = %s,
+                        mark3 = %s, mark3_3 = %s, grade3 = %s, comment3 = %s,
+                        mark4 = %s, mark4_4 = %s, grade4 = %s, comment4 = %s,
+                        mark5 = %s, mark5_5 = %s, grade5 = %s, comment5 = %s,
+                        mark6 = %s, mark6_6 = %s, grade6 = %s, comment6 = %s,
+                        mark7 = %s, mark7_7 = %s, grade7 = %s, comment7 = %s,
+                        mark8 = %s, mark8_8 = %s, grade8 = %s, comment8 = %s,
+                        mark9 = %s, mark9_9 = %s, grade9 = %s, comment9 = %s,
+                        mark10 = %s, mark10_10 = %s, grade10 = %s, comment10 = %s,
+                        mark11 = %s, mark11_11 = %s, grade11 = %s, comment11 = %s
+                        WHERE gradeID = %s
+                    """, values)
                 else:
-                    my_cursor.execute("insert into subject values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", (
-                        self.var_subjectID.get(),
-                        self.var_class.get(),
-                        self.var_classteacher.get(),
-                        self.var_subject1.get(),
-                        self.var_teacher1.get(),
-                        self.var_subject2.get(),
-                        self.var_teacher2.get(),
-                        self.var_subject3.get(),
-                        self.var_teacher3.get(),
-                        self.var_subject4.get(),
-                        self.var_teacher4.get(),
-                        self.var_subject5.get(),
-                        self.var_teacher5.get(),
-                        self.var_subject6.get(),
-                        self.var_teacher6.get(),
-                        self.var_subject7.get(),
-                        self.var_teacher7.get(),
-                        self.var_subject8.get(),
-                        self.var_teacher8.get(),
-                        self.var_subject9.get(),
-                        self.var_teacher9.get(),
-                        self.var_subject10.get(),
-                        self.var_teacher10.get(),
-                        self.var_subject11.get(),
-                        self.var_teacher11.get(),
-                        self.var_subject12.get(),
-                        self.var_teacher12.get(),
-                        self.var_subject13.get(),
-                        self.var_teacher13.get(),
-                        self.var_subject14.get(),
-                        self.var_teacher14.get(),
-                        self.var_subject15.get(),
-                        self.var_teacher15.get(),
-                        self.var_subject16.get(),
-                        self.var_teacher16.get()
-                        
-                    ))
+                    # Insert a new record
+                    my_cursor.execute("""
+                    INSERT INTO grade (gradeID, class, mark1, mark1_1, grade1, comment1, mark2, mark2_2, grade2, comment2,
+                                    mark3, mark3_3, grade3, comment3, mark4, mark4_4, grade4, comment4, mark5, mark5_5,
+                                    grade5, comment5, mark6, mark6_6, grade6, comment6, mark7, mark7_7, grade7, comment7,
+                                    mark8, mark8_8, grade8, comment8, mark9, mark9_9, grade9, comment9, mark10, mark10_10,
+                                    grade10, comment10, mark11, mark11_11, grade11, comment11)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,
+                            %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                    """, values)
+
                     conn.commit()
                     self.fetch_data()
                     conn.close()
-                    self.reset()
-                    messagebox.showinfo("Success", "Subject has been added successfully", parent=self.root)
+                    messagebox.showinfo("Success", "Grade has been added/updated successfully", parent=self.root)
+
             except Exception as es:
                 messagebox.showwarning("Warning", f"Something went wrong: {str(es)}", parent=self.root)
-          
+    
     def fetch_data(self):
-       conn=mysql.connector.connect(host="localhost",username="root",password="francis121",database="report")
-       my_cursor=conn.cursor()
-       my_cursor.execute("select *from subject")
-       rows=my_cursor.fetchall()
-       if len(rows)!=0:
-           self.Cust_Details_Table.delete(*self.Cust_Details_Table.get_children())
-           for i in rows:
-               self.Cust_Details_Table.insert("",END,values=i)
-               conn.commit()
-           conn.close()
-            
-    def get_cusrsor(self,event=""):
-       cusrsor_row=self.Cust_Details_Table.focus()
-       content=self.Cust_Details_Table.item(cusrsor_row)
-       row=content["values"]
+        conn = pymysql.connect(host="localhost", user="root", database="report")
+        my_cursor = conn.cursor()
+
+        # Fetch data for the selected class
+        class_selected = self.var_class.get()
+        my_cursor.execute("SELECT * FROM grade WHERE class = %s", (class_selected,))
+        rows = my_cursor.fetchall()
+
+        # Display data in textboxes
+        if rows:
+            row = rows[0]  # Assuming only one record for a class for simplicity
+            self.var_gradeID.set(row[0])
+            self.var_class.set(row[1])
+            self.var_mark1_1.set(row[2])
+            self.var_mark2_1.set(row[3])
+            self.var_grade1_1.set(row[4])
+            self.var_comm1_1.set(row[5])
+            self.var_mark1_2.set(row[6])
+            self.var_mark2_2.set(row[7])
+            self.var_grade1_2.set(row[8])
+            self.var_comm1_2.set(row[9])
+            self.var_mark1_3.set(row[10])
+            self.var_mark2_3.set(row[11])
+            self.var_grade1_3.set(row[12])
+            self.var_comm1_3.set(row[13])
+            self.var_mark1_4.set(row[14])
+            self.var_mark2_4.set(row[15])
+            self.var_grade1_4.set(row[16])
+            self.var_comm1_4.set(row[17])
+            self.var_mark1_5.set(row[18])
+            self.var_mark2_5.set(row[19])
+            self.var_grade1_5.set(row[20])
+            self.var_comm1_5.set(row[21])
+            self.var_mark1_6.set(row[22])
+            self.var_mark2_6.set(row[23])
+            self.var_grade1_6.set(row[24])
+            self.var_comm1_6.set(row[25])
+            self.var_mark1_7.set(row[26])
+            self.var_mark2_7.set(row[27])
+            self.var_grade1_7.set(row[28])
+            self.var_comm1_7.set(row[29])
+            self.var_mark1_8.set(row[30])
+            self.var_mark2_8.set(row[31])
+            self.var_grade1_8.set(row[32])
+            self.var_comm1_8.set(row[33])
+            self.var_mark1_9.set(row[34])
+            self.var_mark2_9.set(row[35])
+            self.var_grade1_9.set(row[36])
+            self.var_comm1_9.set(row[37])
+            self.var_mark1_10.set(row[38])
+            self.var_mark2_10.set(row[39])
+            self.var_grade1_10.set(row[40])
+            self.var_comm1_10.set(row[41])
+            self.var_mark1_11.set(row[42])
+            self.var_mark2_11.set(row[43])
+            self.var_grade1_11.set(row[44])
+            self.var_comm1_11.set(row[45])
+
+        conn.close()
+
+    
+    def get_selected_class(self):
+        try:
+            conn = pymysql.connect(host="localhost", user="root", database="report")
+            my_cursor = conn.cursor()
+
+            # Fetch data for the selected class
+            class_selected = self.var_class.get()
+            my_cursor.execute("SELECT * FROM grade WHERE class = %s", (class_selected,))
+            row = my_cursor.fetchone()
+
+            conn.close()
+
+            return row  # Returns a tuple containing the grade information for the selected class
+
+        except Exception as e:
+            messagebox.showwarning("Warning", f"Error fetching data: {str(e)}", parent=self.root)
+            return None
+    
+    def get_last_reference(self):
+        try:
+            conn = pymysql.connect(host="localhost", user="root", database="report")
+            cursor = conn.cursor()
+
+            # Execute a query to get the maximum gradeID value from the database
+            cursor.execute("SELECT MAX(gradeID) FROM grade")  # Replace with your actual table name
+            result = cursor.fetchone()
+
+            # Close the database connection
+            conn.close()
+
+            # If there are no existing gradeIDs, return None
+            if result[0] is not None:
+                return str(result[0])
+            else:
+                return None
+
+        except Exception as e:
+            print(f"Error: {e}")
+            return None
         
-       self.var_subjectID.set(row[0]),
-       self.var_class.set(row[1]),
-       self.var_classteacher.set(row[2]),
-       self.var_subject1.set(row[3]),
-       self.var_teacher1.set(row[4]),
-       self.var_subject2.set(row[5]),
-       self.var_teacher2.set(row[6]),
-       self.var_subject3.set(row[7]),
-       self.var_teacher3.set(row[8]),
-       self.var_subject4.set(row[9]),
-       self.var_teacher4.set(row[10]),
-       self.var_subject5.set(row[11]),
-       self.var_teacher5.set(row[12]),
-       self.var_subject6.set(row[13]),
-       self.var_teacher6.set(row[14]),
-       self.var_subject7.set(row[15]),
-       self.var_teacher7.set(row[16]),
-       self.var_subject8.set(row[17]),
-       self.var_teacher8.set(row[18]),
-       self.var_subject9.set(row[19]),
-       self.var_teacher9.set(row[20]),
-       self.var_subject10.set(row[21]),
-       self.var_teacher10.set(row[22]),
-       self.var_subject11.set(row[23]),
-       self.var_teacher11.set(row[24]),
-       self.var_subject12.set(row[25]),
-       self.var_teacher12.set(row[26]),
-       self.var_subject13.set(row[27]),
-       self.var_teacher13.set(row[28]),
-       self.var_subject14.set(row[29]),
-       self.var_teacher14.set(row[30]),
-       self.var_subject15.set(row[31]),
-       self.var_teacher15.set(row[32]),
-       self.var_subject16.set(row[33]),
-       self.var_teacher16.set(row[34])
-        
-    def update(self):
-       if self.var_class.get()=="Select"and self.var_classteacher.get()=="Select":
-           messagebox.showerror("Error","Please enter Class Teacher and Subjects",parent=self.root)
-       else:
-           conn=mysql.connector.connect(host="localhost",username="root",password="francis121",database="report")
-           my_cursor=conn.cursor()
-           my_cursor.execute("update subject set Class=%s,Classteacher=%s,Subject1=%s,Teacher1=%s,Subject2=%s,Teacher2=%s,Subject3=%s,Teacher3=%s,Subject4=%s,Teacher4=%s,Subject5=%s,Teacher5=%s,Subject6=%s,Teacher6=%s,Subject7=%s,Teacher7=%s,Subject8=%s,Teacher8=%s,Subject9=%s,Teacher9=%s,Subject10=%s,Teacher10=%s,Subject11=%s,Teacher11=%s,Subject12=%s,Teacher12=%s,Subject13=%s,Teacher13=%s,Subject14=%s,Teacher14=%s,Subject15=%s,Teacher15=%s,Subject16=%s,Teacher16=%s where subjectID=%s",(
-                   self.var_class.get(),
-                   self.var_classteacher.get(),
-                   self.var_subject1.get(),
-                   self.var_teacher1.get(),
-                   self.var_subject2.get(),
-                   self.var_teacher2.get(),
-                   self.var_subject3.get(),
-                   self.var_teacher3.get(),
-                   self.var_subject4.get(),
-                   self.var_teacher4.get(),
-                   self.var_subject5.get(),
-                   self.var_teacher5.get(),
-                   self.var_subject6.get(),
-                   self.var_teacher6.get(),
-                   self.var_subject7.get(),
-                   self.var_teacher7.get(),
-                   self.var_subject8.get(),
-                   self.var_teacher8.get(),
-                   self.var_subject9.get(),
-                   self.var_teacher9.get(),
-                   self.var_subject10.get(),
-                   self.var_teacher10.get(),
-                   self.var_subject11.get(),
-                   self.var_teacher11.get(),
-                   self.var_subject12.get(),
-                   self.var_teacher12.get(),
-                   self.var_subject13.get(),
-                   self.var_teacher13.get(),
-                   self.var_subject14.get(),
-                   self.var_teacher14.get(),
-                   self.var_subject15.get(),
-                   self.var_teacher15.get(),
-                   self.var_subject16.get(),
-                   self.var_teacher16.get(),
-                   self.var_subjectID.get()         
-           ))
-           conn.commit()
-           self.fetch_data()
-           conn.close()
-           self.reset()
-           messagebox.showinfo("Update","Subject details has been updated sucessfully",parent=self.root)
     def Delete(self):
        Delete=messagebox.askyesno("Report Management System","Do you want to delete this class details",parent=self.root)
        if Delete>0:
-           conn=mysql.connector.connect(host="localhost",username="root",password="francis121",database="report")
+           conn=pymysql.connect(host="localhost",user="root",database="report")
            my_cursor=conn.cursor()
            query="delete from subject where subjectID=%s"
            value=(self.var_subjectID.get(),)
@@ -481,114 +491,6 @@ class Grade:
        self.fetch_data()
        conn.close()
        self.reset()
-    def reset(self):
-        try:
-            # Fetch the last reference from the database
-            last_reference = self.get_last_reference()
-
-            if last_reference is not None:
-                # Increment the last reference by 1
-                next_reference = str(int(last_reference) + 1)
-            else:
-                # If there's no existing reference, set a default value
-                next_reference = "1000"
-
-            # Set the incremented reference to self.var_ref
-            self.var_subjectID.set(next_reference)
-
-        except Exception as e:
-            print(f"Error fetching or incrementing reference: {e}")
-        self.var_class.set("Select"),
-        self.var_classteacher.set("Select"),
-        self.var_subject1.set(""),
-        self.var_teacher1.set("Select"),
-        self.var_subject2.set(""),
-        self.var_teacher2.set("Select"),
-        self.var_subject3.set(""),
-        self.var_teacher3.set("Select"),
-        self.var_subject4.set(""),
-        self.var_teacher4.set("Select"),
-        self.var_subject5.set(""),
-        self.var_teacher5.set("Select"),
-        self.var_subject6.set(""),
-        self.var_teacher6.set("Select"),
-        self.var_subject7.set(""),
-        self.var_teacher7.set("Select"),
-        self.var_subject8.set(""),
-        self.var_teacher8.set("Select"),
-        self.var_subject9.set(""),
-        self.var_teacher9.set("Select"),
-        self.var_subject10.set(""),
-        self.var_teacher10.set("Select"),
-        self.var_subject11.set(""),
-        self.var_teacher11.set("Select"),
-        self.var_subject12.set(""),
-        self.var_teacher12.set("Select"),
-        self.var_subject13.set(""),
-        self.var_teacher13.set("Select"),
-        self.var_subject14.set(""),
-        self.var_teacher14.set("Select"),
-        self.var_subject15.set(""),
-        self.var_teacher15.set("Select"),
-        self.var_subject16.set(""),
-        self.var_teacher16.set("Select"),
-        #x=random.randint(1000,9999)
-        #self.var_subjectID.set(str(x))
-        
-    def search(self):
-       conn=mysql.connector.connect(host="localhost",user="root",password="francis121",database="report")
-       my_cursor=conn.cursor()
-       my_cursor.execute("SELECT * FROM subject WHERE " + str(self.serch_var.get()) + " LIKE %s", ('%' + str(self.txt_search.get()) + '%',))
-
-       rows=my_cursor.fetchall()
-       if len(rows)!=0:
-           self.Cust_Details_Table.delete(*self.Cust_Details_Table.get_children())
-           for i in rows:
-               self.Cust_Details_Table.insert("",END,values=i)
-           conn.commit()
-       conn.close()
-       
-    def show_all_data(self):
-        conn = mysql.connector.connect(host="localhost", user="root", password="francis121", database="report")
-        my_cursor = conn.cursor()
-
-        my_cursor.execute("SELECT * FROM subject")
-        rows = my_cursor.fetchall()
-
-        if len(rows) != 0:
-            # Assuming self.Cust_Details_Table is your treeview widget
-            self.Cust_Details_Table.delete(*self.Cust_Details_Table.get_children())
-
-            for i in rows:
-                self.Cust_Details_Table.insert("", END, values=i)
-
-            conn.commit()
-
-        conn.close()
-       
-    def get_last_reference(self):
-            try:
-                conn = mysql.connector.connect(host="localhost", user="root", password="francis121", database="report")
-                cursor = conn.cursor()
-
-                # Execute a query to get the maximum reference value from the database
-                cursor.execute("SELECT MAX(subjectID) FROM subject")
-
-                # Fetch the result
-                result = cursor.fetchone()
-
-                # Close the database connection
-                conn.close()
-
-                # If there are no existing references, return None
-                if result[0] is not None:
-                    return str(result[0])
-                else:
-                    return None
-
-            except Exception as e:
-                print(f"Error: {e}")
-                return None
     
     def Exit(self):
            self.Exit= tkinter.messagebox.askyesno("Report Management System","confirm if you want to exit",parent=self.root)

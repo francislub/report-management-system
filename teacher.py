@@ -2,7 +2,8 @@ from tkinter import*
 from PIL import Image,ImageTk
 from tkinter import ttk
 import tkinter as tk
-import mysql.connector
+#import mysql.connector
+import pymysql
 import random
 import tkinter.messagebox
 from tkinter import messagebox
@@ -156,6 +157,12 @@ class Teacher_win:
         self.Cust_Details_Table.heading("address",text="Address", anchor=tk.CENTER)
         
         self.Cust_Details_Table["show"]="headings"
+        s = ttk.Style(root)
+        s.theme_use("clam")
+        
+        s.configure(".", font=('Helvetice',11))
+        s.configure("Treeview.Heading",foreground='red',font=('Helvetica',11,"bold"))
+        
         self.Cust_Details_Table.column("ref",width=100, anchor=tk.CENTER)
         self.Cust_Details_Table.column("name",width=400, anchor=tk.CENTER)
         self.Cust_Details_Table.column("gender",width=100, anchor=tk.CENTER)
@@ -168,12 +175,15 @@ class Teacher_win:
         self.Cust_Details_Table.bind("<ButtonRelease-1>",self.get_cusrsor)
         self.fetch_data()
         
+        self.Cust_Details_Table.tag_configure("evenrow", background="#f0f0f0")
+        self.Cust_Details_Table.tag_configure("oddrow", background="#ffffff")
+        
     def add_data(self):
         if self.var_mobile.get() == "" or self.var_teacher_name.get() == "":
             messagebox.showerror("Error", "All fields are required", parent=self.root)
         else:
             try:
-                conn = mysql.connector.connect(host="localhost", user="root", password="francis121", database="report")
+                conn = pymysql.connect(host="localhost", user="root", database="report")
                 my_cursor = conn.cursor()
                 # Check if subjectID  already exists
                 my_cursor.execute("SELECT * FROM teacher WHERE ref = %s", (self.var_ref.get(),))
@@ -200,18 +210,46 @@ class Teacher_win:
             except Exception as es:
                 messagebox.showwarning("Warning", f"Something went wrong: {str(es)}", parent=self.root)
 
+    #def fetch_data(self):
+    #   conn=mysql.connector.connect(host="localhost",user="root",password="francis121",database="report")
+    #   my_cursor=conn.cursor()
+    #   my_cursor.execute("select *from teacher")
+    #   rows=my_cursor.fetchall()
+    #   if len(rows)!=0:
+    #       self.Cust_Details_Table.delete(*self.Cust_Details_Table.get_children())
+    #       for i in rows:
+    #           self.Cust_Details_Table.insert("",END,values=i)
+    #           conn.commit()
+    #       conn.close()
+    #    for row in data:
+    #        self.Cust_Details_Table.insert("", "end", values=row)
+
+    # Rest of your existing code remains unchanged
     def fetch_data(self):
-       conn=mysql.connector.connect(host="localhost",username="root",password="francis121",database="report")
-       my_cursor=conn.cursor()
-       my_cursor.execute("select *from teacher")
-       rows=my_cursor.fetchall()
-       if len(rows)!=0:
-           self.Cust_Details_Table.delete(*self.Cust_Details_Table.get_children())
-           for i in rows:
-               self.Cust_Details_Table.insert("",END,values=i)
-               conn.commit()
-           conn.close()
+        conn = pymysql.connect(host="localhost", user="root", database="report")
+        my_cursor = conn.cursor()
+        my_cursor.execute("select * from teacher")
+        rows = my_cursor.fetchall()
+
+        if len(rows) != 0:
+            # Clear existing data in the treeview
+            self.Cust_Details_Table.delete(*self.Cust_Details_Table.get_children())
+
+            # Insert new rows into the treeview
+            for i in rows:
+                self.Cust_Details_Table.insert("", END, values=i)
             
+            # Commit changes and close the connection
+                conn.commit()
+            conn.close()
+
+        # Add tags to alternate rows
+        for i, item in enumerate(self.Cust_Details_Table.get_children()):
+            if i % 2 == 0:
+                self.Cust_Details_Table.item(item, tags=("oddrow",))
+            else:
+                self.Cust_Details_Table.item(item, tags=("evenrow",))
+
     def get_cusrsor(self,event=""):
        cusrsor_row=self.Cust_Details_Table.focus()
        content=self.Cust_Details_Table.item(cusrsor_row)
@@ -229,9 +267,9 @@ class Teacher_win:
        if self.var_mobile.get()=="":
            messagebox.showerror("Error","Please enter mobile number",parent=self.root)
        else:
-           conn=mysql.connector.connect(host="localhost",username="root",password="francis121",database="report")
+           conn=pymysql.connect(host="localhost",user="root",database="report")
            my_cursor=conn.cursor()
-           my_cursor.execute("update  teacher set Name=%s,Gender=%s,Mobile=%s,Email=%s,Nationality=%s,Address=%s where Reff=%s",(
+           my_cursor.execute("update  teacher set Name=%s,Gender=%s,Mobile=%s,Email=%s,Nationality=%s,Address=%s where Ref=%s",(
                    self.var_teacher_name.get(),
                    self.var_gender.get(),
                    self.var_mobile.get(),
@@ -248,7 +286,7 @@ class Teacher_win:
     def Delete(self):
        Delete=messagebox.askyesno("Report Management System","Do you want to delete this Teacher",parent=self.root)
        if Delete>0:
-           conn=mysql.connector.connect(host="localhost",username="root",password="francis121",database="report")
+           conn=pymysql.connect(host="localhost",user="root",database="report")
            my_cursor=conn.cursor()
            query="delete from teacher where Ref=%s"
            value=(self.var_ref.get(),)
@@ -286,11 +324,11 @@ class Teacher_win:
         self.var_address.set("")
         
     def search(self):
-       conn=mysql.connector.connect(host="localhost",user="root",password="francis121",database="report")
+       conn=pymysql.connect(host="localhost",user="root",database="report")
        my_cursor=conn.cursor()
         
        my_cursor.execute("SELECT * FROM teacher WHERE " + str(self.serch_var.get()) + " LIKE %s", ('%' + str(self.txt_search.get()) + '%',))
-
+        
        rows=my_cursor.fetchall()
        if len(rows)!=0:
            self.Cust_Details_Table.delete(*self.Cust_Details_Table.get_children())
@@ -298,9 +336,15 @@ class Teacher_win:
                self.Cust_Details_Table.insert("",END,values=i)
            conn.commit()
        conn.close()
+       # Add tags to alternate rows
+       for i, item in enumerate(self.Cust_Details_Table.get_children()):
+           if i % 2 == 0:
+               self.Cust_Details_Table.item(item, tags=("oddrow",))
+           else:
+               self.Cust_Details_Table.item(item, tags=("evenrow",))
        
     def show_all_data(self):
-        conn = mysql.connector.connect(host="localhost", user="root", password="francis121", database="report")
+        conn = pymysql.connect(host="localhost", user="root", database="report")
         my_cursor = conn.cursor()
 
         my_cursor.execute("SELECT * FROM teacher")
@@ -314,11 +358,16 @@ class Teacher_win:
                 self.Cust_Details_Table.insert("", END, values=i)
 
             conn.commit()
-
-        conn.close()
+            conn.close()
+        for i, item in enumerate(self.Cust_Details_Table.get_children()):
+            if i % 2 == 0:
+                self.Cust_Details_Table.item(item, tags=("oddrow",))
+            else:
+                self.Cust_Details_Table.item(item, tags=("evenrow",))
+                
     def get_last_reference(self):
             try:
-                conn = mysql.connector.connect(host="localhost", user="root", password="francis121", database="report")
+                conn = pymysql.connect(host="localhost", user="root", database="report")
                 cursor = conn.cursor()
 
                 # Execute a query to get the maximum reference value from the database

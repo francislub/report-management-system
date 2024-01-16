@@ -2,7 +2,8 @@ from tkinter import*
 from PIL import Image,ImageTk
 from tkinter import ttk
 import tkinter as tk
-import mysql.connector
+#import mysql.connector
+import pymysql
 import random
 import tkinter.messagebox
 from tkinter import messagebox
@@ -82,7 +83,7 @@ class Subject:
         
         #==========================Select Class ========================================
         self.var_year=StringVar()
-        self.conn = mysql.connector.connect(host="localhost",user="root",password="francis121",database="report")
+        self.conn = pymysql.connect(host="localhost",user="root",database="report")
 
         # Retrieve values from the database
         cursor = self.conn.cursor()
@@ -98,7 +99,7 @@ class Subject:
         classL.grid(row=1,column=0,sticky=W)
         
         #==========================Select class teacher =======================================
-        self.conn = mysql.connector.connect(host="localhost",user="root",password="francis121",database="report")
+        self.conn = pymysql.connect(host="localhost",user="root",database="report")
 
         # Retrieve values from the database
         cursor = self.conn.cursor()
@@ -143,7 +144,7 @@ class Subject:
         entry_subject1.grid(row=0,column=1,padx=10)
         
         #==========================Select teacher =======================================
-        self.conn = mysql.connector.connect(host="localhost",user="root",password="francis121",database="report")
+        self.conn = pymysql.connect(host="localhost",user="root",database="report")
 
         # Retrieve values from the database
         cursor = self.conn.cursor()
@@ -165,7 +166,7 @@ class Subject:
         entry_subject2.grid(row=0,column=5,padx=10)
         
         #==========================Select teacher =======================================
-        self.conn = mysql.connector.connect(host="localhost",user="root",password="francis121",database="report")
+        self.conn = pymysql.connect(host="localhost",user="root",database="report")
         # Retrieve values from the database
         cursor = self.conn.cursor()
         cursor.execute("SELECT DISTINCT Name FROM teacher")  # Modify with your database column and table names
@@ -186,7 +187,7 @@ class Subject:
         entry_subject3.grid(row=1,column=1)
         
         #==========================Select teacher =======================================
-        self.conn = mysql.connector.connect(host="localhost",user="root",password="francis121",database="report")
+        self.conn = pymysql.connect(host="localhost",user="root",database="report")
 
         # Retrieve values from the database
         cursor = self.conn.cursor()
@@ -208,7 +209,7 @@ class Subject:
         entry_subject4.grid(row=1,column=5)
         
         #==========================Select teacher =======================================
-        self.conn = mysql.connector.connect(host="localhost",user="root",password="francis121",database="report")
+        self.conn = pymysql.connect(host="localhost",user="root",database="report")
         # Retrieve values from the database
         cursor = self.conn.cursor()
         cursor.execute("SELECT DISTINCT Name FROM teacher")  # Modify with your database column and table names
@@ -229,7 +230,7 @@ class Subject:
         entry_subject5.grid(row=2,column=1)
         
         #==========================Select teacher =======================================
-        self.conn = mysql.connector.connect(host="localhost",user="root",password="francis121",database="report")
+        self.conn = pymysql.connect(host="localhost",user="root",database="report")
 
         # Retrieve values from the database
         cursor = self.conn.cursor()
@@ -251,7 +252,7 @@ class Subject:
         entry_subject6.grid(row=2,column=5)
         
         #==========================Select teacher =======================================
-        self.conn = mysql.connector.connect(host="localhost",user="root",password="francis121",database="report")
+        self.conn = pymysql.connect(host="localhost",user="root",database="report")
         # Retrieve values from the database
         cursor = self.conn.cursor()
         cursor.execute("SELECT DISTINCT Name FROM teacher")  # Modify with your database column and table names
@@ -272,7 +273,7 @@ class Subject:
         entry_subject7.grid(row=3,column=1)
         
         #==========================Select teacher =======================================
-        self.conn = mysql.connector.connect(host="localhost",user="root",password="francis121",database="report")
+        self.conn = pymysql.connect(host="localhost",user="root",database="report")
 
         # Retrieve values from the database
         cursor = self.conn.cursor()
@@ -294,7 +295,7 @@ class Subject:
         entry_subject8.grid(row=3,column=5)
         
         #==========================Select teacher =======================================
-        self.conn = mysql.connector.connect(host="localhost",user="root",password="francis121",database="report")
+        self.conn = pymysql.connect(host="localhost",user="root",database="report")
         # Retrieve values from the database
         cursor = self.conn.cursor()
         cursor.execute("SELECT DISTINCT Name FROM teacher")  # Modify with your database column and table names
@@ -315,7 +316,7 @@ class Subject:
         entry_subject9.grid(row=4,column=1)
         
         #==========================Select teacher =======================================
-        self.conn = mysql.connector.connect(host="localhost",user="root",password="francis121",database="report")
+        self.conn = pymysql.connect(host="localhost",user="root",database="report")
 
         # Retrieve values from the database
         cursor = self.conn.cursor()
@@ -337,7 +338,7 @@ class Subject:
         entry_subject10.grid(row=4,column=5)
         
         #==========================Select teacher =======================================
-        self.conn = mysql.connector.connect(host="localhost",user="root",password="francis121",database="report")
+        self.conn = pymysql.connect(host="localhost",user="root",database="report")
         # Retrieve values from the database
         cursor = self.conn.cursor()
         cursor.execute("SELECT DISTINCT Name FROM teacher")  # Modify with your database column and table names
@@ -358,7 +359,7 @@ class Subject:
         entry_subject11.grid(row=5,column=1)
         
         #==========================Select teacher =======================================
-        self.conn = mysql.connector.connect(host="localhost",user="root",password="francis121",database="report")
+        self.conn = pymysql.connect(host="localhost",user="root",database="report")
 
         # Retrieve values from the database
         cursor = self.conn.cursor()
@@ -380,7 +381,7 @@ class Subject:
         entry_subject12.grid(row=5,column=5)
         
         #==========================Select teacher =======================================
-        self.conn = mysql.connector.connect(host="localhost",user="root",password="francis121",database="report")
+        self.conn = pymysql.connect(host="localhost",user="root",database="report")
         # Retrieve values from the database
         cursor = self.conn.cursor()
         cursor.execute("SELECT DISTINCT Name FROM teacher")  # Modify with your database column and table names
@@ -401,7 +402,7 @@ class Subject:
         entry_subject13.grid(row=6,column=1)
         
         #==========================Select teacher =======================================
-        self.conn = mysql.connector.connect(host="localhost",user="root",password="francis121",database="report")
+        self.conn = pymysql.connect(host="localhost",user="root",database="report")
 
         # Retrieve values from the database
         cursor = self.conn.cursor()
@@ -423,7 +424,7 @@ class Subject:
         entry_subject14.grid(row=6,column=5)
         
         #==========================Select teacher =======================================
-        self.conn = mysql.connector.connect(host="localhost",user="root",password="francis121",database="report")
+        self.conn = pymysql.connect(host="localhost",user="root",database="report")
         # Retrieve values from the database
         cursor = self.conn.cursor()
         cursor.execute("SELECT DISTINCT Name FROM teacher")  # Modify with your database column and table names
@@ -444,7 +445,7 @@ class Subject:
         entry_subject15.grid(row=7,column=1)
         
         #==========================Select teacher =======================================
-        self.conn = mysql.connector.connect(host="localhost",user="root",password="francis121",database="report")
+        self.conn = pymysql.connect(host="localhost",user="root",database="report")
 
         # Retrieve values from the database
         cursor = self.conn.cursor()
@@ -466,7 +467,7 @@ class Subject:
         entry_subject16.grid(row=7,column=5)
         
         #==========================Select teacher =======================================
-        self.conn = mysql.connector.connect(host="localhost",user="root",password="francis121",database="report")
+        self.conn = pymysql.connect(host="localhost",user="root",database="report")
         # Retrieve values from the database
         cursor = self.conn.cursor()
         cursor.execute("SELECT DISTINCT Name FROM teacher")  # Modify with your database column and table names
@@ -604,27 +605,15 @@ class Subject:
         self.fetch_data()
         
         # Define tag configuration for odd and even rows
-        self.Cust_Details_Table.tag_configure('oddrow', background='#E8E8E8')  # Light gray
-        self.Cust_Details_Table.tag_configure('evenrow', background='#FFFFFF')  # White
-
-        # Fetch and display data
-        self.fetch_data()
-
-        # Add these lines after the self.fetch_data() line
-
-        # Apply the tags to alternate rows
-        for i in range(len(self.Cust_Details_Table.get_children())):
-            if i % 2 == 0:
-                self.Cust_Details_Table.item(self.Cust_Details_Table.get_children()[i], tags=('evenrow',))
-            else:
-                self.Cust_Details_Table.item(self.Cust_Details_Table.get_children()[i], tags=('oddrow',))
+        self.Cust_Details_Table.tag_configure("evenrow", background="#f0f0f0")
+        self.Cust_Details_Table.tag_configure("oddrow", background="#ffffff")
         
     def add_data(self):
         if self.var_subjectID.get() == "" or self.var_class.get() == "":
             messagebox.showerror("Error", "All fields are required", parent=self.root)
         else:
             try:
-                conn = mysql.connector.connect(host="localhost", user="root", password="francis121", database="report")
+                conn = pymysql.connect(host="localhost", user="root", database="report")
                 my_cursor = conn.cursor()
                 # Check if subjectID  already exists
                 my_cursor.execute("SELECT * FROM subject WHERE subjectID = %s", (self.var_subjectID.get(),))
@@ -680,7 +669,7 @@ class Subject:
                 messagebox.showwarning("Warning", f"Something went wrong: {str(es)}", parent=self.root)
           
     def fetch_data(self):
-       conn=mysql.connector.connect(host="localhost",username="root",password="francis121",database="report")
+       conn=pymysql.connect(host="localhost",user="root",database="report")
        my_cursor=conn.cursor()
        my_cursor.execute("select *from subject")
        rows=my_cursor.fetchall()
@@ -690,6 +679,11 @@ class Subject:
                self.Cust_Details_Table.insert("",END,values=i)
                conn.commit()
            conn.close()
+       for i, item in enumerate(self.Cust_Details_Table.get_children()):
+           if i % 2 == 0:
+                self.Cust_Details_Table.item(item, tags=("oddrow",))
+           else:
+                self.Cust_Details_Table.item(item, tags=("evenrow",))
             
     def get_cusrsor(self,event=""):
        cusrsor_row=self.Cust_Details_Table.focus()
@@ -736,7 +730,7 @@ class Subject:
        if self.var_class.get()=="Select"and self.var_classteacher.get()=="Select":
            messagebox.showerror("Error","Please enter Class Teacher and Subjects",parent=self.root)
        else:
-           conn=mysql.connector.connect(host="localhost",username="root",password="francis121",database="report")
+           conn=pymysql.connect(host="localhost",user="root",database="report")
            my_cursor=conn.cursor()
            my_cursor.execute("update subject set Class=%s,Classteacher=%s,Subject1=%s,Teacher1=%s,Subject2=%s,Teacher2=%s,Subject3=%s,Teacher3=%s,Subject4=%s,Teacher4=%s,Subject5=%s,Teacher5=%s,Subject6=%s,Teacher6=%s,Subject7=%s,Teacher7=%s,Subject8=%s,Teacher8=%s,Subject9=%s,Teacher9=%s,Subject10=%s,Teacher10=%s,Subject11=%s,Teacher11=%s,Subject12=%s,Teacher12=%s,Subject13=%s,Teacher13=%s,Subject14=%s,Teacher14=%s,Subject15=%s,Teacher15=%s,Subject16=%s,Teacher16=%s where subjectID=%s",(
                    self.var_class.get(),
@@ -783,7 +777,7 @@ class Subject:
     def Delete(self):
        Delete=messagebox.askyesno("Report Management System","Do you want to delete this class details",parent=self.root)
        if Delete>0:
-           conn=mysql.connector.connect(host="localhost",username="root",password="francis121",database="report")
+           conn=pymysql.connect(host="localhost",user="root",database="report")
            my_cursor=conn.cursor()
            query="delete from subject where subjectID=%s"
            value=(self.var_subjectID.get(),)
@@ -850,7 +844,7 @@ class Subject:
         #self.var_subjectID.set(str(x))
         
     def search(self):
-       conn=mysql.connector.connect(host="localhost",user="root",password="francis121",database="report")
+       conn=pymysql.connect(host="localhost",user="root",database="report")
        my_cursor=conn.cursor()
        my_cursor.execute("SELECT * FROM subject WHERE " + str(self.serch_var.get()) + " LIKE %s", ('%' + str(self.txt_search.get()) + '%',))
 
@@ -861,9 +855,14 @@ class Subject:
                self.Cust_Details_Table.insert("",END,values=i)
            conn.commit()
        conn.close()
+       for i, item in enumerate(self.Cust_Details_Table.get_children()):
+           if i % 2 == 0:
+                self.Cust_Details_Table.item(item, tags=("oddrow",))
+           else:
+                self.Cust_Details_Table.item(item, tags=("evenrow",))
        
     def show_all_data(self):
-        conn = mysql.connector.connect(host="localhost", user="root", password="francis121", database="report")
+        conn = pymysql.connect(host="localhost", user="root", database="report")
         my_cursor = conn.cursor()
 
         my_cursor.execute("SELECT * FROM subject")
@@ -877,12 +876,16 @@ class Subject:
                 self.Cust_Details_Table.insert("", END, values=i)
 
             conn.commit()
-
         conn.close()
+        for i, item in enumerate(self.Cust_Details_Table.get_children()):
+           if i % 2 == 0:
+                self.Cust_Details_Table.item(item, tags=("oddrow",))
+           else:
+                self.Cust_Details_Table.item(item, tags=("evenrow",))
        
     def get_last_reference(self):
             try:
-                conn = mysql.connector.connect(host="localhost", user="root", password="francis121", database="report")
+                conn = pymysql.connect(host="localhost", user="root", database="report")
                 cursor = conn.cursor()
 
                 # Execute a query to get the maximum reference value from the database

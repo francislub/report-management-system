@@ -5,7 +5,8 @@ from tkinter import ttk
 import random
 from tkinter import messagebox
 import tkinter.messagebox
-import mysql.connector
+#import mysql.connector
+import pymysql
 from time import strftime
 from datetime import datetime
 
@@ -95,6 +96,11 @@ class Year:
         self.year_table.heading("year",text="Year",anchor=tk.CENTER)
         
         self.year_table["show"]="headings"
+        s = ttk.Style(root)
+        s.theme_use("clam")
+        
+        s.configure(".", font=('Helvetice',11))
+        s.configure("Treeview.Heading",foreground='red',font=('Helvetica',11,"bold"))
         
         self.year_table.column("yearID",width=100,anchor=tk.CENTER)
         self.year_table.column("year",width=100,anchor=tk.CENTER)
@@ -103,12 +109,15 @@ class Year:
         self.year_table.bind("<ButtonRelease-1>",self.get_cusrsor)
         self.fetch_data()
         
+        self.year_table.tag_configure("evenrow", background="#f0f0f0")
+        self.year_table.tag_configure("oddrow", background="#ffffff")
+        
     def add_data(self):
         if self.var_yearID.get() == "" or self.var_year.get() == "":
             messagebox.showerror("Error", "All fields are required", parent=self.root)
         else:
             try:
-                conn = mysql.connector.connect(host="localhost", user="root", password="francis121", database="report")
+                conn = pymysql.connect(host="localhost", user="root", database="report")
                 my_cursor = conn.cursor()
 
                 # Check if year ID already exists
@@ -131,7 +140,7 @@ class Year:
                 messagebox.showwarning("Warning", f"Something went wrong: {str(es)}", parent=self.root)
 
     def fetch_data(self):
-        conn=mysql.connector.connect(host="localhost",user="root",password="francis121",database="report")
+        conn=pymysql.connect(host="localhost",user="root",database="report")
         my_cursor=conn.cursor()
         my_cursor.execute("select *from year")
         rows=my_cursor.fetchall()
@@ -141,6 +150,12 @@ class Year:
                 self.year_table.insert("",END,values=i)
                 conn.commit()
             conn.close()
+        for i, item in enumerate(self.year_table.get_children()):
+           if i % 2 == 0:
+                self.year_table.item(item, tags=("oddrow",))
+           else:
+                self.year_table.item(item, tags=("evenrow",))
+                
     def get_cusrsor(self,event=""):
         cusrsor_row=self.year_table.focus()
         content=self.year_table.item(cusrsor_row)
@@ -154,7 +169,7 @@ class Year:
         if self.var_year.get()=="":
             messagebox.showerror("Error","Please enter A year",parent=self.root)
         else:
-            conn=mysql.connector.connect(host="localhost",user="root",password="francis121",database="report")
+            conn=pymysql.connect(host="localhost",user="root",database="report")
             my_cursor=conn.cursor()
             my_cursor.execute("update  year set year=%s where yearID=%s",(
                     
@@ -171,7 +186,7 @@ class Year:
     def Delete(self):
         Delete=messagebox.askyesno("Report Management System","Do you want to delete this New Year",parent=self.root)
         if Delete>0:
-            conn=mysql.connector.connect(host="localhost",user="root",password="francis121",database="report")
+            conn=pymysql.connect(host="localhost",user="root",database="report")
             my_cursor=conn.cursor()
             query="delete from year where yearID=%s"
             value=(self.var_yearID.get(),)
@@ -210,7 +225,7 @@ class Year:
         #self.var_yearID.set(str(x))
     def get_last_reference(self):
             try:
-                conn = mysql.connector.connect(host="localhost", user="root", password="francis121", database="report")
+                conn = pymysql.connect(host="localhost", user="root", database="report")
                 cursor = conn.cursor()
 
                 # Execute a query to get the maximum reference value from the database

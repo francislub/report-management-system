@@ -2,7 +2,8 @@ from tkinter import*
 from PIL import Image,ImageTk
 from tkinter import ttk
 import tkinter as tk
-import mysql.connector
+#import mysql.connector
+import pymysql
 import random
 from tkcalendar import DateEntry
 from datetime import datetime
@@ -143,6 +144,12 @@ class User:
         self.Cust_Details_Table.heading("image",text="Image", anchor=tk.CENTER)
         
         self.Cust_Details_Table["show"]="headings"
+        s = ttk.Style(root)
+        s.theme_use("clam")
+        
+        s.configure(".", font=('Helvetice',11))
+        s.configure("Treeview.Heading",foreground='red',font=('Helvetica',11,"bold"))
+        
         self.Cust_Details_Table.column("ref",width=100, anchor=tk.CENTER)
         self.Cust_Details_Table.column("username",width=300, anchor=tk.CENTER)
         self.Cust_Details_Table.column("email",width=300, anchor=tk.CENTER)
@@ -155,12 +162,16 @@ class User:
         self.Cust_Details_Table.bind("<ButtonRelease-1>",self.get_cusrsor)
         self.fetch_data()
         
+        # Define tag configuration for odd and even rows
+        self.Cust_Details_Table.tag_configure("evenrow", background="#f0f0f0")
+        self.Cust_Details_Table.tag_configure("oddrow", background="#ffffff")
+        
     def add_data(self):
         if self.var_username.get() == "" or self.var_email.get() == "":
             messagebox.showerror("Error", "All fields are required", parent=self.root)
         else:
             try:
-                conn = mysql.connector.connect(host="localhost", user="root", password="francis121", database="report")
+                conn = pymysql.connect(host="localhost", user="root", database="report")
                 my_cursor = conn.cursor()
                 # Check if subjectID  already exists
                 my_cursor.execute("SELECT * FROM user WHERE ref = %s", (self.var_ref.get(),))
@@ -187,7 +198,7 @@ class User:
                 messagebox.showwarning("Warning", f"Something went wrong: {str(es)}", parent=self.root)
 
     def fetch_data(self):
-       conn=mysql.connector.connect(host="localhost",username="root",password="francis121",database="report")
+       conn=pymysql.connect(host="localhost",user="root",database="report")
        my_cursor=conn.cursor()
        my_cursor.execute("select *from user")
        rows=my_cursor.fetchall()
@@ -197,6 +208,12 @@ class User:
                self.Cust_Details_Table.insert("",END,values=i)
                conn.commit()
            conn.close()
+           
+           for i, item in enumerate(self.Cust_Details_Table.get_children()):
+                if i % 2 == 0:
+                        self.Cust_Details_Table.item(item, tags=("oddrow",))
+                else:
+                        self.Cust_Details_Table.item(item, tags=("evenrow",))
             
     def get_cusrsor(self,event=""):
        cusrsor_row=self.Cust_Details_Table.focus()
@@ -215,7 +232,7 @@ class User:
        if self.var_username.get()=="":
            messagebox.showerror("Error","Please enter the user details to be deleted",parent=self.root)
        else:
-           conn=mysql.connector.connect(host="localhost",username="root",password="francis121",database="report")
+           conn=pymysql.connect(host="localhost",user="root",database="report")
            my_cursor=conn.cursor()
            my_cursor.execute("update user set Username=%s,Email=%s,Role=%s,Password1=%s,Password2=%s,image=%s where Ref=%s",(
                    self.var_username.get(),
@@ -234,7 +251,7 @@ class User:
     def Delete(self):
        Delete=messagebox.askyesno("Report Management System","Do you want to delete this User",parent=self.root)
        if Delete>0:
-           conn=mysql.connector.connect(host="localhost",username="root",password="francis121",database="report")
+           conn=pymysql.connect(host="localhost",user="root",database="report")
            my_cursor=conn.cursor()
            query="delete from user where Ref=%s"
            value=(self.var_ref.get(),)
@@ -275,7 +292,7 @@ class User:
        
     def get_last_reference(self):
             try:
-                conn = mysql.connector.connect(host="localhost", user="root", password="francis121", database="report")
+                conn = pymysql.connect(host="localhost", user="root", database="report")
                 cursor = conn.cursor()
 
                 # Execute a query to get the maximum reference value from the database

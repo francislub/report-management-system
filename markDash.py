@@ -2,11 +2,16 @@ from tkinter import *
 import tkinter.messagebox
 from tkinter import messagebox
 from tkinter import ttk
+from tkinter import Tk, Button, ttk, Label, Toplevel
 from PIL import Image,ImageTk
-import mysql.connector
+#import mysql.connector
+import pymysql
 import random
 from time import strftime
 from sheet import MarkEntry
+from subject import Subject
+from classL import cL
+
 
 class Markss:
     def __init__(self,root,selected_class="Select Class"):
@@ -69,7 +74,7 @@ class Markss:
         self.lbl_select = Label(ClassMenu, text="Select Class", font=("times new roman", 17,"bold"),image=self.icon_side,compound=RIGHT,bg="white")
         self.lbl_select.place(x=150, y=8)
         
-        self.conn = mysql.connector.connect(host="localhost",user="root",password="francis121",database="report")
+        self.conn = pymysql.connect(host="localhost",user="root",database="report")
         
         # Retrieve values from the database
         cursor = self.conn.cursor()
@@ -82,7 +87,7 @@ class Markss:
         self.combo_class.place(x=330, y=13)
         # Bind the function to update the label when the combobox selection changes
         self.combo_class.bind("<<ComboboxSelected>>", self.update_selected_class_label)
-
+        #=====================================================================================================
         
         #=====================title=======================================================
         lbl_title=Label(self.root,text="MARKS ENTRY FORM",font=("times new roman",18,"bold"),bg="black",fg="white",bd=4)
@@ -91,10 +96,6 @@ class Markss:
         self.label_class = Label(self.root, text=f"Class: {selected_class}", bg="black", fg="white", anchor="w",
                                  padx=5, font=("times new roman", 20, "bold"))
         self.label_class.place(x=270, y=160)
-        # Function to update the label when the combobox selection changes
-        #def update_selected_class_label(self, event):
-        #    selected_class = self.combo_class.get()
-        #    self.label_class.config(text=f"Class: {selected_class}")
         
         #===========Left Menu==============
         LeftMenu = Frame(self.root,bd=2,relief=RIDGE, bg="white")
@@ -102,9 +103,9 @@ class Markss:
         
         ################## Buttons####################################################
         #self.subject_buttons = []  # List to store subject buttons
-        btn_subject = Button(LeftMenu,text="Subject\nEntry",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",17,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
+        btn_subject = Button(LeftMenu,text="Subject\nEntry",command=self.show_loading_subject,image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",17,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
         btn_terminalRe = Button(LeftMenu,text="Terminal\nReports",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",17,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
-        btn_classList = Button(LeftMenu,text="Class\nList",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",18,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
+        btn_classList = Button(LeftMenu,text="Class\nList",command= self.show_loading_class,image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",18,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
         btn_broadSheet = Button(LeftMenu,text="Broad\nSheet",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",18,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
         btn_teachDash = Button(LeftMenu,text="MOCK",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",18,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
         btn_teachDash = Button(LeftMenu,text="Attendance",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",18,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
@@ -114,7 +115,6 @@ class Markss:
         
         
         lbl_footer = Label(self.root,text="Report Management System | Developed by LarksTeckHub \nFor any Technical Issue Contact: 0741789121",font=("times new roman",12),bg="#4d636d",fg="white").pack(side=BOTTOM, fill=X)
-   
         #===============Button==================
         #===================labelframe====================================================
         labelframeleft=LabelFrame(self.root,bd=2,relief=RIDGE,text="",font=("times new roman",18,"bold"),padx=2)
@@ -178,10 +178,16 @@ class Markss:
             col = (i - 1) % 2
             btn_subject.place(x=20 + col * 230, y=10 + row * 50, height=40, width=200)
             self.subject_buttons.append(btn_subject)
-            
+        
+    def show_selected_class(self):
+        selected_class = self.combo_class.get()
+        # Now, you can pass the selected_class value to sheet.py or update the label directly
+        # In this example, we will use a simple print statement
+        print("Selected Class:", selected_class)
+              
     def update_selected_class_label(self, event):
         selected_class = self.combo_class.get()
-        self.label_class.config(text=f"Class: {selected_class}")
+        
         # Fetch subjects for the selected class from the database
         cursor = self.conn.cursor()
         cursor.execute("SELECT subject1, subject2, subject3, subject4, subject5, subject6, subject7, subject8, subject9, subject10, subject11, subject12, subject13, subject14, subject15, subject16 FROM subject WHERE class = %s", (selected_class,))
@@ -194,7 +200,7 @@ class Markss:
             else:
                 # If subject is empty, display "Empty" on the button
                 self.subject_buttons[i]["text"] = "Empty"
-    
+  
     def show_subject(self, subject_number):
         # Check if a class is selected
         selected_class = self.combo_class.get()
@@ -204,43 +210,47 @@ class Markss:
 
         # Fetch students for the selected class from the database
         cursor = self.conn.cursor()
-        cursor.execute("SELECT name FROM student WHERE class = %s", (selected_class,))
+        cursor.execute("SELECT ref  FROM student WHERE class = %s", (selected_class,))
         students = [student[0] for student in cursor.fetchall()]
+        #students = cursor.fetchall()
+        
+        # Fetch students for the selected class from the database
+        #cursor = self.conn.cursor()
+        cursor.execute("SELECT name FROM student WHERE class = %s", (selected_class,))
+        name = [student[0] for student in cursor.fetchall()]
+        
+        # Fetch marks for the selected subject from the database
+        cursor.execute(f"SELECT * FROM result{subject_number} WHERE class = %s", (selected_class,))
+        marks = cursor.fetchall()
+        
+        cursor.execute(f"SELECT subject{subject_number} FROM subject WHERE class = %s", (selected_class,))
+        selected_subject = cursor.fetchone()[0]
 
         # Continue with the intended behavior
         self.new_window = Toplevel(self.root)
-        self.app = MarkEntry(self.new_window, rows=10, columns=5, students=students)
+        self.app = MarkEntry(self.new_window, rows=10, columns=5, name=name, students=students, selected_class= selected_class, selected_subject=selected_subject, subject_number=subject_number)
+        #self.app = MarkEntry(self.new_window, selected_class, selected_subject, students)
+
     #########################################  
-    #def show_loading_term(self):
-    #    self.loading_label = Label(self.root, text="Loading...", font=("times new roman", 20, "bold"))
-    #    self.loading_label.pack()
-    #    self.root.after(1000, self.term_details)  # After 30 seconds, show another window
+    def show_loading_subject(self):
+        self.loading_label = Label(self.root, text="Loading...", font=("times new roman", 20, "bold"))
+        self.loading_label.pack()
+        self.root.after(1000, self.subject_details)  # After 30 seconds, show another window
         
-    #def term_details(self):
-    #    self.loading_label.destroy()
-    #    self.new_window=Toplevel(self.root)
-    #    self.app=termYear(self.new_window)
+    def subject_details(self):
+        self.loading_label.destroy()
+        self.new_window=Toplevel(self.root)
+        self.app=Subject(self.new_window)
     #########################################  
-    #def show_loading_year(self):
-    #    self.loading_label = Label(self.root, text="Loading...", font=("times new roman", 20, "bold"))
-    #    self.loading_label.pack()
-    #    self.root.after(1000, self.year_details)  # After 30 seconds, show another window
-    #def year_details(self):
-    #    self.loading_label.destroy()
-    #    self.new_window=Toplevel(self.root)
-    #    self.app=Year(self.new_window)
+    def show_loading_class(self):
+        self.loading_label = Label(self.root, text="Loading...", font=("times new roman", 20, "bold"))
+        self.loading_label.pack()
+        self.root.after(1000, self.class_details)  # After 30 seconds, show another window
+    def class_details(self):
+        self.loading_label.destroy()
+        self.new_window=Toplevel(self.root)
+        self.app=cL(self.new_window)
          # Create the UI components
-
-    #def create_widgets(self):
-    #    labelframeleft = Frame(self.root)
-    #    labelframeleft.place(x=20, y=100, height=200, width=250)
-
-        # Subject display button
-    #    self.btn_subject1 = Button(labelframeleft, text="", font=("times new roman", 15, "bold"), cursor="hand2")
-    #    self.btn_subject1.place(x=20, y=10, height=40, width=200)
-
-    #def update_subject_button(self, subject_text):
-    #    self.btn_subject1["text"] = subject_text
        
     def logout(self):
         logout = tkinter.messagebox.askyesno("Report Management System", "Confirm if you want to log out", parent=self.root)

@@ -1,21 +1,25 @@
 from tkinter import *
 import tkinter.messagebox
-import mysql.connector
+#import mysql.connector
+import pymysql
 import random
 from time import strftime
 from PIL import Image,ImageTk
 from student import Student
-from markDash import Markss
+from markdash import Markss
 #from sheet import MarkEntry
 
 class Teacher:
     def __init__(self,root):
         self.root = root
+        #self.root = Tk()
+        #self.show_loading_marks()
         self.root.geometry("1450x730+0+0")
         self.root.overrideredirect(True)
         self.root.title('Color Changer')
         # List of colors
-        colors = ["#ff5733", "#33ff57", "#3357ff", "#ff33a6", "#a633ff"]
+        colors = ["#000000","#000426","#000848","#000C6A","#00108C","#0014AE","#0018D0"]
+        #colors = ["#ff5733", "#33ff57", "#3357ff", "#ff33a6", "#a633ff"]
 
         # Function to change the background color
         def change_color():
@@ -119,7 +123,7 @@ class Teacher:
         #===============content==================
         #################################################################
        # Connect to the MySQL database
-        mydb = mysql.connector.connect(host="localhost",user="root",password="francis121",database="report")
+        mydb = pymysql.connect(host="localhost",user="root",database="report")
 
         # Create a cursor object to execute SQL queries
         mycursor = mydb.cursor()
@@ -139,7 +143,7 @@ class Teacher:
         
         #####################################################
         # Connect to the MySQL database
-        mydb = mysql.connector.connect(host="localhost",user="root",password="francis121",database="report")
+        mydb = pymysql.connect(host="localhost",user="root",database="report")
 
         # Create a cursor object to execute SQL queries
         mycursor = mydb.cursor()
@@ -158,7 +162,7 @@ class Teacher:
         self.lbl_stuff.place(x=450, y=120, height=100, width=200)
         ##################################################################
         # Connect to the MySQL database
-        mydb = mysql.connector.connect(host="localhost",user="root",password="francis121",database="report")
+        mydb = pymysql.connect(host="localhost",user="root",database="report")
 
         # Create a cursor object to execute SQL queries
         mycursor = mydb.cursor()
@@ -177,7 +181,7 @@ class Teacher:
         self.lbl_subject.place(x=650, y=120, height=100, width=200)
         #################################################################
        # Connect to the MySQL database
-        mydb = mysql.connector.connect(host="localhost",user="root",password="francis121",database="report")
+        mydb = pymysql.connect(host="localhost",user="root",database="report")
 
         # Create a cursor object to execute SQL queries
         mycursor = mydb.cursor()
@@ -197,7 +201,7 @@ class Teacher:
        #########################################################
        #########################################################
        # Connect to the MySQL database
-        mydb = mysql.connector.connect(host="localhost",user="root",password="francis121",database="report")
+        mydb = pymysql.connect(host="localhost",user="root",database="report")
 
         # Create a cursor object to execute SQL queries
         mycursor = mydb.cursor()
@@ -236,6 +240,8 @@ class Teacher:
         
     def marks_details(self):
         self.loading_label.destroy()
+        #root.master.destroy()
+        #import mark
         self.new_window=Toplevel(self.root)
         self.app=Markss(self.new_window)
     

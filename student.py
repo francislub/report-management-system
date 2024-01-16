@@ -2,7 +2,8 @@ from tkinter import*
 from PIL import Image,ImageTk
 from tkinter import ttk
 import tkinter as tk
-import mysql.connector
+#import mysql.connector
+import pymysql
 import random
 from tkcalendar import DateEntry
 from datetime import datetime
@@ -95,7 +96,7 @@ class Student:
         combo_status.current(0)
         combo_status.grid(row=3,column=1)
         
-        self.conn = mysql.connector.connect(host="localhost",user="root",password="francis121",database="report")
+        self.conn = pymysql.connect(host="localhost",user="root",database="report")
 
         # Retrieve values from the database
         cursor = self.conn.cursor()
@@ -154,7 +155,7 @@ class Student:
         
         #===============table===============
         Table_Frame=LabelFrame(self.root,bd=2,relief=RIDGE,text="View Details and Search System",font=("arial",12,"bold"))
-        Table_Frame.place(x=435,y=50,width=915,height=530)
+        Table_Frame.place(x=435,y=50,width=915,height=645)
         
         lblSearchBy=Label(Table_Frame,text="Search By:",font=("times new roman",12,"bold"),bg="red",fg="white")
         lblSearchBy.grid(row=0,column=0,sticky=W,padx=2)
@@ -175,12 +176,12 @@ class Student:
         btnShowAll=Button(Table_Frame,text="Show All",command=self.show_all_data,font=("arial",11,"bold"),bg="black",fg="gold",width=8)
         btnShowAll.grid(row=0,column=4,padx=1)
         
-        btnviewAll=Button(Table_Frame,text="View Each Class",command=self.show_class_dropdown,font=("arial",11,"bold"),bg="black",fg="gold",width=12)
+        btnviewAll=Button(Table_Frame,text="View Each Class",font=("arial",11,"bold"),bg="black",fg="gold",width=12)
         btnviewAll.grid(row=0,column=5,padx=1)
         
         #================Show data table===========================================
         details_table=Frame(Table_Frame,bd=2,relief=RIDGE)
-        details_table.place(x=0,y=80,width=890,height=400)
+        details_table.place(x=0,y=80,width=890,height=540)
         
         Scrollbar_x=ttk.Scrollbar(details_table,orient=HORIZONTAL)
         Scrollbar_y=ttk.Scrollbar(details_table,orient=VERTICAL)
@@ -223,55 +224,8 @@ class Student:
         self.Cust_Details_Table.pack(fill=BOTH,expand=1)
         self.Cust_Details_Table.bind("<ButtonRelease-1>",self.get_cusrsor)
         self.fetch_data()
-        # Define tag configuration for odd and even rows
-        self.Cust_Details_Table.tag_configure('oddrow', background='#E8E8E8')  # Light gray
-        self.Cust_Details_Table.tag_configure('evenrow', background='#FFFFFF')  # White
-
-        # Fetch and display data
-        self.fetch_data()
-
-        # Add these lines after the self.fetch_data() line
-
-        # Define tag configuration for odd and even rows
-        self.Cust_Details_Table.tag_configure('oddrow', background='#E8E8E8')  # Light gray
-        self.Cust_Details_Table.tag_configure('evenrow', background='#FFFFFF')  # White
-
-        # Fetch and display data
-        self.fetch_data()
-
-        # Add these lines after the self.fetch_data() line
-
-        # Apply the tags to alternate rows
-        for i in range(len(self.Cust_Details_Table.get_children())):
-            if i % 2 == 0:
-                self.Cust_Details_Table.item(self.Cust_Details_Table.get_children()[i], tags=('evenrow',))
-            else:
-                self.Cust_Details_Table.item(self.Cust_Details_Table.get_children()[i], tags=('oddrow',))
-        
-        #i = 0
-        #for row in conn:
-        #    if ro[0]%2==0:
-        #        tree.insert('',i,text="",values=(ro[0],ro[1],ro[2],ro[3],ro[4],ro[5],ro[6]),tags=("even",))
-        #    else:
-        #        tree.insert('',i,text="",values=(ro[0],ro[1],ro[2],ro[3],ro[4],ro[5],ro[6]),tags=("odd",))
-        #    i = i + 1
-        
-        
-        # Define tag configuration for odd and even rows
-        #tree.tag_configure('even',foreground="black", background='white')  # Light gray
-        #tree.tag_configure('odd',foreground="white", background='black')  # White
-
-        # Fetch and display data
-        #self.fetch_data()
-
-        # Add these lines after the self.fetch_data() line
-
-        # Apply the tags to alternate rows
-        #for i in range(len(self.Cust_Details_Table.get_children())):
-        #    if i % 2 == 0:
-        #        self.Cust_Details_Table.item(self.Cust_Details_Table.get_children()[i], tags=('evenrow',))
-        #    else:
-        #        self.Cust_Details_Table.item(self.Cust_Details_Table.get_children()[i], tags=('oddrow',))
+        self.Cust_Details_Table.tag_configure("evenrow", background="#f0f0f0")
+        self.Cust_Details_Table.tag_configure("oddrow", background="#ffffff")
         
         # Add buttons for navigation
         self.prev_button = Button(Table_Frame, text="Previous", command=self.show_previous_table)
@@ -293,23 +247,16 @@ class Student:
         # Show the first class table
         self.show_class_table()
                 
-    def show_class_dropdown(self):
-        conn = mysql.connector.connect(host="localhost", username="root", password="francis121", database="report")
-        my_cursor = conn.cursor()
-        my_cursor.execute("SELECT DISTINCT class FROM student")
-        classes = [class_info[0] for class_info in my_cursor.fetchall()]
-        conn.close()
+    
+    #    conn = mysql.connector.connect(host="localhost", username="root", password="francis121", database="report")
+    #    my_cursor = conn.cursor()
+    #    my_cursor.execute("SELECT DISTINCT class FROM student")
+    #    classes = [class_info[0] for class_info in my_cursor.fetchall()]
+#====================================================================================================
 
-        menu = Menu(self.root, tearoff=0)
-        for class_name in self.class_list:
-            menu.add_command(label=class_name[0])
-
-        btnviewAll = self.root.nametowidget(self.root.winfo_children()[0])  # Assuming the button is the first child
-        menu.post(btnviewAll.winfo_rootx() + btnviewAll.winfo_width(), btnviewAll.winfo_rooty())
-
-
+#====================================================================================================
     def get_distinct_classes(self):
-        conn = mysql.connector.connect(host="localhost", username="root", password="francis121", database="report")
+        conn = pymysql.connect(host="localhost", user="root", database="report")
         my_cursor = conn.cursor()
         my_cursor.execute("SELECT DISTINCT class FROM student")
         classes = my_cursor.fetchall()
@@ -320,7 +267,7 @@ class Student:
         if self.class_list:
             current_class = self.class_list[self.current_class_index][0]
 
-            conn = mysql.connector.connect(host="localhost", username="root", password="francis121", database="report")
+            conn = pymysql.connect(host="localhost", user="root", database="report")
             my_cursor = conn.cursor()
             my_cursor.execute("SELECT * FROM student WHERE class = %s", (current_class,))
             rows = my_cursor.fetchall()
@@ -338,18 +285,28 @@ class Student:
         if self.current_class_index < len(self.class_list) - 1:
             self.current_class_index += 1
             self.show_class_table()
+        for i, item in enumerate(self.Cust_Details_Table.get_children()):
+            if i % 2 == 0:
+                self.Cust_Details_Table.item(item, tags=("oddrow",))
+            else:
+                self.Cust_Details_Table.item(item, tags=("evenrow",))
 
     def show_previous_table(self):
         if self.current_class_index > 0:
             self.current_class_index -= 1
             self.show_class_table()
+        for i, item in enumerate(self.Cust_Details_Table.get_children()):
+            if i % 2 == 0:
+                self.Cust_Details_Table.item(item, tags=("oddrow",))
+            else:
+                self.Cust_Details_Table.item(item, tags=("evenrow",))
         
     def add_data(self):
         if self.var_ref.get() == "" or self.var_student_name.get() == "":
             messagebox.showerror("Error", "All fields are required", parent=self.root)
         else:
             try:
-                conn = mysql.connector.connect(host="localhost", user="root", password="francis121", database="report")
+                conn = pymysql.connect(host="localhost", user="root", database="report")
                 my_cursor = conn.cursor()
                 # Check if subjectID  already exists
                 my_cursor.execute("SELECT * FROM student WHERE ref = %s", (self.var_ref.get(),))
@@ -378,7 +335,7 @@ class Student:
                 messagebox.showwarning("Warning", f"Something went wrong: {str(es)}", parent=self.root)
 
     def fetch_data(self):
-       conn=mysql.connector.connect(host="localhost",username="root",password="francis121",database="report")
+       conn=pymysql.connect(host="localhost",user="root",database="report")
        my_cursor=conn.cursor()
        my_cursor.execute("select *from student")
        rows=my_cursor.fetchall()
@@ -388,6 +345,11 @@ class Student:
                self.Cust_Details_Table.insert("",END,values=i)
                conn.commit()
            conn.close()
+       for i, item in enumerate(self.Cust_Details_Table.get_children()):
+           if i % 2 == 0:
+                self.Cust_Details_Table.item(item, tags=("oddrow",))
+           else:
+                self.Cust_Details_Table.item(item, tags=("evenrow",))
         
             
     def get_cusrsor(self,event=""):
@@ -409,7 +371,7 @@ class Student:
        if self.var_student_name.get()=="":
            messagebox.showerror("Error","Please enter the student details to be deleted",parent=self.root)
        else:
-           conn=mysql.connector.connect(host="localhost",username="root",password="francis121",database="report")
+           conn=pymysql.connect(host="localhost",user="root",database="report")
            my_cursor=conn.cursor()
            my_cursor.execute("update  student set Name=%s,Gender=%s,Status=%s,Class=%s,DOB=%s,Age=%s,Nationality=%s,Address=%s where Ref=%s",(
                    self.var_student_name.get(),
@@ -430,7 +392,7 @@ class Student:
     def Delete(self):
        Delete=messagebox.askyesno("Report Management System","Do you want to delete this Student",parent=self.root)
        if Delete>0:
-           conn=mysql.connector.connect(host="localhost",username="root",password="francis121",database="report")
+           conn=pymysql.connect(host="localhost",user="root",database="report")
            my_cursor=conn.cursor()
            query="delete from student where Ref=%s"
            value=(self.var_ref.get(),)
@@ -472,7 +434,7 @@ class Student:
         self.var_address.set("")
         
     def search(self):
-       conn=mysql.connector.connect(host="localhost",user="root",password="francis121",database="report")
+       conn=pymysql.connect(host="localhost",user="root",database="report")
        my_cursor=conn.cursor()
         
        my_cursor.execute("SELECT * FROM student WHERE " + str(self.serch_var.get()) + " LIKE %s", ('%' + str(self.txt_search.get()) + '%',))
@@ -484,9 +446,15 @@ class Student:
                self.Cust_Details_Table.insert("",END,values=i)
            conn.commit()
        conn.close()
+       # Add tags to alternate rows
+       for i, item in enumerate(self.Cust_Details_Table.get_children()):
+           if i % 2 == 0:
+               self.Cust_Details_Table.item(item, tags=("oddrow",))
+           else:
+               self.Cust_Details_Table.item(item, tags=("evenrow",))
        
     def show_all_data(self):
-        conn = mysql.connector.connect(host="localhost", user="root", password="francis121", database="report")
+        conn = pymysql.connect(host="localhost", user="root", database="report")
         my_cursor = conn.cursor()
 
         my_cursor.execute("SELECT * FROM student")
@@ -500,11 +468,17 @@ class Student:
                 self.Cust_Details_Table.insert("", END, values=i)
 
             conn.commit()
-
         conn.close()
+        # Add tags to alternate rows
+        for i, item in enumerate(self.Cust_Details_Table.get_children()):
+            if i % 2 == 0:
+               self.Cust_Details_Table.item(item, tags=("oddrow",))
+            else:
+               self.Cust_Details_Table.item(item, tags=("evenrow",))
+               
     def get_last_reference(self):
             try:
-                conn = mysql.connector.connect(host="localhost", user="root", password="francis121", database="report")
+                conn = pymysql.connect(host="localhost", user="root", database="report")
                 cursor = conn.cursor()
 
                 # Execute a query to get the maximum reference value from the database

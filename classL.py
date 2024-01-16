@@ -5,7 +5,8 @@ import random
 import tkinter as tk
 from tkinter import messagebox
 import tkinter.messagebox
-import mysql.connector
+#import mysql.connector
+import pymysql
 from time import strftime
 from datetime import datetime
 
@@ -94,6 +95,11 @@ class cL:
         self.class_table.heading("class",text="Class",anchor=tk.CENTER)
         
         self.class_table["show"]="headings"
+        s = ttk.Style(root)
+        s.theme_use("clam")
+        
+        s.configure(".", font=('Helvetice',11))
+        s.configure("Treeview.Heading",foreground='red',font=('Helvetica',11,"bold"))
         
         self.class_table.column("classID",width=100,anchor=tk.CENTER)
         self.class_table.column("class",width=100,anchor=tk.CENTER)
@@ -102,12 +108,15 @@ class cL:
         self.class_table.bind("<ButtonRelease-1>",self.get_cusrsor)
         self.fetch_data()
         
+        self.class_table.tag_configure("evenrow", background="#f0f0f0")
+        self.class_table.tag_configure("oddrow", background="#ffffff")
+        
     def add_data(self):
         if self.var_classID.get()==""or self.var_class.get()=="":
             messagebox.showerror("Error","All fields are required",parent=self.root)
         else:
             try:
-                conn=mysql.connector.connect(host="localhost",user="root",password="francis121",database="report")
+                conn=pymysql.connect(host="localhost",user="root",database="report")
                 my_cursor=conn.cursor()
                 # Check if term  already exists
                 my_cursor.execute("SELECT * FROM class WHERE classID = %s", (self.var_classID.get(),))
@@ -130,7 +139,7 @@ class cL:
                 messagebox.showwarning("warning",f"Something went wrong:{str(es)}",parent=self.root) 
     #fetch_data()
     def fetch_data(self):
-        conn=mysql.connector.connect(host="localhost",user="root",password="francis121",database="report")
+        conn=pymysql.connect(host="localhost",user="root",database="report")
         my_cursor=conn.cursor()
         my_cursor.execute("select *from class")
         rows=my_cursor.fetchall()
@@ -140,6 +149,12 @@ class cL:
                 self.class_table.insert("",END,values=i)
                 conn.commit()
             conn.close()
+            for i, item in enumerate(self.class_table.get_children()):
+                if i % 2 == 0:
+                        self.class_table.item(item, tags=("oddrow",))
+                else:
+                        self.class_table.item(item, tags=("evenrow",))
+                        
     def get_cusrsor(self,event=""):
         cusrsor_row=self.class_table.focus()
         content=self.class_table.item(cusrsor_row)
@@ -153,7 +168,7 @@ class cL:
         if self.var_class.get()=="":
             messagebox.showerror("Error","Please enter A Class",parent=self.root)
         else:
-            conn=mysql.connector.connect(host="localhost",user="root",password="francis121",database="report")
+            conn=pymysql.connect(host="localhost",user="root",database="report")
             my_cursor=conn.cursor()
             my_cursor.execute("update  class set class=%s where classID=%s",(
                     
@@ -170,7 +185,7 @@ class cL:
     def Delete(self):
         Delete=messagebox.askyesno("Report Management System","Do you want to delete this Class",parent=self.root)
         if Delete>0:
-            conn=mysql.connector.connect(host="localhost",user="root",password="francis121",database="report")
+            conn=pymysql.connect(host="localhost",user="root",database="report")
             my_cursor=conn.cursor()
             query="delete from class where classID=%s"
             value=(self.var_classID.get(),)
@@ -208,7 +223,7 @@ class cL:
         
     def get_last_reference(self):
             try:
-                conn = mysql.connector.connect(host="localhost", user="root", password="francis121", database="report")
+                conn = pymysql.connect(host="localhost", user="root", database="report")
                 cursor = conn.cursor()
 
                 # Execute a query to get the maximum reference value from the database
