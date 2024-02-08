@@ -24,7 +24,7 @@ class cL:
         lbl_title=Label(self.root,text="Add New Class",font=("times new roman",18,"bold"),bg="black",fg="gold",bd=4,relief=RIDGE)
         lbl_title.place(x=0,y=0,width=1150,height=50)
         #===================2st Image===log======================================================
-        Image2=Image.open(r"C:\Users\USER\Desktop\summer\PYTHON PROJECTS TKINTER\REPT\images\logo.PNG")
+        Image2=Image.open(r"C:\Users\ENG. FRANCIS\Desktop\summer\PYTHON PROJECTS TKINTER\REPT\images\logo.PNG")
         Image2=Image2.resize((100,40),Image.LANCZOS)
         self.photoImage2=ImageTk.PhotoImage(Image2)
         
@@ -51,12 +51,46 @@ class cL:
         
         self.var_classID.set(next_reference)
         
+        lbl_year=Label(labelframeleft,text="Year",font=("times new roman",12,"bold"),padx=2,pady=6)
+        lbl_year.grid(row=1,column=0,sticky=W,padx=20)
+        #==========================Select Year ========================================
+        self.var_year=StringVar()
+        self.conn = pymysql.connect(host="localhost",user="root",database="report")
+
+        # Retrieve values from the database
+        cursor = self.conn.cursor()
+        cursor.execute("SELECT DISTINCT year FROM year")  # Modify with your database column and table names
+        years = [year[0] for year in cursor.fetchall()]
+
+        combo_year = ttk.Combobox(labelframeleft, textvariable=self.var_year, width=27, font=("times new roman", 13, "bold"), state="readonly")
+        combo_year["values"] = tuple(["Select"] + years)
+        combo_year.current(0)
+        combo_year.grid(row=1, column=1,sticky=W)
+        
+        #==========================Select Term ========================================
+        lbl_term=Label(labelframeleft,text="Term",font=("times new roman",12,"bold"),padx=2,pady=6)
+        lbl_term.grid(row=2,column=0,sticky=W,padx=20)
+        
+        self.var_term=StringVar()
+        self.conn = pymysql.connect(host="localhost",user="root",database="report")
+
+        # Retrieve values from the database
+        cursor = self.conn.cursor()
+        cursor.execute("SELECT DISTINCT term FROM term")  # Modify with your database column and table names
+        years = [year[0] for year in cursor.fetchall()]
+
+        combo_term = ttk.Combobox(labelframeleft, textvariable=self.var_term, width=27, font=("times new roman", 13, "bold"), state="readonly")
+        combo_term["values"] = tuple(["Select"] + years)
+        combo_term.current(0)
+        combo_term.grid(row=2, column=1,sticky=W)
+        
+        
         lbl_class=Label(labelframeleft,text="Class",font=("times new roman",12,"bold"),padx=2,pady=6)
-        lbl_class.grid(row=1,column=0,sticky=W,padx=20)
+        lbl_class.grid(row=3,column=0,sticky=W,padx=20)
         
         self.var_class=StringVar()
         entry_class=ttk.Entry(labelframeleft,textvariable=self.var_class,width=29,font=("times new roman",13,"bold"))
-        entry_class.grid(row=1,column=1,sticky=W)
+        entry_class.grid(row=3,column=1,sticky=W)
         
         #================btn===========================================
         btn_frame=Frame(labelframeleft,bd=2,relief=RIDGE)
@@ -79,12 +113,12 @@ class cL:
         
         #================table frame search system===========================================
         Table_Frame=LabelFrame(self.root,bd=2,relief=RIDGE,text="Show Class",font=("arial",12,"bold"))
-        Table_Frame.place(x=500,y=55,width=500,height=350)
+        Table_Frame.place(x=500,y=55,width=650,height=350)
         
         Scrollbar_x=ttk.Scrollbar(Table_Frame,orient=HORIZONTAL)
         Scrollbar_y=ttk.Scrollbar(Table_Frame,orient=VERTICAL)
         
-        self.class_table=ttk.Treeview(Table_Frame,columns=("classID","class"),xscrollcommand=Scrollbar_x.set,yscrollcommand=Scrollbar_y.set)
+        self.class_table=ttk.Treeview(Table_Frame,columns=("classID","year","term","class"),xscrollcommand=Scrollbar_x.set,yscrollcommand=Scrollbar_y.set)
         Scrollbar_x.pack(side=BOTTOM,fill=X)
         Scrollbar_y.pack(side=RIGHT,fill=Y)
         
@@ -92,6 +126,8 @@ class cL:
         Scrollbar_y.config(command=self.class_table.yview)
         
         self.class_table.heading("classID",text="Class ID",anchor=tk.CENTER)
+        self.class_table.heading("year",text="Year",anchor=tk.CENTER)
+        self.class_table.heading("term",text="Term",anchor=tk.CENTER)
         self.class_table.heading("class",text="Class",anchor=tk.CENTER)
         
         self.class_table["show"]="headings"
@@ -102,6 +138,8 @@ class cL:
         s.configure("Treeview.Heading",foreground='red',font=('Helvetica',11,"bold"))
         
         self.class_table.column("classID",width=100,anchor=tk.CENTER)
+        self.class_table.column("year",width=100,anchor=tk.CENTER)
+        self.class_table.column("term",width=100,anchor=tk.CENTER)
         self.class_table.column("class",width=100,anchor=tk.CENTER)
         
         self.class_table.pack(fill=BOTH,expand=1)
@@ -112,7 +150,7 @@ class cL:
         self.class_table.tag_configure("oddrow", background="#ffffff")
         
     def add_data(self):
-        if self.var_classID.get()==""or self.var_class.get()=="":
+        if self.var_classID.get()==""or self.var_class.get()=="" or self.var_year.get()=="Select":
             messagebox.showerror("Error","All fields are required",parent=self.root)
         else:
             try:
@@ -125,8 +163,10 @@ class cL:
                 if existing_record:
                     messagebox.showerror("Error", "Class ID already exists. Please enter a different ID.", parent=self.root)
                 else:
-                    my_cursor.execute("insert into class values(%s,%s)",(
+                    my_cursor.execute("insert into class values(%s,%s,%s,%s)",(
                         self.var_classID.get(),
+                        self.var_year.get(),
+                        self.var_term.get(),
                         self.var_class.get()
                         
                     ))
@@ -161,17 +201,21 @@ class cL:
         row=content["values"]
         
         self.var_classID.set(row[0]),
-        self.var_class.set(row[1])
+        self.var_year.set(row[1]),
+        self.var_term.set(row[2]),
+        self.var_class.set(row[3])
         
     #update function
     def update(self):
-        if self.var_class.get()=="":
+        if self.var_class.get()=="" or self.var_term.get()=="Select":
             messagebox.showerror("Error","Please enter A Class",parent=self.root)
         else:
             conn=pymysql.connect(host="localhost",user="root",database="report")
             my_cursor=conn.cursor()
-            my_cursor.execute("update  class set class=%s where classID=%s",(
+            my_cursor.execute("update  class set year=%s,term=%s,class=%s where classID=%s",(
                     
+                    self.var_year.get(),
+                    self.var_term.get(),
                     self.var_class.get(),
                     self.var_classID.get()
                     

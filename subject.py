@@ -53,12 +53,20 @@ class Subject:
         self.var_teacher15=StringVar()
         self.var_subject16=StringVar()
         self.var_teacher16=StringVar()
+        self.var_subject17=StringVar()
+        self.var_teacher17=StringVar()
+        self.var_subject18=StringVar()
+        self.var_teacher18=StringVar()
+        self.var_subject19=StringVar()
+        self.var_teacher19=StringVar()
+        self.var_subject20=StringVar()
+        self.var_teacher20=StringVar()
         
         #=====================title=======================================================
         lbl_title=Label(self.root,text="ADD SUBJECTS TO CORRESPONDING CLASS",font=("times new roman",18,"bold"),bg="black",fg="gold",bd=4,relief=RIDGE)
         lbl_title.place(x=0,y=0,width=1355,height=50)
         #===================2st Image===log======================================================
-        Image2=Image.open(r"C:\Users\USER\Desktop\summer\PYTHON PROJECTS TKINTER\REPT\images\logo.PNG")
+        Image2=Image.open(r"C:\Users\ENG. FRANCIS\Desktop\summer\PYTHON PROJECTS TKINTER\REPT\images\logo.PNG")
         Image2=Image2.resize((100,40),Image.LANCZOS)
         self.photoImage2=ImageTk.PhotoImage(Image2)
         
@@ -135,7 +143,7 @@ class Subject:
         
         #===========================Right Frame ==================================
         labelframeright=LabelFrame(self.root,bd=2,relief=RIDGE,text="Enter Subjects with Teachers",font=("arial",12,"bold"))
-        labelframeright.place(x=335,y=50,width=1020,height=310)
+        labelframeright.place(x=335,y=50,width=1020,height=390)
         #==================================================================================
         #=========================subject one=====================================
         lbl_subject1_ref=Label(labelframeright,text="Subject",font=("times new roman",12,"bold"),padx=2,pady=6)
@@ -481,9 +489,93 @@ class Subject:
         teacher16=Label(labelframeright,text="Teacher",font=("times new roman",12,"bold"),padx=2,pady=6)
         teacher16.grid(row=7,column=6,sticky=W,padx=20)
         #========================================================================================
+        #=========================subject 17 new=====================================
+        lbl_subject17_ref=Label(labelframeright,text="Subject",font=("times new roman",12,"bold"),padx=2,pady=6)
+        lbl_subject17_ref.grid(row=8,column=0,sticky=W)
+        entry_subject17=ttk.Entry(labelframeright,textvariable=self.var_subject17,width=16,font=("times new roman",13,"bold"))
+        entry_subject17.grid(row=8,column=1)
+        
+        #==========================Select teacher =======================================
+        self.conn = pymysql.connect(host="localhost",user="root",database="report")
+        # Retrieve values from the database
+        cursor = self.conn.cursor()
+        cursor.execute("SELECT DISTINCT Name FROM teacher")  # Modify with your database column and table names
+        name = [Name[0] for Name in cursor.fetchall()]
+
+        combo_teacher17 = ttk.Combobox(labelframeright, textvariable=self.var_teacher17, width=16, font=("times new roman", 13, "bold"), state="readonly")
+        combo_teacher17["values"] = tuple(["Select"] + name)
+        combo_teacher17.current(0)
+        combo_teacher17.grid(row=8, column=3)
+        
+        teacher17=Label(labelframeright,text="Teacher",font=("times new roman",12,"bold"),padx=2,pady=6)
+        teacher17.grid(row=8,column=2,sticky=W,padx=20)
+        #========================================================================================
+        #=========================subject 18 new=====================================
+        lbl_subject18_ref=Label(labelframeright,text="Subject",font=("times new roman",12,"bold"),padx=2,pady=6)
+        lbl_subject18_ref.grid(row=9,column=0,sticky=W)
+        entry_subject18=ttk.Entry(labelframeright,textvariable=self.var_subject18,width=16,font=("times new roman",13,"bold"))
+        entry_subject18.grid(row=9,column=1)
+        
+        #==========================Select teacher =======================================
+        self.conn = pymysql.connect(host="localhost",user="root",database="report")
+        # Retrieve values from the database
+        cursor = self.conn.cursor()
+        cursor.execute("SELECT DISTINCT Name FROM teacher")  # Modify with your database column and table names
+        name = [Name[0] for Name in cursor.fetchall()]
+
+        combo_teacher18 = ttk.Combobox(labelframeright, textvariable=self.var_teacher18, width=16, font=("times new roman", 13, "bold"), state="readonly")
+        combo_teacher18["values"] = tuple(["Select"] + name)
+        combo_teacher18.current(0)
+        combo_teacher18.grid(row=9, column=3)
+        
+        teacher18=Label(labelframeright,text="Teacher",font=("times new roman",12,"bold"),padx=2,pady=6)
+        teacher18.grid(row=9,column=2,sticky=W,padx=20)
+        #========================================================================================
+        #=========================subject 19 new=====================================
+        lbl_subject19_ref=Label(labelframeright,text="Subject",font=("times new roman",12,"bold"),padx=2,pady=6)
+        lbl_subject19_ref.grid(row=8,column=4,sticky=W)
+        entry_subject19=ttk.Entry(labelframeright,textvariable=self.var_subject19,width=16,font=("times new roman",13,"bold"))
+        entry_subject19.grid(row=8,column=5)
+        
+        #==========================Select teacher =======================================
+        self.conn = pymysql.connect(host="localhost",user="root",database="report")
+        # Retrieve values from the database
+        cursor = self.conn.cursor()
+        cursor.execute("SELECT DISTINCT Name FROM teacher")  # Modify with your database column and table names
+        name = [Name[0] for Name in cursor.fetchall()]
+
+        combo_teacher19 = ttk.Combobox(labelframeright, textvariable=self.var_teacher19, width=16, font=("times new roman", 13, "bold"), state="readonly")
+        combo_teacher19["values"] = tuple(["Select"] + name)
+        combo_teacher19.current(0)
+        combo_teacher19.grid(row=8, column=7)
+        
+        teacher19=Label(labelframeright,text="Teacher",font=("times new roman",12,"bold"),padx=2,pady=6)
+        teacher19.grid(row=8,column=6,sticky=W,padx=20)
+        #========================================================================================
+        #=========================subject 20 new=====================================
+        lbl_subject20_ref=Label(labelframeright,text="Subject",font=("times new roman",12,"bold"),padx=2,pady=6)
+        lbl_subject20_ref.grid(row=9,column=4,sticky=W)
+        entry_subject20=ttk.Entry(labelframeright,textvariable=self.var_subject20,width=16,font=("times new roman",13,"bold"))
+        entry_subject20.grid(row=9,column=5)
+        
+        #==========================Select teacher =======================================
+        self.conn = pymysql.connect(host="localhost",user="root",database="report")
+        # Retrieve values from the database
+        cursor = self.conn.cursor()
+        cursor.execute("SELECT DISTINCT Name FROM teacher")  # Modify with your database column and table names
+        name = [Name[0] for Name in cursor.fetchall()]
+
+        combo_teacher20 = ttk.Combobox(labelframeright, textvariable=self.var_teacher20, width=16, font=("times new roman", 13, "bold"), state="readonly")
+        combo_teacher20["values"] = tuple(["Select"] + name)
+        combo_teacher20.current(0)
+        combo_teacher20.grid(row=9, column=7)
+        
+        teacher20=Label(labelframeright,text="Teacher",font=("times new roman",12,"bold"),padx=2,pady=6)
+        teacher20.grid(row=9,column=6,sticky=W,padx=20)
+        #========================================================================================
         #===============table========================================
         Table_Frame=LabelFrame(self.root,bd=2,relief=RIDGE,text="View Details and Search System",font=("arial",12,"bold"))
-        Table_Frame.place(x=5,y=350,width=1350,height=350)
+        Table_Frame.place(x=5,y=415,width=1350,height=286)
         
         lblSearchBy=Label(Table_Frame,text="Search By:",font=("times new roman",12,"bold"),bg="red",fg="white")
         lblSearchBy.grid(row=0,column=0,sticky=W,padx=2)
@@ -506,12 +598,12 @@ class Subject:
         
         #================Show data table===========================================
         details_table=Frame(Table_Frame,bd=2,relief=RIDGE)
-        details_table.place(x=0,y=40,width=1350,height=290)
+        details_table.place(x=0,y=40,width=1350,height=226)
         
         Scrollbar_x=ttk.Scrollbar(details_table,orient=HORIZONTAL)
         Scrollbar_y=ttk.Scrollbar(details_table,orient=VERTICAL)
         
-        self.Cust_Details_Table=ttk.Treeview(details_table,columns=("subjectID","class","classteacher","subject1","teacher1","subject2","teacher2","subject3","teacher3","subject4","teacher4","subject5","teacher5","subject6","teacher6","subject7","teacher7","subject8","teacher8","subject9","teacher9","subject10","teacher10","subject11","teacher11","subject12","teacher12","subject13","teacher13","subject14","teacher14","subject15","teacher15","subject16","teacher16",),xscrollcommand=Scrollbar_x.set,yscrollcommand=Scrollbar_y.set)
+        self.Cust_Details_Table=ttk.Treeview(details_table,columns=("subjectID","class","classteacher","subject1","teacher1","subject2","teacher2","subject3","teacher3","subject4","teacher4","subject5","teacher5","subject6","teacher6","subject7","teacher7","subject8","teacher8","subject9","teacher9","subject10","teacher10","subject11","teacher11","subject12","teacher12","subject13","teacher13","subject14","teacher14","subject15","teacher15","subject16","teacher16","subject17","teacher17","subject18","teacher18","subject19","teacher19","subject20","teacher20",),xscrollcommand=Scrollbar_x.set,yscrollcommand=Scrollbar_y.set)
         Scrollbar_x.pack(side=BOTTOM,fill=X)
         Scrollbar_y.pack(side=RIGHT,fill=Y)
         
@@ -553,6 +645,14 @@ class Subject:
         self.Cust_Details_Table.heading("teacher15",text="Teacher15",anchor=tk.CENTER)
         self.Cust_Details_Table.heading("subject16",text="Subject16",anchor=tk.CENTER)
         self.Cust_Details_Table.heading("teacher16",text="Teacher16",anchor=tk.CENTER)
+        self.Cust_Details_Table.heading("subject17",text="Subject17",anchor=tk.CENTER)
+        self.Cust_Details_Table.heading("teacher17",text="Teacher17",anchor=tk.CENTER)
+        self.Cust_Details_Table.heading("subject18",text="Subject18",anchor=tk.CENTER)
+        self.Cust_Details_Table.heading("teacher18",text="Teacher18",anchor=tk.CENTER)
+        self.Cust_Details_Table.heading("subject19",text="Subject19",anchor=tk.CENTER)
+        self.Cust_Details_Table.heading("teacher19",text="Teacher19",anchor=tk.CENTER)
+        self.Cust_Details_Table.heading("subject20",text="Subject20",anchor=tk.CENTER)
+        self.Cust_Details_Table.heading("teacher20",text="Teacher20",anchor=tk.CENTER)
         
         self.Cust_Details_Table["show"]="headings"
         s = ttk.Style(root)
@@ -600,6 +700,14 @@ class Subject:
         self.Cust_Details_Table.column("teacher15",width=200,anchor=tk.CENTER)
         self.Cust_Details_Table.column("subject16",width=100,anchor=tk.CENTER)
         self.Cust_Details_Table.column("teacher16",width=200,anchor=tk.CENTER)
+        self.Cust_Details_Table.column("subject17",width=100,anchor=tk.CENTER)
+        self.Cust_Details_Table.column("teacher17",width=200,anchor=tk.CENTER)
+        self.Cust_Details_Table.column("subject18",width=100,anchor=tk.CENTER)
+        self.Cust_Details_Table.column("teacher18",width=200,anchor=tk.CENTER)
+        self.Cust_Details_Table.column("subject19",width=100,anchor=tk.CENTER)
+        self.Cust_Details_Table.column("teacher19",width=200,anchor=tk.CENTER)
+        self.Cust_Details_Table.column("subject20",width=100,anchor=tk.CENTER)
+        self.Cust_Details_Table.column("teacher20",width=200,anchor=tk.CENTER)
         self.Cust_Details_Table.pack(fill=BOTH,expand=1)
         self.Cust_Details_Table.bind("<ButtonRelease-1>",self.get_cusrsor)
         self.fetch_data()
@@ -622,7 +730,7 @@ class Subject:
                 if existing_record:
                     messagebox.showerror("Error", "Subject ID already exists. Please enter a different ID.", parent=self.root)
                 else:
-                    my_cursor.execute("insert into subject values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", (
+                    my_cursor.execute("insert into subject values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", (
                         self.var_subjectID.get(),
                         self.var_class.get(),
                         self.var_classteacher.get(),
@@ -657,7 +765,15 @@ class Subject:
                         self.var_subject15.get(),
                         self.var_teacher15.get(),
                         self.var_subject16.get(),
-                        self.var_teacher16.get()
+                        self.var_teacher16.get(),
+                        self.var_subject17.get(),
+                        self.var_teacher17.get(),
+                        self.var_subject18.get(),
+                        self.var_teacher18.get(),
+                        self.var_subject19.get(),
+                        self.var_teacher19.get(),
+                        self.var_subject20.get(),
+                        self.var_teacher20.get()
                         
                     ))
                     conn.commit()
@@ -724,7 +840,15 @@ class Subject:
        self.var_subject15.set(row[31]),
        self.var_teacher15.set(row[32]),
        self.var_subject16.set(row[33]),
-       self.var_teacher16.set(row[34])
+       self.var_teacher16.set(row[34]),
+       self.var_subject17.set(row[35]),
+       self.var_teacher17.set(row[36]),
+       self.var_subject18.set(row[37]),
+       self.var_teacher18.set(row[38]),
+       self.var_subject19.set(row[39]),
+       self.var_teacher19.set(row[40]),
+       self.var_subject20.set(row[41]),
+       self.var_teacher20.set(row[42])
         
     def update(self):
        if self.var_class.get()=="Select"and self.var_classteacher.get()=="Select":
@@ -732,7 +856,7 @@ class Subject:
        else:
            conn=pymysql.connect(host="localhost",user="root",database="report")
            my_cursor=conn.cursor()
-           my_cursor.execute("update subject set Class=%s,Classteacher=%s,Subject1=%s,Teacher1=%s,Subject2=%s,Teacher2=%s,Subject3=%s,Teacher3=%s,Subject4=%s,Teacher4=%s,Subject5=%s,Teacher5=%s,Subject6=%s,Teacher6=%s,Subject7=%s,Teacher7=%s,Subject8=%s,Teacher8=%s,Subject9=%s,Teacher9=%s,Subject10=%s,Teacher10=%s,Subject11=%s,Teacher11=%s,Subject12=%s,Teacher12=%s,Subject13=%s,Teacher13=%s,Subject14=%s,Teacher14=%s,Subject15=%s,Teacher15=%s,Subject16=%s,Teacher16=%s where subjectID=%s",(
+           my_cursor.execute("update subject set Class=%s,Classteacher=%s,Subject1=%s,Teacher1=%s,Subject2=%s,Teacher2=%s,Subject3=%s,Teacher3=%s,Subject4=%s,Teacher4=%s,Subject5=%s,Teacher5=%s,Subject6=%s,Teacher6=%s,Subject7=%s,Teacher7=%s,Subject8=%s,Teacher8=%s,Subject9=%s,Teacher9=%s,Subject10=%s,Teacher10=%s,Subject11=%s,Teacher11=%s,Subject12=%s,Teacher12=%s,Subject13=%s,Teacher13=%s,Subject14=%s,Teacher14=%s,Subject15=%s,Teacher15=%s,Subject16=%s,Teacher16=%s,Subject17=%s,Teacher17=%s,Subject18=%s,Teacher18=%s,Subject19=%s,Teacher19=%s,Subject20=%s,Teacher20=%s where subjectID=%s",(
                    self.var_class.get(),
                    self.var_classteacher.get(),
                    self.var_subject1.get(),
@@ -767,6 +891,14 @@ class Subject:
                    self.var_teacher15.get(),
                    self.var_subject16.get(),
                    self.var_teacher16.get(),
+                   self.var_subject17.get(),
+                   self.var_teacher17.get(),
+                   self.var_subject18.get(),
+                   self.var_teacher18.get(),
+                   self.var_subject19.get(),
+                   self.var_teacher19.get(),
+                   self.var_subject20.get(),
+                   self.var_teacher20.get(),
                    self.var_subjectID.get()         
            ))
            conn.commit()
@@ -840,6 +972,14 @@ class Subject:
         self.var_teacher15.set("Select"),
         self.var_subject16.set(""),
         self.var_teacher16.set("Select"),
+        self.var_subject17.set(""),
+        self.var_teacher17.set("Select"),
+        self.var_subject18.set(""),
+        self.var_teacher18.set("Select"),
+        self.var_subject19.set(""),
+        self.var_teacher19.set("Select"),
+        self.var_subject20.set(""),
+        self.var_teacher20.set("Select"),
         #x=random.randint(1000,9999)
         #self.var_subjectID.set(str(x))
         

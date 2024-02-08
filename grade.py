@@ -69,7 +69,7 @@ class Grade:
         lbl_title=Label(self.root,text="GRADE SETTINGS",font=("times new roman",18,"bold"),bg="black",fg="gold",bd=4,relief=RIDGE)
         lbl_title.place(x=0,y=0,width=1355,height=50)
         #===================2st Image===log======================================================
-        Image2=Image.open(r"C:\Users\USER\Desktop\summer\PYTHON PROJECTS TKINTER\REPT\images\logo.PNG")
+        Image2=Image.open(r"C:\Users\ENG. FRANCIS\Desktop\summer\PYTHON PROJECTS TKINTER\REPT\images\logo.PNG")
         Image2=Image2.resize((100,40),Image.LANCZOS)
         self.photoImage2=ImageTk.PhotoImage(Image2)
         
@@ -138,8 +138,8 @@ class Grade:
         btnAdd=Button(btn_frame,text="Add", command=self.add_data,font=("arial",11,"bold"),bg="black",fg="gold",width=8)
         btnAdd.grid(row=0,column=0,padx=1)
         
-        btnUpdate=Button(btn_frame,text="View",font=("arial",11,"bold"),bg="black",fg="gold",width=8)
-        btnUpdate.grid(row=0,column=1,padx=1)
+        viewgrade=Button(btn_frame,text="View Grade" , command=self.fetch_data,font=("arial",11,"bold"),bg="black",fg="gold",width=8)
+        viewgrade.grid(row=0,column=1,padx=1)
         
         btnDelete=Button(btn_frame,text="Delete",font=("arial",11,"bold"),bg="black",fg="gold",width=8)
         btnDelete.grid(row=0,column=2,padx=1)
@@ -161,10 +161,10 @@ class Grade:
         lbl_to=Label(labelframeright,text="To",font=("times new roman",12,"bold"),padx=2,pady=6)
         lbl_to.grid(row=0,column=3,sticky=W,padx=40)
         
-        lbl_grade=Label(labelframeright,text="Grade",font=("times new roman",12,"bold"),padx=2,pady=6)
+        lbl_grade=Label(labelframeright,text="Grade/Identifier",font=("times new roman",12,"bold"),padx=2,pady=6)
         lbl_grade.grid(row=0,column=5,sticky=W ,padx=40)
         
-        lbl_comment=Label(labelframeright,text="Comment",font=("times new roman",12,"bold"),padx=2,pady=6)
+        lbl_comment=Label(labelframeright,text="Comment/Descriptor",font=("times new roman",12,"bold"),padx=2,pady=6)
         lbl_comment.grid(row=0,column=7,sticky=W,padx=40)
         
         #=========================Entries=====================================
@@ -306,54 +306,49 @@ class Grade:
         if self.var_class.get() == "Select":
             messagebox.showerror("Error", "All fields are required", parent=self.root)
         else:
-            try:
+            #try:
                 conn = pymysql.connect(host="localhost", user="root", database="report")
                 my_cursor = conn.cursor()
-
+                
                 # Use the last reference to generate the next gradeID
                 last_reference = self.get_last_reference()
                 next_reference = str(int(last_reference) + 1) if last_reference else "1001"
                 self.var_gradeID.set(next_reference)
 
-                # Check if gradeID already exists
-                my_cursor.execute("SELECT * FROM grade WHERE gradeID = %s", (self.var_gradeID.get(),))
+                # Check if the record with gradeID and class already exists
+                #gradeID = self.var_gradeID.get()
+                selected_class = self.var_class.get()
+                my_cursor.execute("SELECT class FROM grade WHERE class= %s", (selected_class))
                 existing_record = my_cursor.fetchone()
-
-                # Define the values for the query
-                values = (
-                    self.var_gradeID.get(),
-                    self.var_class.get(),
-                    self.var_mark1_1.get(), self.var_mark2_1.get(), self.var_grade1_1.get(), self.var_comm1_1.get(),
-                    self.var_mark1_2.get(), self.var_mark2_2.get(), self.var_grade1_2.get(), self.var_comm1_2.get(),
-                    self.var_mark1_3.get(), self.var_mark2_3.get(), self.var_grade1_3.get(), self.var_comm1_3.get(),
-                    self.var_mark1_4.get(), self.var_mark2_4.get(), self.var_grade1_4.get(), self.var_comm1_4.get(),
-                    self.var_mark1_5.get(), self.var_mark2_5.get(), self.var_grade1_5.get(), self.var_comm1_5.get(),
-                    self.var_mark1_6.get(), self.var_mark2_6.get(), self.var_grade1_6.get(), self.var_comm1_6.get(),
-                    self.var_mark1_7.get(), self.var_mark2_7.get(), self.var_grade1_7.get(), self.var_comm1_7.get(),
-                    self.var_mark1_8.get(), self.var_mark2_8.get(), self.var_grade1_8.get(), self.var_comm1_8.get(),
-                    self.var_mark1_9.get(), self.var_mark2_9.get(), self.var_grade1_9.get(), self.var_comm1_9.get(),
-                    self.var_mark1_10.get(), self.var_mark2_10.get(), self.var_grade1_10.get(), self.var_comm1_10.get(),
-                    self.var_mark1_11.get(), self.var_mark2_11.get(), self.var_grade1_11.get(), self.var_comm1_11.get()
-                )
 
                 if existing_record:
                     # Update the existing record
                     my_cursor.execute("""
-                        UPDATE grade SET
-                        class = %s,
-                        mark1 = %s, mark1_1 = %s, grade1 = %s, comment1 = %s,
-                        mark2 = %s, mark2_2 = %s, grade2 = %s, comment2 = %s,
-                        mark3 = %s, mark3_3 = %s, grade3 = %s, comment3 = %s,
-                        mark4 = %s, mark4_4 = %s, grade4 = %s, comment4 = %s,
-                        mark5 = %s, mark5_5 = %s, grade5 = %s, comment5 = %s,
-                        mark6 = %s, mark6_6 = %s, grade6 = %s, comment6 = %s,
-                        mark7 = %s, mark7_7 = %s, grade7 = %s, comment7 = %s,
-                        mark8 = %s, mark8_8 = %s, grade8 = %s, comment8 = %s,
-                        mark9 = %s, mark9_9 = %s, grade9 = %s, comment9 = %s,
-                        mark10 = %s, mark10_10 = %s, grade10 = %s, comment10 = %s,
-                        mark11 = %s, mark11_11 = %s, grade11 = %s, comment11 = %s
-                        WHERE gradeID = %s
-                    """, values)
+                    UPDATE grade
+                    SET mark1=%s, mark1_1=%s, grade1=%s, comment1=%s,
+                        mark2=%s, mark2_2=%s, grade2=%s, comment2=%s,
+                        mark3=%s, mark3_3=%s, grade3=%s, comment3=%s,
+                        mark4=%s, mark4_4=%s, grade4=%s, comment4=%s,
+                        mark5=%s, mark5_5=%s, grade5=%s, comment5=%s,
+                        mark6=%s, mark6_6=%s, grade6=%s, comment6=%s,
+                        mark7=%s, mark7_7=%s, grade7=%s, comment7=%s,
+                        mark8=%s, mark8_8=%s, grade8=%s, comment8=%s,
+                        mark9=%s, mark9_9=%s, grade9=%s, comment9=%s,
+                        mark10=%s, mark10_10=%s, grade10=%s, comment10=%s,
+                        mark11=%s, mark11_11=%s, grade11=%s, comment11=%s
+                    WHERE  class=%s
+                    """, (self.var_mark1_1.get(), self.var_mark2_1.get(), self.var_grade1_1.get(), self.var_comm1_1.get(),
+                        self.var_mark1_2.get(), self.var_mark2_2.get(), self.var_grade1_2.get(), self.var_comm1_2.get(),
+                        self.var_mark1_3.get(), self.var_mark2_3.get(), self.var_grade1_3.get(), self.var_comm1_3.get(),
+                        self.var_mark1_4.get(), self.var_mark2_4.get(), self.var_grade1_4.get(), self.var_comm1_4.get(),
+                        self.var_mark1_5.get(), self.var_mark2_5.get(), self.var_grade1_5.get(), self.var_comm1_5.get(),
+                        self.var_mark1_6.get(), self.var_mark2_6.get(), self.var_grade1_6.get(), self.var_comm1_6.get(),
+                        self.var_mark1_7.get(), self.var_mark2_7.get(), self.var_grade1_7.get(), self.var_comm1_7.get(),
+                        self.var_mark1_8.get(), self.var_mark2_8.get(), self.var_grade1_8.get(), self.var_comm1_8.get(),
+                        self.var_mark1_9.get(), self.var_mark2_9.get(), self.var_grade1_9.get(), self.var_comm1_9.get(),
+                        self.var_mark1_10.get(), self.var_mark2_10.get(), self.var_grade1_10.get(), self.var_comm1_10.get(),
+                        self.var_mark1_11.get(), self.var_mark2_11.get(), self.var_grade1_11.get(), self.var_comm1_11.get(),
+                        selected_class))
                 else:
                     # Insert a new record
                     my_cursor.execute("""
@@ -362,77 +357,136 @@ class Grade:
                                     grade5, comment5, mark6, mark6_6, grade6, comment6, mark7, mark7_7, grade7, comment7,
                                     mark8, mark8_8, grade8, comment8, mark9, mark9_9, grade9, comment9, mark10, mark10_10,
                                     grade10, comment10, mark11, mark11_11, grade11, comment11)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,
-                            %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-                    """, values)
-
-                    conn.commit()
-                    self.fetch_data()
-                    conn.close()
-                    messagebox.showinfo("Success", "Grade has been added/updated successfully", parent=self.root)
-
-            except Exception as es:
-                messagebox.showwarning("Warning", f"Something went wrong: {str(es)}", parent=self.root)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,
+                            %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s , %s)
+                    """, (self.var_gradeID.get(), selected_class, 
+                        self.var_mark1_1.get(), self.var_mark2_1.get(), self.var_grade1_1.get(), self.var_comm1_1.get(),
+                        self.var_mark1_2.get(), self.var_mark2_2.get(), self.var_grade1_2.get(), self.var_comm1_2.get(),
+                        self.var_mark1_3.get(), self.var_mark2_3.get(), self.var_grade1_3.get(), self.var_comm1_3.get(),
+                        self.var_mark1_4.get(), self.var_mark2_4.get(), self.var_grade1_4.get(), self.var_comm1_4.get(),
+                        self.var_mark1_5.get(), self.var_mark2_5.get(), self.var_grade1_5.get(), self.var_comm1_5.get(),
+                        self.var_mark1_6.get(), self.var_mark2_6.get(), self.var_grade1_6.get(), self.var_comm1_6.get(),
+                        self.var_mark1_7.get(), self.var_mark2_7.get(), self.var_grade1_7.get(), self.var_comm1_7.get(),
+                        self.var_mark1_8.get(), self.var_mark2_8.get(), self.var_grade1_8.get(), self.var_comm1_8.get(),
+                        self.var_mark1_9.get(), self.var_mark2_9.get(), self.var_grade1_9.get(), self.var_comm1_9.get(),
+                        self.var_mark1_10.get(), self.var_mark2_10.get(), self.var_grade1_10.get(), self.var_comm1_10.get(),
+                        self.var_mark1_11.get(), self.var_mark2_11.get(), self.var_grade1_11.get(), self.var_comm1_11.get()))
+                
+                conn.commit()
+                #self.fetch_data()
+                conn.close()
+                messagebox.showinfo("Success", "Grade added/updated successfully", parent=self.root)
+            #except Exception as e:
+            #    messagebox.showerror("Error", f"Error due to: {str(e)}", parent=self.root)
     
     def fetch_data(self):
-        conn = pymysql.connect(host="localhost", user="root", database="report")
-        my_cursor = conn.cursor()
+        selected_class = self.var_class.get()
+        if selected_class != "Select":
+            try:
+                conn = pymysql.connect(host="localhost", user="root", database="report")
+                my_cursor = conn.cursor()
+    
+                # Fetch data for the selected class
+                my_cursor.execute("SELECT * FROM grade WHERE class = %s", (selected_class,))
+                rows = my_cursor.fetchall()
 
-        # Fetch data for the selected class
-        class_selected = self.var_class.get()
-        my_cursor.execute("SELECT * FROM grade WHERE class = %s", (class_selected,))
-        rows = my_cursor.fetchall()
-
-        # Display data in textboxes
-        if rows:
-            row = rows[0]  # Assuming only one record for a class for simplicity
-            self.var_gradeID.set(row[0])
-            self.var_class.set(row[1])
-            self.var_mark1_1.set(row[2])
-            self.var_mark2_1.set(row[3])
-            self.var_grade1_1.set(row[4])
-            self.var_comm1_1.set(row[5])
-            self.var_mark1_2.set(row[6])
-            self.var_mark2_2.set(row[7])
-            self.var_grade1_2.set(row[8])
-            self.var_comm1_2.set(row[9])
-            self.var_mark1_3.set(row[10])
-            self.var_mark2_3.set(row[11])
-            self.var_grade1_3.set(row[12])
-            self.var_comm1_3.set(row[13])
-            self.var_mark1_4.set(row[14])
-            self.var_mark2_4.set(row[15])
-            self.var_grade1_4.set(row[16])
-            self.var_comm1_4.set(row[17])
-            self.var_mark1_5.set(row[18])
-            self.var_mark2_5.set(row[19])
-            self.var_grade1_5.set(row[20])
-            self.var_comm1_5.set(row[21])
-            self.var_mark1_6.set(row[22])
-            self.var_mark2_6.set(row[23])
-            self.var_grade1_6.set(row[24])
-            self.var_comm1_6.set(row[25])
-            self.var_mark1_7.set(row[26])
-            self.var_mark2_7.set(row[27])
-            self.var_grade1_7.set(row[28])
-            self.var_comm1_7.set(row[29])
-            self.var_mark1_8.set(row[30])
-            self.var_mark2_8.set(row[31])
-            self.var_grade1_8.set(row[32])
-            self.var_comm1_8.set(row[33])
-            self.var_mark1_9.set(row[34])
-            self.var_mark2_9.set(row[35])
-            self.var_grade1_9.set(row[36])
-            self.var_comm1_9.set(row[37])
-            self.var_mark1_10.set(row[38])
-            self.var_mark2_10.set(row[39])
-            self.var_grade1_10.set(row[40])
-            self.var_comm1_10.set(row[41])
-            self.var_mark1_11.set(row[42])
-            self.var_mark2_11.set(row[43])
-            self.var_grade1_11.set(row[44])
-            self.var_comm1_11.set(row[45])
-
+                # Display data in textboxes
+                if rows:
+                    row = rows[0]  # Assuming only one record for a class for simplicity
+                    self.var_gradeID.set(row[0])
+                    self.var_class.set(row[1])
+                    self.var_mark1_1.set(row[2])
+                    self.var_mark2_1.set(row[3])
+                    self.var_grade1_1.set(row[4])
+                    self.var_comm1_1.set(row[5])
+                    self.var_mark1_2.set(row[6])
+                    self.var_mark2_2.set(row[7])
+                    self.var_grade1_2.set(row[8])
+                    self.var_comm1_2.set(row[9])
+                    self.var_mark1_3.set(row[10])
+                    self.var_mark2_3.set(row[11])
+                    self.var_grade1_3.set(row[12])
+                    self.var_comm1_3.set(row[13])
+                    self.var_mark1_4.set(row[14])
+                    self.var_mark2_4.set(row[15])
+                    self.var_grade1_4.set(row[16])
+                    self.var_comm1_4.set(row[17])
+                    self.var_mark1_5.set(row[18])
+                    self.var_mark2_5.set(row[19])
+                    self.var_grade1_5.set(row[20])
+                    self.var_comm1_5.set(row[21])
+                    self.var_mark1_6.set(row[22])
+                    self.var_mark2_6.set(row[23])
+                    self.var_grade1_6.set(row[24])
+                    self.var_comm1_6.set(row[25])
+                    self.var_mark1_7.set(row[26])
+                    self.var_mark2_7.set(row[27])
+                    self.var_grade1_7.set(row[28])
+                    self.var_comm1_7.set(row[29])
+                    self.var_mark1_8.set(row[30])
+                    self.var_mark2_8.set(row[31])
+                    self.var_grade1_8.set(row[32])
+                    self.var_comm1_8.set(row[33])
+                    self.var_mark1_9.set(row[34])
+                    self.var_mark2_9.set(row[35])
+                    self.var_grade1_9.set(row[36])
+                    self.var_comm1_9.set(row[37])
+                    self.var_mark1_10.set(row[38])
+                    self.var_mark2_10.set(row[39])
+                    self.var_grade1_10.set(row[40])
+                    self.var_comm1_10.set(row[41])
+                    self.var_mark1_11.set(row[42])
+                    self.var_mark2_11.set(row[43])
+                    self.var_grade1_11.set(row[44])
+                    self.var_comm1_11.set(row[45])
+                else:
+                    self.var_mark1_1.set("")
+                    self.var_mark2_1.set("")
+                    self.var_grade1_1.set("")
+                    self.var_comm1_1.set("")
+                    self.var_mark1_2.set("")
+                    self.var_mark2_2.set("")
+                    self.var_grade1_2.set("")
+                    self.var_comm1_2.set("")
+                    self.var_mark1_3.set("")
+                    self.var_mark2_3.set("")
+                    self.var_grade1_3.set("")
+                    self.var_comm1_3.set("")
+                    self.var_mark1_4.set("")
+                    self.var_mark2_4.set("")
+                    self.var_grade1_4.set("")
+                    self.var_comm1_4.set("")
+                    self.var_mark1_5.set("")
+                    self.var_mark2_5.set("")
+                    self.var_grade1_5.set("")
+                    self.var_comm1_5.set("")
+                    self.var_mark1_6.set("")
+                    self.var_mark2_6.set("")
+                    self.var_grade1_6.set("")
+                    self.var_comm1_6.set("")
+                    self.var_mark1_7.set("")
+                    self.var_mark2_7.set("")
+                    self.var_grade1_7.set("")
+                    self.var_comm1_7.set("")
+                    self.var_mark1_8.set("")
+                    self.var_mark2_8.set("")
+                    self.var_grade1_8.set("")
+                    self.var_comm1_8.set("")
+                    self.var_mark1_9.set("")
+                    self.var_mark2_9.set("")
+                    self.var_grade1_9.set("")
+                    self.var_comm1_9.set("")
+                    self.var_mark1_10.set("")
+                    self.var_mark2_10.set("")
+                    self.var_grade1_10.set("")
+                    self.var_comm1_10.set("")
+                    self.var_mark1_11.set("")
+                    self.var_mark2_11.set("")
+                    self.var_grade1_11.set("")
+                    self.var_comm1_11.set("")
+            except Exception as e:
+                messagebox.showwarning("Warning", f"Error fetching data: {str(e)}", parent=self.root)
+            
         conn.close()
 
     
@@ -497,7 +551,6 @@ class Grade:
            if self.Exit>0:
                self.root.destroy()
                return
-
                     
 if __name__=="__main__":
     root=Tk()

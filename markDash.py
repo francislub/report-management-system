@@ -10,8 +10,8 @@ import random
 from time import strftime
 from sheet import MarkEntry
 from subject import Subject
-from classL import cL
-
+from Obroadsheet import Osheet
+from Abroadsheet import Asheet
 
 class Markss:
     def __init__(self,root,selected_class="Select Class"):
@@ -92,7 +92,8 @@ class Markss:
         #=====================title=======================================================
         lbl_title=Label(self.root,text="MARKS ENTRY FORM",font=("times new roman",18,"bold"),bg="black",fg="white",bd=4)
         lbl_title.place(x=200,y=160,width=1160,height=40)
-       
+        
+        self.selected_class = StringVar()
         self.label_class = Label(self.root, text=f"Class: {selected_class}", bg="black", fg="white", anchor="w",
                                  padx=5, font=("times new roman", 20, "bold"))
         self.label_class.place(x=270, y=160)
@@ -105,8 +106,8 @@ class Markss:
         #self.subject_buttons = []  # List to store subject buttons
         btn_subject = Button(LeftMenu,text="Subject\nEntry",command=self.show_loading_subject,image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",17,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
         btn_terminalRe = Button(LeftMenu,text="Terminal\nReports",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",17,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
-        btn_classList = Button(LeftMenu,text="Class\nList",command= self.show_loading_class,image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",18,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
-        btn_broadSheet = Button(LeftMenu,text="Broad\nSheet",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",18,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
+        btn_ObroadSheet = Button(LeftMenu,text="O Level\nBroad Sheet", command=self.open_obroadsheet,image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",18,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
+        btn_AbroadSheet = Button(LeftMenu,text="A Level\nBroad Sheet", command=self.open_abroadsheet,image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",18,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
         btn_teachDash = Button(LeftMenu,text="MOCK",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",18,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
         btn_teachDash = Button(LeftMenu,text="Attendance",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",18,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
         btn_teachDash = Button(LeftMenu,text="Remarks",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",18,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
@@ -168,17 +169,46 @@ class Markss:
         
         self.btn_subject16 = Button(labelframeleft,text="",font=("times new roman",15,"bold"),cursor="hand2")
         self.btn_subject16.place(x=250,y=360,height=40,width=200)
+        
+        self.btn_subject17 = Button(labelframeleft,text="",font=("times new roman",15,"bold"),cursor="hand2")
+        self.btn_subject17.place(x=20,y=405,height=40,width=200)
+        
+        self.btn_subject18 = Button(labelframeleft,text="",font=("times new roman",15,"bold"),cursor="hand2")
+        self.btn_subject18.place(x=250,y=405,height=40,width=200)
+        
+        self.btn_subject19 = Button(labelframeleft,text="",font=("times new roman",15,"bold"),cursor="hand2")
+        self.btn_subject19.place(x=20,y=450,height=30,width=200)
+        
+        self.btn_subject20 = Button(labelframeleft,text="",font=("times new roman",15,"bold"),cursor="hand2")
+        self.btn_subject20.place(x=250,y=450,height=30,width=200)
+        
         #########################################
             
         self.subject_buttons = []
 
-        for i in range(1, 17):
+        for i in range(1, 21):
             btn_subject = Button(labelframeleft, text="", font=("times new roman", 15, "bold"), cursor="hand2", command=lambda i=i: self.show_subject(i))
             row = (i - 1) // 2
             col = (i - 1) % 2
             btn_subject.place(x=20 + col * 230, y=10 + row * 50, height=40, width=200)
             self.subject_buttons.append(btn_subject)
-        
+    #=====================================Broadsheet==================================
+    def open_abroadsheet(self):
+        selected_class = self.combo_class.get()
+        if selected_class == "Select Class":
+            messagebox.showerror("Error", "Please select a class" , parent=self.root)
+        else:
+            # Open the Abroadsheet form with the selected class in the title
+             self.show_loading_Asheet()
+             
+    def open_obroadsheet(self):
+        selected_class = self.combo_class.get()
+        if selected_class == "Select Class":
+            messagebox.showerror("Error", "Please select a class" , parent=self.root)
+        else:
+            # Open the Abroadsheet form with the selected class in the title
+             self.show_loading_Osheet()
+    #====================================================================================
     def show_selected_class(self):
         selected_class = self.combo_class.get()
         # Now, you can pass the selected_class value to sheet.py or update the label directly
@@ -188,9 +218,12 @@ class Markss:
     def update_selected_class_label(self, event):
         selected_class = self.combo_class.get()
         
+        self.selected_class.set(f"Class: {selected_class}")
+        self.label_class.config(textvariable=self.selected_class)
+        
         # Fetch subjects for the selected class from the database
         cursor = self.conn.cursor()
-        cursor.execute("SELECT subject1, subject2, subject3, subject4, subject5, subject6, subject7, subject8, subject9, subject10, subject11, subject12, subject13, subject14, subject15, subject16 FROM subject WHERE class = %s", (selected_class,))
+        cursor.execute("SELECT subject1, subject2, subject3, subject4, subject5, subject6, subject7, subject8, subject9, subject10, subject11, subject12, subject13, subject14, subject15, subject16, subject17, subject18, subject19, subject20 FROM subject WHERE class = %s", (selected_class,))
         subjects = cursor.fetchone()
 
         for i, subject in enumerate(subjects):
@@ -205,7 +238,7 @@ class Markss:
         # Check if a class is selected
         selected_class = self.combo_class.get()
         if selected_class == "Select Class":
-            messagebox.showinfo("Error", "Please select a class first.")
+            messagebox.showinfo("Error", "Please select a class first.", parent=self.root)
             return
 
         # Fetch students for the selected class from the database
@@ -242,14 +275,24 @@ class Markss:
         self.new_window=Toplevel(self.root)
         self.app=Subject(self.new_window)
     #########################################  
-    def show_loading_class(self):
+    def show_loading_Osheet(self):
         self.loading_label = Label(self.root, text="Loading...", font=("times new roman", 20, "bold"))
         self.loading_label.pack()
-        self.root.after(1000, self.class_details)  # After 30 seconds, show another window
-    def class_details(self):
+        self.root.after(1000, self.Osheet_details)  # After 30 seconds, show another window
+    def Osheet_details(self):
         self.loading_label.destroy()
         self.new_window=Toplevel(self.root)
-        self.app=cL(self.new_window)
+        self.app=Osheet(self.new_window, self.combo_class.get())
+         # Create the UI components
+    #########################################  
+    def show_loading_Asheet(self):
+        self.loading_label = Label(self.root, text="Loading...", font=("times new roman", 20, "bold"))
+        self.loading_label.pack()
+        self.root.after(1000, self.Asheet_details)  # After 30 seconds, show another window
+    def Asheet_details(self):
+        self.loading_label.destroy()
+        self.new_window=Toplevel(self.root)
+        self.app=Asheet(self.new_window, self.combo_class.get())
          # Create the UI components
        
     def logout(self):
@@ -258,6 +301,7 @@ class Markss:
             # Perform logout actions here (e.g., closing the window, resetting variables, etc.)
             self.root.destroy()
     
-root=Tk()
-ob = Markss(root)
-root.mainloop()
+if __name__=="__main__":
+    root=Tk()
+    ob = Markss(root)
+    root.mainloop()

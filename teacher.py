@@ -32,7 +32,7 @@ class Teacher_win:
         lbl_title=Label(self.root,text="ADD TEACHER DETAILS",font=("times new roman",18,"bold"),bg="black",fg="gold",bd=4,relief=RIDGE)
         lbl_title.place(x=0,y=0,width=1355,height=50)
         #===================2st Image===log======================================================
-        Image2=Image.open(r"C:\Users\USER\Desktop\summer\PYTHON PROJECTS TKINTER\REPT\images\logo.PNG")
+        Image2=Image.open(r"C:\Users\ENG. FRANCIS\Desktop\summer\PYTHON PROJECTS TKINTER\REPT\images\logo.PNG")
         Image2=Image2.resize((100,40),Image.LANCZOS)
         self.photoImage2=ImageTk.PhotoImage(Image2)
         

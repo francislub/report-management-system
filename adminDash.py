@@ -6,6 +6,8 @@ import random
 from time import strftime
 from PIL import Image,ImageTk
 from user import User
+from term import termYear
+from year import Year
 #from teacherDash import Teacher
 
 class Admin:
@@ -87,8 +89,23 @@ class Admin:
         self.icon_side = self.icon_side.subsample(self.icon_side.width()// new_width, self.icon_side.height() // new_height)
         
         #=========================BUTTONS===============================================
+                ################## Term & Year####################################################
+        # Create a Menu for Settings dropdown
+        self.termYear = Menu(root, tearoff=0)
+        self.termYear.configure(font=("times new roman", 16, "bold"))  # Apply the same font as the Settings button
+        self.termYear.add_command(label="Year",command=self.show_loading_year, font=("times new roman", 16, "bold"))  # Apply font to dropdown items
+        self.termYear.add_command(label="Term",command=self.show_loading_term, font=("times new roman", 16, "bold"))  # Apply font to dropdown items
+        
+        # Function to display the Settings dropdown
+        def show_TermYear():
+            x = btn_termYear.winfo_rootx() + btn_termYear.winfo_width()  # Adjust x-coordinate to place the menu on the right
+            y = btn_termYear.winfo_rooty() + btn_termYear.winfo_height()
+            self.termYear.post(x, y)
+        # Settings Button with dropdown
+        btn_termYear = Button(LeftMenu, text="Term & Year", image=self.icon_side, compound=LEFT, padx=5, anchor="w", font=("times new roman", 16, "bold"), bg="white", bd=3, cursor="hand2", command=show_TermYear)
+        btn_termYear.pack(side=TOP, fill=X)
+        
         btn_user = Button(LeftMenu,text="Users",command=self.show_loading_user,image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",16,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
-        btn_marks = Button(LeftMenu,text="",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",16,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
         btn_viewStud = Button(LeftMenu,text="",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",13,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
         btn_reportGeneration = Button(LeftMenu,text="",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",14,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
         btn_reportGenerat = Button(LeftMenu,text="",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",14,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
@@ -227,6 +244,27 @@ class Admin:
         self.loading_label.destroy()
         self.new_window=Toplevel(self.root)
         self.app=User(self.new_window)
+        
+    #########################################  
+    def show_loading_term(self):
+        self.loading_label = Label(self.root, text="Loading...", font=("times new roman", 20, "bold"))
+        self.loading_label.pack()
+        self.root.after(1000, self.term_details)  # After 30 seconds, show another window
+        
+    def term_details(self):
+        self.loading_label.destroy()
+        self.new_window=Toplevel(self.root)
+        self.app=termYear(self.new_window)
+    #########################################  
+    def show_loading_year(self):
+        self.loading_label = Label(self.root, text="Loading...", font=("times new roman", 20, "bold"))
+        self.loading_label.pack()
+        self.root.after(1000, self.year_details)  # After 30 seconds, show another window
+    def year_details(self):
+        self.loading_label.destroy()
+        self.new_window=Toplevel(self.root)
+        self.app=Year(self.new_window)
+        
     
     #def show_loading_teacher(self):
     #    self.loading_label = Label(self.root, text="Loading...", font=("times new roman", 20, "bold"))
@@ -243,6 +281,7 @@ class Admin:
             # Perform logout actions here (e.g., closing the window, resetting variables, etc.)
             self.root.destroy()
     
-root=Tk()
-ob = Admin(root)
-root.mainloop()
+if __name__=="__main__":
+    root=Tk()
+    ob = Admin(root)
+    root.mainloop()

@@ -35,7 +35,7 @@ class Student:
         lbl_title=Label(self.root,text="ADD STUDENT DETAILS",font=("times new roman",18,"bold"),bg="black",fg="gold",bd=4,relief=RIDGE)
         lbl_title.place(x=0,y=0,width=1355,height=50)
         #===================2st Image===log======================================================
-        Image2=Image.open(r"C:\Users\USER\Desktop\summer\PYTHON PROJECTS TKINTER\REPT\images\logo.PNG")
+        Image2=Image.open(r"C:\Users\ENG. FRANCIS\Desktop\summer\PYTHON PROJECTS TKINTER\REPT\images\logo.PNG")
         Image2=Image2.resize((100,40),Image.LANCZOS)
         self.photoImage2=ImageTk.PhotoImage(Image2)
         
@@ -50,7 +50,7 @@ class Student:
         user_photo_placeholder = Label(LeftMenu, text="User Photo", bg="lightgray", height=10)
         user_photo_placeholder.pack(side="top", fill="x")
         #===================1st Image=====================================================
-        Img=Image.open(r"C:\Users\USER\Desktop\summer\PYTHON PROJECTS TKINTER\report-management-system\images/s4.jpg")
+        Img=Image.open(r"C:\Users\ENG. FRANCIS\Desktop\summer\PYTHON PROJECTS TKINTER\report-management-system\images/s4.jpg")
         Img=Img.resize((500,170),Image.LANCZOS)
         self.photoImg=ImageTk.PhotoImage(Img)
         
@@ -134,6 +134,7 @@ class Student:
         lblAddress.grid(row=8,column=0,sticky=W)
         txtAddress=ttk.Entry(labelframeleft,textvariable=self.var_address,width=29,font=("times new roman",13,"bold"))
         txtAddress.grid(row=8,column=1)
+        
         #================btn===========================================
         btn_frame=Frame(labelframeleft,bd=2,relief=RIDGE)
         btn_frame.place(x=0,y=400,width=760,height=50)

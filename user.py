@@ -5,6 +5,7 @@ import tkinter as tk
 #import mysql.connector
 import pymysql
 import random
+from tkinter import filedialog
 from tkcalendar import DateEntry
 from datetime import datetime
 import tkinter.messagebox
@@ -31,7 +32,7 @@ class User:
         lbl_title=Label(self.root,text="CREATE USER'S ACCOUNTS",font=("times new roman",18,"bold"),bg="black",fg="gold",bd=4,relief=RIDGE)
         lbl_title.place(x=0,y=0,width=1355,height=50)
         #===================2st Image===log======================================================
-        Image2=Image.open(r"C:\Users\USER\Desktop\summer\PYTHON PROJECTS TKINTER\REPT\images\logo.PNG")
+        Image2=Image.open(r"C:\Users\ENG. FRANCIS\Desktop\summer\PYTHON PROJECTS TKINTER\REPT\images\logo.PNG")
         Image2=Image2.resize((100,40),Image.LANCZOS)
         self.photoImage2=ImageTk.PhotoImage(Image2)
         
@@ -85,18 +86,28 @@ class User:
         
         lblpassword1=Label(labelframeleft,text="Password",font=("times new roman",12,"bold"),padx=2,pady=6)
         lblpassword1.grid(row=4,column=0,sticky=W)
-        txtpassword1=ttk.Entry(labelframeleft,textvariable=self.var_password1,width=29,font=("times new roman",13,"bold"))
+        txtpassword1=ttk.Entry(labelframeleft,textvariable=self.var_password1,width=29,font=("times new roman",13,"bold"), show="*")
         txtpassword1.grid(row=4,column=1)
         
         lblpassword2=Label(labelframeleft,text="Confirm Password",font=("times new roman",12,"bold"),padx=2,pady=6)
         lblpassword2.grid(row=5,column=0,sticky=W)
-        txtpassword2=ttk.Entry(labelframeleft,textvariable=self.var_password2,width=29,font=("times new roman",13,"bold"))
+        txtpassword2=ttk.Entry(labelframeleft,textvariable=self.var_password2,width=29,font=("times new roman",13,"bold"), show="*")
         txtpassword2.grid(row=5,column=1)
         
+        def open_image():
+            file_path = filedialog.askopenfilename()
+            image = Image.open(file_path)
+            # Update the entry widget with the file name
+            txtimage.delete(0, END)
+            txtimage.insert(0, file_path)
+
         lblimage=Label(labelframeleft,text="Image",font=("times new roman",12,"bold"),padx=2,pady=6)
         lblimage.grid(row=8,column=0,sticky=W)
         txtimage=ttk.Entry(labelframeleft,textvariable=self.var_image,width=29,font=("times new roman",13,"bold"))
         txtimage.grid(row=8,column=1)
+        btn_open=Button(labelframeleft,text="Open Image", command=open_image,font=("times new roman",13,"bold"))
+        btn_open.grid(row=9,column=0,sticky=W)
+        
         #================btn===========================================
         btn_frame=Frame(labelframeleft,bd=2,relief=RIDGE)
         btn_frame.place(x=0,y=400,width=760,height=50)
@@ -169,6 +180,8 @@ class User:
     def add_data(self):
         if self.var_username.get() == "" or self.var_email.get() == "":
             messagebox.showerror("Error", "All fields are required", parent=self.root)
+        elif self.var_password1.get() != self.var_password2.get():
+            messagebox.showerror("Error", "Passwords do not match", parent=self.root)
         else:
             try:
                 conn = pymysql.connect(host="localhost", user="root", database="report")
@@ -231,6 +244,8 @@ class User:
     def update(self):
        if self.var_username.get()=="":
            messagebox.showerror("Error","Please enter the user details to be deleted",parent=self.root)
+       elif self.var_password1.get() != self.var_password2.get():
+            messagebox.showerror("Error", "Passwords do not match", parent=self.root)
        else:
            conn=pymysql.connect(host="localhost",user="root",database="report")
            my_cursor=conn.cursor()

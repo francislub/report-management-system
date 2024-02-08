@@ -240,8 +240,6 @@ class Teacher:
         
     def marks_details(self):
         self.loading_label.destroy()
-        #root.master.destroy()
-        #import mark
         self.new_window=Toplevel(self.root)
         self.app=Markss(self.new_window)
     
@@ -262,6 +260,7 @@ class Teacher:
             # Perform logout actions here (e.g., closing the window, resetting variables, etc.)
             self.root.destroy()
     
-root=Tk()
-ob = Teacher(root)
-root.mainloop()
+if __name__=="__main__":
+    root=Tk()
+    ob = Teacher(root)
+    root.mainloop()

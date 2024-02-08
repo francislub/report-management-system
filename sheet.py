@@ -12,6 +12,7 @@ class MarkEntry:
         #self.ClassLbl = Toplevel(self.root)
         self.root.geometry("1450x730+0+0")
         self.root.configure(bg="black")
+        self.result_table = "result"
         #self.root.overrideredirect(True)
         self.table_frame = Canvas(root)
         self.canvas = Canvas(self.table_frame, bg="white", highlightthickness=0)
@@ -36,7 +37,8 @@ class MarkEntry:
         self.create_table(rows, columns)
 
         # Initialize the UI components and create the table
-        #====================title================
+        #========]'] 
+        # hn============title================
         title= Label(self.root, text="Marks Entry For Each Subject",compound=LEFT, font=("times new roman",40,"bold"),bg="#010c48",fg="white",anchor="w",padx=20).place(x=0,y=0,relwidth=1,height=70)
         
         self.label_subject = Label(root, text=f"Subject: {selected_subject}", font=("times new roman", 40, "bold"),
@@ -122,39 +124,41 @@ class MarkEntry:
         self.canvas.create_window((0, 0), window=self.table_frame, anchor=NW)
 
         # Initially, create a 3x3 table
-        self.create_table(20, 18 )
+        self.create_table(100, 18 )
 
         # Configure the canvas to update scroll region when the frame size changes
         self.table_frame.bind("<Configure>", self.update_scrollregion)
         
     def show_marks(self):
-        # Get the selected ID and Name from the entries
-        selected_id = self.entries[self.current_row][0].get()
-        selected_name = self.entries[self.current_row][1].get()
+        for row in range(len(self.entries)):
+            # Get the selected ID and Name from the entries
+            selected_id = self.entries[row][0].get()
+            selected_name = self.entries[row][1].get()
 
-        # Check if both ID and Name are provided
-        if selected_id and selected_name:
-            # Connect to the database
-            conn = pymysql.connect(host="localhost", user="root", database="report")
-            my_cursor = conn.cursor()
+            # Check if both ID and Name are provided
+            if selected_id and selected_name:
+                # Connect to the database
+                conn = pymysql.connect(host="localhost", user="root", database="report")
+                my_cursor = conn.cursor()
 
-            # Retrieve marks for the selected ID and Name
-            result_table = self.result_table
-            fetch_query = f"SELECT * FROM {result_table} WHERE studentID = %s AND name = %s"
-            my_cursor.execute(fetch_query, (selected_id, selected_name))
-            marks_data = my_cursor.fetchone()
+                # Retrieve marks for the selected ID and Name
+                result_table = self.result_table
+                fetch_query = f"SELECT * FROM {result_table} WHERE studentID = %s AND name = %s"
+                my_cursor.execute(fetch_query, (selected_id, selected_name))
+                marks_data = my_cursor.fetchone()
 
-            # Check if data is found
-            if marks_data:
-                # Update the entries with the retrieved marks starting from column 3
-                for col in range(2, min(len(self.entries[0]), len(marks_data) + 2)):
-                    self.entries[self.current_row][col].delete(0, END)
-                    self.entries[self.current_row][col].insert(0, marks_data[col + 2])
+                # Check if data is found
+                if marks_data:
+                    # Update the entries with the retrieved marks starting from column 3
+                    for col in range(2, min(len(self.entries[0]), len(marks_data) + 2)):
+                        self.entries[row][col].delete(0, END)
+                        self.entries[row][col].insert(0, marks_data[col + 2])
 
-            # Close the database connection
-            conn.close()
-        else:
-            messagebox.showerror("Error", "Please provide both ID and Name." , parent=self.root)
+                # Close the database connection
+                conn.close()
+            else:
+                #messagebox.showerror("Error", "Please provide both ID and Name." , parent=self.root)
+                pass
                     
     def save_data(self):
         # Connect to the database
@@ -162,7 +166,7 @@ class MarkEntry:
         my_cursor = conn.cursor()
 
         # Loop through the entries and save data to the respective tables (result1, result2, ..., result16)
-        for subject_number in range(1, 17):
+        for subject_number in range(1, 21):
             #result = f"result{subject_number}"
             result = self.result_table
 

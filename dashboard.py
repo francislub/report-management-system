@@ -1,4 +1,5 @@
 from tkinter import *
+import tkinter as tk
 import tkinter.messagebox
 from PIL import Image,ImageTk
 #import mysql.connector
@@ -6,19 +7,42 @@ import pymysql
 import random
 from time import strftime
 from teacher import Teacher_win
-#from teacherDash import Teacher
+from teacherDash import Teacher
 import colorsys
-from term import termYear
-from year import Year
 from classL import cL
 from subject import Subject
 from grade import Grade 
+from remarks import remark
+from itertools import cycle
+#=====================Graph===============
+from tkinter import Frame, RIDGE
+import matplotlib.pyplot as plt
+import numpy as np
+#import os
+#os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "0"
+#import matplotlib
+#matplotlib.rcParams['font.sans-serif'] = 'Arial'
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+
 class IMS:
     def __init__(self,root):
         self.root = root
         self.root.geometry("1450x730+0+0")
         self.root.overrideredirect(True)
-        self.root.title('Color Changer')
+        self.root.title('Color Changer') 
+        # Other initialization code...
+        self.classes = []  # List to store available classes
+        self.current_class_index = 0
+
+        # Fetch available classes from the database
+        self.fetch_classes()
+        self.selected_class = None
+        self.current_class = 1
+
+        # Set initial class for display
+        self.selected_class = self.classes[self.current_class_index]
+        self.display_graph()
+        
         #List of colors
         colors = ["#000000","#000426","#000848","#000C6A","#00108C","#0014AE","#0018D0"]
         #colors = ["#010c48","#ff5733", "#33ff57", "#3357ff", "#ff33a6", "#a633ff"]
@@ -93,43 +117,21 @@ class IMS:
         self.icon_side = self.icon_side.subsample(self.icon_side.width()// new_width, self.icon_side.height() // new_height)
         
         #btn_termYear = Button(LeftMenu,text="Term & Year",command=self.term_details,image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",16,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
-                ################## Term & Year####################################################
-        # Create a Menu for Settings dropdown
-        self.termYear = Menu(root, tearoff=0)
-        self.termYear.configure(font=("times new roman", 16, "bold"))  # Apply the same font as the Settings button
-        self.termYear.add_command(label="Year",command=self.show_loading_year, font=("times new roman", 16, "bold"))  # Apply font to dropdown items
-        self.termYear.add_command(label="Term",command=self.show_loading_term, font=("times new roman", 16, "bold"))  # Apply font to dropdown items
+                ################## Class####################################################
+        btn_class = Button(LeftMenu,text="Add Class",command=self.show_loading_class,image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",16,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
         
-        # Function to display the Settings dropdown
-        def show_TermYear():
-            x = btn_termYear.winfo_rootx() + btn_termYear.winfo_width()  # Adjust x-coordinate to place the menu on the right
-            y = btn_termYear.winfo_rooty() + btn_termYear.winfo_height()
-            self.termYear.post(x, y)
-        # Settings Button with dropdown
-        btn_termYear = Button(LeftMenu, text="Term & Year", image=self.icon_side, compound=LEFT, padx=5, anchor="w", font=("times new roman", 16, "bold"), bg="white", bd=3, cursor="hand2", command=show_TermYear)
-        btn_termYear.pack(side=TOP, fill=X)
-        #btn_classSubject = Button(LeftMenu,text="Class & Subject",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",16,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
-                ################## Class $ Subject####################################################
-        # Create a Menu for Settings dropdown
-        self.classSubject = Menu(root, tearoff=0)
-        self.classSubject.configure(font=("times new roman", 16, "bold"))  # Apply the same font as the Settings button
-        self.classSubject.add_command(label="Classes",command=self.show_loading_class, font=("times new roman", 16, "bold"))  # Apply font to dropdown items
-        self.classSubject.add_command(label="Subjects",command=self.show_loading_subject, font=("times new roman", 16, "bold"))  # Apply font to dropdown items
+        btn_subject = Button(LeftMenu,text="Subject",command=self.show_loading_subject,image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",16,"bold"),bg="white",bd=3,cursor="hand2")
+        btn_subject.pack(side=TOP,fill=X)
         
-        # Function to display the Settings dropdown
-        def show_classSubject():
-            x = btn_classSubject.winfo_rootx() + btn_classSubject.winfo_width()  # Adjust x-coordinate to place the menu on the right
-            y = btn_classSubject.winfo_rooty() + btn_classSubject.winfo_height()
-            self.classSubject.post(x, y)
-        # Settings Button with dropdown
-        btn_classSubject = Button(LeftMenu, text="Class & Subject", image=self.icon_side, compound=LEFT, padx=5, anchor="w", font=("times new roman", 16, "bold"), bg="white", bd=3, cursor="hand2", command=show_classSubject)
-        btn_classSubject.pack(side=TOP, fill=X)
+        btn_reportgrade = Button(LeftMenu,text="Grading",command=self.show_loading_grade,image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",16,"bold"),bg="white",bd=3,cursor="hand2")
+        btn_reportgrade.pack(side=TOP,fill=X)
         
-        btn_teachers = Button(LeftMenu,text="Teachers",command=self.show_loading_message,image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",16,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
-        btn_grading = Button(LeftMenu,text="Grading",command=self.show_loading_grade,image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",16,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
-        btn_reportTermination = Button(LeftMenu,text="Report Termination",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",13,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
+        btn_reportRemarks = Button(LeftMenu,text="Report Remarks",command=self.show_loading_remark,image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",13,"bold"),bg="white",bd=3,cursor="hand2")
+        btn_reportRemarks.pack(side=TOP,fill=X)
+        
+        #==================================
         btn_reportGeneration = Button(LeftMenu,text="Report Generation",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",14,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
-        btn_teachDash = Button(LeftMenu,text="Teacher's Dash",image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",16,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
+        btn_teachDash = Button(LeftMenu,text="Teacher's Dash",command=self.show_loading_teacher,image=self.icon_side,compound=LEFT,padx=5,anchor="w",font=("times new roman",16,"bold"),bg="white",bd=3,cursor="hand2").pack(side=TOP,fill=X)
         
         ################## SETTINGS####################################################
         # Create a Menu for Settings dropdown
@@ -329,12 +331,101 @@ class IMS:
         # Display the total number of user
         self.lbl_sales = Label(self.root, text=f"Total Users\n{total_term}", bd=5, relief=RIDGE, bg="#ffc107", fg="white", font=("goudy old style", 20, "bold"))
         self.lbl_sales.place(x=1050, y=120, height=100, width=200)
-        
+        #######################################################################################################################
         #===========Graph Menu==============
-        GraphMenu = Frame(self.root,bd=2,relief=RIDGE, bg="white")
-        GraphMenu.place(x=390,y=240,width=965,height=440)
+        self.GraphMenu1 = Frame(self.root,bd=2,relief=RIDGE, bg="white")
+        self.GraphMenu1.place(x=390,y=230,width=965,height=455)
         
-       
+        # Add class navigation buttons
+        self.next_button = Button(self.GraphMenu1, text="Next", command=self.next_class, font=("arial", 11, "bold"), bg="black", fg="gold", width=12)
+        self.next_button.place(x=890,y=5,width=50,height=25)
+
+        self.prev_button = Button(self.GraphMenu1, text="Previous", command=self.previous_class, font=("arial", 11, "bold"), bg="black", fg="gold", width=12)
+        self.prev_button.place(x=10,y=5,width=70,height=25)
+        
+        self.title = Label(self.GraphMenu1, text=f'PERFORMANCE FOR {self.selected_class}', font=("goudy old style", 20, "bold"))
+        self.title.place(x=300, y=5, height=25)
+        
+        #############################################################################################################
+        self.GraphMenu = Frame(self.GraphMenu1,bd=1,relief=RIDGE, bg="white")
+        self.GraphMenu.place(x=0,y=30,width=960,height=424)
+        # Display the initial graph
+        self.display_graph()
+
+    
+    def display_graph(self):
+    
+        # Clear the GraphMenu frame before displaying the graph
+        if hasattr(self, 'GraphMenu'):
+            for widget in self.GraphMenu.winfo_children():
+                widget.destroy()
+
+            # Create a Matplotlib figure
+            fig ,ax = plt.subplots(figsize=(8,4))
+            
+            conn = pymysql.connect(host="localhost", user="root", database="report")
+            my_cursor = conn.cursor()
+            
+            # Fetch subjects for the selected class
+            subjects_query = f"SELECT subject1, subject2, subject3, subject4, subject5, subject6, subject7, subject8, subject9, subject10, subject11, subject12, subject13, subject14, subject15, subject16 FROM subject WHERE class='{self.selected_class}'"
+            my_cursor.execute(subjects_query)
+            subjects_result = my_cursor.fetchone()
+
+            # Filter out null or empty and non-existing subjects
+            filtered_subjects = [subject for subject in subjects_result if subject != ""]
+
+            # Create concatenated string without null or empty subjects
+            subjects = ','.join(filtered_subjects)
+
+            # Bar width for better visualization
+            bar_width = 100
+            index = np.arange(len(filtered_subjects))
+            
+            fig, ax = plt.subplots()
+            # Plotting the bar graph for girls
+            ax.bar(index, np.random.randint(50, 100), label='Girls',edgecolor='grey', color='pink')  # Replace with your data
+
+            # Plotting the bar graph for boys
+            ax.bar(index + bar_width, np.random.randint(60, 100), label='Boys',edgecolor='grey', color='blue')  # Replace with your data
+
+            # Set labels and title
+            ax.set_xlabel("SUBJECTS")
+            ax.set_ylabel("TOTAL SCORE")
+            ax.set_xticks(index + bar_width / 2)
+            ax.set_xticklabels([subj[:4] for subj in filtered_subjects])
+            ax.legend()
+
+            # Embed the Matplotlib figure in the Tkinter window
+            canvas = FigureCanvasTkAgg(fig, master=self.GraphMenu)
+            canvas_widget = canvas.get_tk_widget()
+            canvas_widget.pack(side=tk.TOP, fill=tk.BOTH, expand=1)
+            canvas.draw()
+            plt.close()
+            
+            #######################################################################################################################
+        
+    def fetch_classes(self):
+        # Fetch available classes from the database
+        conn = pymysql.connect(host="localhost", user="root", database="report")
+        cursor = conn.cursor()
+        cursor.execute("SELECT DISTINCT class FROM subject")  
+        self.classes = [cls[0] for cls in cursor.fetchall()]
+
+    def next_class(self):
+        # Update to the next class in the list
+        self.current_class_index = (self.current_class_index + 1) % len(self.classes)
+        self.selected_class = self.classes[self.current_class_index]
+        self.current_class += 1
+        self.display_graph()
+
+    def previous_class(self):
+        # Update to the previous class in the list
+        self.current_class_index = (self.current_class_index - 1) % len(self.classes)
+        self.selected_class = self.classes[self.current_class_index]
+        if self.current_class > 1:
+            self.current_class -= 1
+            self.display_graph()
+
         #########################################  
     def show_loading_message(self):
         self.loading_label = Label(self.root, text="Loading...", font=("times new roman", 20, "bold"))
@@ -345,25 +436,6 @@ class IMS:
         self.loading_label.destroy()
         self.new_window=Toplevel(self.root)
         self.app=Teacher_win(self.new_window)
-    #########################################  
-    def show_loading_term(self):
-        self.loading_label = Label(self.root, text="Loading...", font=("times new roman", 20, "bold"))
-        self.loading_label.pack()
-        self.root.after(1000, self.term_details)  # After 30 seconds, show another window
-        
-    def term_details(self):
-        self.loading_label.destroy()
-        self.new_window=Toplevel(self.root)
-        self.app=termYear(self.new_window)
-    #########################################  
-    def show_loading_year(self):
-        self.loading_label = Label(self.root, text="Loading...", font=("times new roman", 20, "bold"))
-        self.loading_label.pack()
-        self.root.after(1000, self.year_details)  # After 30 seconds, show another window
-    def year_details(self):
-        self.loading_label.destroy()
-        self.new_window=Toplevel(self.root)
-        self.app=Year(self.new_window)
     
     #########################################  
     def show_loading_class(self):
@@ -398,14 +470,25 @@ class IMS:
 
         
     #########################################  
-    #def show_loading_dash(self):
-    #    self.loading_label = Label(self.root, text="Loading...", font=("times new roman", 20, "bold"))
-    #    self.loading_label.pack()
-    #    self.root.after(1000, self.teacherDash_details)  # After 30 seconds, show another window
-    #def teacherDash_details(self):
-    #    self.loading_label.destroy()
-    #    self.new_window=Toplevel(self.root)
-    #    self.app=Teacher(self.teacherDash_details)
+    def show_loading_remark(self):
+        self.loading_label = Label(self.root, text="Loading...", font=("times new roman", 20, "bold"))
+        self.loading_label.pack()
+        self.root.after(1000, self.remark_details)  # After 30 seconds, show another window
+    def remark_details(self):
+        self.loading_label.destroy()
+        self.new_window=Toplevel(self.root)
+        self.app=remark(self.new_window)
+        
+    #########################################  
+    #########################################  
+    def show_loading_teacher(self):
+        self.loading_label = Label(self.root, text="Loading...", font=("times new roman", 20, "bold"))
+        self.loading_label.pack()
+        self.root.after(1000, self.teacher_details)  # After 30 seconds, show another window
+    def teacher_details(self):
+        self.loading_label.destroy()
+        self.new_window=Toplevel(self.root)
+        self.app=Teacher(self.new_window)
         
     def logout(self):
         logout = tkinter.messagebox.askyesno("Report Management System", "Confirm if you want to log out", parent=self.root)
@@ -413,6 +496,7 @@ class IMS:
             # Perform logout actions here (e.g., closing the window, resetting variables, etc.)
             self.root.destroy()
     
-root=Tk()
-ob = IMS(root)
-root.mainloop()
+if __name__=="__main__":
+    root=Tk()
+    ob = IMS(root)
+    root.mainloop()
